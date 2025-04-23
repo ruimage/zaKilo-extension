@@ -1,0 +1,143 @@
+Планируемые фичи
+
+1) Перевод цены за 1 единицу веса (кг, литр, штука)
+2) Выделение цветом лучших цен
+3) Сортировка товаров по ценам за 1 единицу веса
+4) Определение среднего веса товаров и приближение к нему (если все товары весят 50-75 грамм, то цена за 100 грамм, если вес товары весят 930-1100 мл, то цена за 1 лтр)
+
+Веса, примеры:
+930 мл => name: 1 л, multiplier: 1000/930
+1.947 л => name: 1 л, multiplier: 1/1.947
+970 мл => name: 1 л, multiplier: 1000/970
+950 г = > name: 1 кг, multiplier: 1000/950
+1.4 л = > name: 1 л, multiplier: 1/1.4
+800 мл => name: 1 л, multiplier: 1000/800
+906 мл = > name: 1 л, multiplier: 1000/906
+450 г = > name: 1 кг, multiplier: 1000/450
+75 г = > name: 1 кг, multiplier: 1000/75
+3 кг = > name: 1 кг, multiplier: 1/3
+2 л = > name: 1 л, multiplier: 1/2
+2 шт = > name: 1 шт, multiplier: 1/2
+3 шт = > name: 1 шт, multiplier: 1/3
+Цена за 100 г = > name: 1 кг, multiplier: 1000/100
+2.7 кг = > name: 1 кг, multiplier: 1/2.7
+
+
+Сайт пятерочка
+Карточка товара в поиске
+<div class="chakra-stack productCard_container__7EuBL searchResult_productCardContainer__S3Jxa css-8g8ihq" data-qa="product-card-3378621"></dvi>
+Цена
+<div class="priceContainer_priceContainerCatalog__LIxni css-k008qs"><div class="priceContainer_totalContainer__rvZ0b css-k008qs"><p class="chakra-text priceContainer_price__AY8C_ css-6uvdux">102</p><p class="chakra-text priceContainer_cent__KeKyD css-6uvdux">99</p><p class="chakra-text priceContainer_price__AY8C_ css-6uvdux">₽</p></div></div>
+Цена с акцией
+<div class="priceContainer_priceContainerCatalog__LIxni css-k008qs"><div class="priceContainer_totalContainer__rvZ0b css-k008qs"><svg viewBox="0 0 45 7" focusable="false" class="chakra-icon priceContainer_discountIcon__Zd010 css-1ksz0az"><path d="M0.976562 6.2832C0.976562 6.2832 10.2062 6.48785 22.4928 4.99776C34.7794 3.50768 43.6229 1.11116 43.6229 1.11116" stroke="#E52322" stroke-linecap="round"></path></svg><p class="chakra-text priceContainer_catalogUsualPrice__m97fW css-bx74j9">172</p><p class="chakra-text priceContainer_catalogUsualCent__lz5B_ css-bx74j9">99</p><p class="chakra-text priceContainer_catalogUsualPrice__m97fW css-bx74j9">₽</p></div><div class="priceContainer_discountContainer__T9iMx css-k008qs"><div class="priceContainer_discountCatalogPriceBackground__8anaj css-0"></div><div class="priceContainer_discountInternalContainer__MhRsi css-k008qs"><p class="chakra-text priceContainer_price__AY8C_ css-6uvdux">134</p><p class="chakra-text priceContainer_cent__KeKyD css-6uvdux">99</p><p class="chakra-text priceContainer_price__AY8C_ css-6uvdux">₽</p></div></div></div>
+Вес
+<p class="chakra-text mainInformation_weight__o6cXn css-15thl77">970 мл</p>
+
+итоговый вид цены
+<div class="priceContainer_priceContainerCatalog__LIxni css-k008qs" style="
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+"><div class="priceContainer_totalContainer__rvZ0b css-k008qs"><p class="chakra-text priceContainer_price__AY8C_ css-6uvdux">89</p><p class="chakra-text priceContainer_cent__KeKyD css-6uvdux">99</p><p class="chakra-text priceContainer_price__AY8C_ css-6uvdux">₽</p></div> / <div class="priceContainer_totalContainer__rvZ0b css-k008qs"><p class="chakra-text priceContainer_price__AY8C_ css-6uvdux">96</p><p class="chakra-text priceContainer_cent__KeKyD css-6uvdux">78</p><p class="chakra-text priceContainer_price__AY8C_ css-6uvdux">₽ за 1 л</p></div></div>
+
+
+
+Сайт деливери клаб
+Карточка товара в поиске
+<li class="DesktopComponentsSlidedCarousel_item DesktopGoodsCarousel_item DesktopComponentsSlidedCarousel_leftAlign" data-carousel-item="true">
+Цена
+<div class="p1jdj7iy" aria-hidden="true"><span class="rwsi3wr lei6h7l b15kf5nf pgfrt5h UiKitText_root UiKitText_Body2 UiKitText_Medium UiKitText_Text" data-testid="product-card-price">170&thinsp;₽</span></div>
+Цена с акцией
+<div class="p1jdj7iy" aria-hidden="true"><span class="rwsi3wr lei6h7l n1hnneev pgfrt5h UiKitText_root UiKitText_Body2 UiKitText_Medium UiKitText_Text" data-testid="product-card-price">25&thinsp;₽</span><span class="rwsi3wr lei6h7l o4ypzi7 UiKitText_root UiKitText_Body2 UiKitText_Medium UiKitText_Text" data-testid="product-card-old-price">30&thinsp;₽</span></div>
+Вес
+<div data-testid="product-card-weight" class="wpsxpb7">140&nbsp;г</div>
+
+итоговый вид цены
+<div class="p1jdj7iy" aria-hidden="true"><span class="rwsi3wr lei6h7l n1hnneev pgfrt5h UiKitText_root UiKitText_Body2 UiKitText_Medium UiKitText_Text" data-testid="product-card-price">38&thinsp;₽</span><span class="rwsi3wr lei6h7l o4ypzi7 UiKitText_root UiKitText_Body2 UiKitText_Medium UiKitText_Text" data-testid="product-card-old-price">56&thinsp;₽</span>
+<span class="rwsi3wr lei6h7l n1hnneev pgfrt5h UiKitText_root UiKitText_Body2 UiKitText_Medium UiKitText_Text" data-testid="product-card-price">54,28&thinsp;₽ за 1 кг</span> <!--последний span должен добавляться программой -->
+</div>
+
+элементы при изменении которых нужно обновлять цены за единицу
+<div class="DesktopComponentsSlidedCarousel_listContainer DesktopGoodsCarousel_listContainer"><ul class="DesktopComponentsSlidedCarousel_list" style="transform: translateX(0%);">
+<div class="DesktopGoodsList_root" data-testid="desktop-goods-list-root">
+
+
+
+Сайт перекресток
+Карточка товара в поиске
+<div class="product-card-wrapper">
+Цена
+<div class="product-card__price"><div class="sc-bXDkGd kmhKOg"><div class="price-new"><span class="sr-only">Цена</span>91,99&nbsp;₽</div></div></div>
+Цена с акцией
+<div class="product-card__price"><div class="sc-bXDkGd gacEVB"><div class="price-new"><span class="sr-only">Цена</span>59,99&nbsp;₽</div><div class="price-old-wrapper"><div class="price-old"><span class="sr-only">Старая цена</span>69,99&nbsp;₽</div></div></div></div>
+Вес
+<div class="product-card__size">400 мл</div>
+
+элементы при изменении которых нужно обновлять цены за единицу
+<div class="catalog-content-group__list">
+
+
+Сайт ашан
+Карточка товара в поиске
+<div class="styles_productCard__Qy_9h styles_catalogListPage_item__NAAw9">
+Цена
+<div class="flexLayout_flexLayout__lGs40" style="--align:center"><div class="styles_price__U1y_f typography_h3__AujKn styles_productCardContentPanel_price__MqlWB">56,99<span class="styles_price_gpyph__hy7dk">&nbsp;<!-- -->₽</span></div></div>
+Цена с акцией
+<div class="flexLayout_flexLayout__lGs40" style="--align:center"><div class="styles_price__U1y_f typography_h3__AujKn styles_productCardContentPanel_price__MqlWB">144,90<span class="styles_price_gpyph__hy7dk">&nbsp;<!-- -->₽</span></div><div class="styles_price__U1y_f styles_price__oldPrice__VsVTT styles_productCardContentPanel_oldPrice__TYk2W">176,99</div></div>
+Вес
+<a class="styles_productCardContentPanel_link__6vQup styles_link__VBOJI typography_body__83w8q" title="Молоко питьевое «Северная долина» ультрапастеризованное 3,2% БЗМЖ, 950 мл" href="/product/moloko_ultra_32__950gbzmzh/"><p class="styles_productCardContentPanel_name__072Y7">Молоко питьевое «Северная долина» ультрапастеризованное 3,2% БЗМЖ, 950 мл</p></a>
+<a class="styles_productCardContentPanel_link__6vQup styles_link__VBOJI typography_body__83w8q" title="Молоко «Княгинино» 2,5% БЗМЖ, 930 г" href="/product/moloko-knyaginino-2-5-930-g/"><p class="styles_productCardContentPanel_name__072Y7">Молоко «Княгинино» 2,5% БЗМЖ, 930 г</p></a>
+<a class="styles_productCardContentPanel_link__6vQup styles_link__VBOJI typography_body__83w8q" title="Яйца куриные «Лето» С0, 10 шт" href="/product/yayco-kurinoe-leto-so-10-sht/"><p class="styles_productCardContentPanel_name__072Y7">Яйца куриные «Лето» С0, 10 шт</p></a>
+
+элементы при изменении которых нужно обновлять цены за единицу
+<div class="catalog-content-group__list">
+
+
+Сайт самокат
+Карточка товара в поиске
+<div class="swiper-slide SliderWithTitle_slide__LPZRp swiper-slide-active"><a href="/product/905a1e1d-a9ca-11eb-85ab-1c34dae33151"><div class="ProductCard_root__OCLMl"><div class="ProductCardImage_root___xdPV">
+Цена
+<div class="ProductCardActions_text__3Uohy"><span class="Text_text__7SbT7 Text_text--type_p2SemiBold__JDK1U" style="color: rgb(255, 51, 95);"><span>115&nbsp;₽</span></span></div>
+Цена с акцией
+<div class="ProductCardActions_text__3Uohy"><span class="Text_text__7SbT7 Text_text--type_p2SemiBold__JDK1U" style="color: rgb(255, 51, 95);"><span class="ProductCardActions_oldPrice__d7vDY">129</span><span>90&nbsp;₽</span></span></div>
+Вес
+<span class="Text_text__7SbT7 Text_text--type_p3SemiBold__nZftu" style="color: rgb(166, 166, 166);">300&nbsp;г</span>
+
+элементы при изменении которых нужно обновлять цены за единицу
+<div class="swiper-wrapper" style="transform: translate3d(0px, 0px, 0px);">
+
+
+Сайт купер
+Карточка товара в поиске
+<li class="Carousel_slide__Wg4C_" aria-roledescription="slide" aria-label="1 из 12"><div class="ProductCard_root__zO_B9" data-qa="catalog_page_taxons_list_taxon_item_0_element_0"><a class="Link_root__4y_Mz Link_disguised__1Avt5 ProductCardLink_root__38cOL" href="/magnit_express/ketchup-heinz-tomatnyy-800-g-694d1c8?sid=960"><div class="ProductCardGridLayout_root__PDqjk">
+<li class="Carousel_slide__Wg4C_" aria-roledescription="slide" aria-label="1 из 10"><div class="ProductCard_root__zO_B9" data-qa="category_department_taxons_list_taxon_item_0_element_0"><a class="Link_root__4y_Mz Link_disguised__1Avt5 ProductCardLink_root__38cOL" href="/magnit_express/granadilla-i-marakuyya-duet-840-g?sid=960"><div class="ProductCardGridLayout_root__PDqjk"><div class="ProductCardGridLayout_top__ykgCO">
+<li class="Carousel_slide__Wg4C_" aria-roledescription="slide" aria-label="2 из 10"><div class="ProductCard_root__zO_B9" data-qa="category_department_taxons_list_taxon_item_1_element_1"><a class="Link_root__4y_Mz Link_disguised__1Avt5 ProductCardLink_root__38cOL" href="/magnit_express/pomidory-kokteyl-nye-magnit-svezhest-350-g-3592a3c?sid=960"><div class="ProductCardGridLayout_root__PDqjk"><div class="ProductCardGridLayout_top__ykgCO">
+<div class="ProductCard_root__zO_B9" data-qa="category_taxon_products_products_grid_product_item_1"><a class="Link_root__4y_Mz Link_disguised__1Avt5 ProductCardLink_root__38cOL" href="/magnit_express/yaytso-kurinoe-stolovoe-s1-10-sht-213e7d1?sid=324"><div class="ProductCardGridLayout_root__PDqjk"><div class="ProductCardGridLayout_top__ykgCO">
+
+Цена
+<div class="ProductCard_price__LnWjd CommonProductCard_price__XM9uA"><div class="ProductCardPrice_price__zSwp0 CommonProductCard_priceText__S5e9l" data-qa="category_department_taxons_list_taxon_item_1_element_0_price"><span class="SROnly_root__XZy7u">Цена за 1 шт.</span>229,99&nbsp;₽</div></div>
+Цена с акцией
+<div class="ProductCard_price__LnWjd CommonProductCard_price__XM9uA"><div class="ProductCardPrice_originalPrice__TAcDj" data-qa="category_department_taxons_list_taxon_item_0_element_1_original_price"><span class="SROnly_root__XZy7u">Цена без скидки за 1 шт.</span>149,99&nbsp;₽</div><div class="ProductCardPrice_price__zSwp0 ProductCardPrice_accent__6BZDJ CommonProductCard_priceText__S5e9l" data-qa="category_department_taxons_list_taxon_item_0_element_1_price"><span class="SROnly_root__XZy7u">Цена со скидкой за 1 шт.</span>75,99&nbsp;₽</div></div>
+Вес
+<div class="ProductCard_volume__RHLb0" data-qa="category_department_taxons_list_taxon_item_0_element_1_volume"><span>470 г</span></div>
+
+
+элементы при изменении которых нужно обновлять цены за единицу
+<li class="TaxonsList_department__KMRd2">
+
+
+Сайт Магнит
+Карточка товара в поиске
+<div data-v-e5374dff="" data-v-c1240bb8="" class="pl-stack-item pl-stack-item_size-6 pl-stack-item_size-4-m pl-stack-item_size-3-ml unit-catalog__stack-item"><article data-v-e7f5403e="" data-v-c1240bb8="" class="unit-catalog-product-preview show-ratings"><a title="Молоко Домик в деревне Безлактозное ультрапастеризованное 1.8% 950г" class="pl-hover-base" href="/product/1000568396-domik_v_derevne_moloko_bezlakt_ultrapast_1_8_950g_t_pak?shopCode=729895&amp;shopType=1" disabled="false" viewtransition="false"><div data-v-e7f5403e="" class="unit-catalog-product-preview-gallery"><div data-v-e7f5403e="" class="unit-catalog-product-preview-image"><img data-v-e7f5403e="" src="https://images-foodtech.magnit.ru/WPK5cfEjSIDDCsvnAIFTUxHZWj3NHtnhUnf-UGuOMeo/rs:fit:416:416/plain/s3://img-dostavka/uf/1fb/1fba4616b91ee0828b58575d52725708/d66fa3bd7f73280b548c42436fcf2d13.jpeg@webp" alt="Молоко Домик в деревне Безлактозное ультрапастеризованное 1.8% 950г" loading="lazy">
+
+Цена
+<div data-v-e7f5403e="" class="unit-catalog-product-preview-prices unit-catalog-product-preview-prices_ordinary"><div data-v-e7f5403e="" class="unit-catalog-product-preview-prices__top-row"><span data-v-2a72d049="" data-v-e7f5403e="" class="pl-text unit-catalog-product-preview-prices__regular" style="--_f: var(--pl-font-title-small); --_f-l: var(--pl-font-title-medium); --_c: var(--pl-text-primary);"><span data-v-e7f5403e="">139.99&hairsp;₽</span></span><!----></div><!----></div>
+Цена с акцией
+<div data-v-e7f5403e="" class="unit-catalog-product-preview-prices unit-catalog-product-preview-prices_ordinary"><div data-v-e7f5403e="" class="unit-catalog-product-preview-prices__top-row"><span data-v-2a72d049="" data-v-e7f5403e="" class="pl-text unit-catalog-product-preview-prices__regular" style="--_f: var(--pl-font-title-small); --_f-l: var(--pl-font-title-medium); --_c: var(--pl-text-primary);"><span data-v-e7f5403e="">53.99&hairsp;₽</span></span><div data-v-20bfca8c="" data-v-e7f5403e="" class="pl-label pl-label_discount pl-label_size-xs pl-label_size-s-l catalog-badge unit-catalog-product-preview__discount" style="background: var(--u-catalog-product-card-discount-background); color: var(--u-catalog-product-card-discount-color);"><div data-v-20bfca8c="" class="pl-label__content"><!----> -33% <!----></div><!----></div></div><span data-v-2a72d049="" data-v-e7f5403e="" class="pl-text unit-catalog-product-preview-prices__sale" style="--_f: var(--pl-font-caption-small-regular-low); --_f-l: var(--pl-font-body-small-regular-low); --_c: var(--pl-text-secondary);"><span data-v-e7f5403e="">81.29&hairsp;₽</span></span></div>
+Вес
+<div data-v-2a72d049="" data-v-e7f5403e="" class="pl-text unit-catalog-product-preview-title" style="--_f: var(--pl-font-body-large-regular); --_c: var(--pl-text-primary);">Молоко Нижняя Тавда коровье пастеризованное 2.5% 800мл</div>
+<div data-v-2a72d049="" data-v-e7f5403e="" class="pl-text unit-catalog-product-preview-title" style="--_f: var(--pl-font-body-large-regular); --_c: var(--pl-text-primary);">Молоко Домик в деревне Безлактозное ультрапастеризованное 1.8% 950г</div>
+<div data-v-2a72d049="" data-v-e7f5403e="" class="pl-text unit-catalog-product-preview-title" style="--_f: var(--pl-font-body-large-regular); --_c: var(--pl-text-primary);">Яйцо столовое C0 10шт</div>
+
+элементы при изменении которых нужно обновлять цены за единицу
+<div data-v-c1240bb8="" data-v-bba4620f="" class="unit-catalog" data-test-id="unit-catalog">
