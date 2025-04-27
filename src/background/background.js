@@ -4,35 +4,35 @@ const api = (typeof browser !== "undefined") ? browser : chrome;
 const siteMap = [
     {
         match: ["*://*.auchan.ru/*"],
-        script: "content/auchan.js"
+        script: "src/content/auchan.js"
     },
     {
         match: ["*://market-delivery.yandex.ru/*"],
-        script: "content/delivery_club.js"
+        script: "src/content/delivery_club.js"
     },
     {
         match: ["*://eda.yandex.ru/*"],
-        script: "content/delivery_club.js"
+        script: "src/content/delivery_club.js"
     },
     {
         match: ["*://kuper.ru/*"],
-        script: "content/kuper.js"
+        script: "src/content/kuper.js"
     },
     {
         match: ["*://magnit.ru/*"],
-        script: "content/magnit.js"
+        script: "src/content/magnit.js"
     },
     {
         match: ["*://*.perekrestok.ru/*"],
-        script: "content/perekrestok.js"
+        script: "src/content/perekrestok.js"
     },
     {
         match: ["*://5ka.ru/*"],
-        script: "content/pyaterochka.js"
+        script: "src/content/pyaterochka.js"
     },
     {
         match: ["*://samokat.ru/*"],
-        script: "content/samokat.js"
+        script: "src/content/samokat.js"
     }
 ];
 
