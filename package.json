@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:chrome": "vite build --mode=ch1rome",
+    "build:chrome": "vite build --mode=chrome",
     "build:firefox": "vite build --mode=firefox",
     "pack:firefox": "vite build --mode=firefox && web-ext build --source-dir=dist/firefox --artifacts-dir=ext-dist --overwrite-dest --filename=zaKilo-firefox-{version}.zip",
     "pack:chrome": "vite build --mode=chrome && web-ext build --source-dir=dist/chrome --artifacts-dir=ext-dist --overwrite-dest --filename=zaKilo-chrome-{version}.zip"
