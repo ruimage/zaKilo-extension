@@ -1,0 +1,9 @@
+{
+  "permissions": [
+    "tabs",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "background/background.js"
+  }
+}

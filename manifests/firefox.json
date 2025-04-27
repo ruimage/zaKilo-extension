@@ -1,0 +1,19 @@
+{
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "scripting"
+  ],
+  "background": {
+    "scripts": [
+      "background/background.js"
+    ],
+    "persistent": false
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "zakilo@syrnikovpavel.ru",
+      "strict_min_version": "109.0"
+    }
+  }
+}
