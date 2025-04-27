@@ -1,0 +1,23 @@
+{
+  "name": "zakilo-extension",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:chrome": "vite build --mode=ch1rome",
+    "build:firefox": "vite build --mode=firefox",
+    "pack:firefox": "vite build --mode=firefox && web-ext build --source-dir=dist/firefox --artifacts-dir=ext-dist --overwrite-dest --filename=zaKilo-firefox-{version}.zip",
+    "pack:chrome": "vite build --mode=chrome && web-ext build --source-dir=dist/chrome --artifacts-dir=ext-dist --overwrite-dest --filename=zaKilo-chrome-{version}.zip"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "lodash-es": "^4.17.21",
+    "vite-plugin-web-extension": "^4.4.3",
+    "web-ext": "^8.6.0"
+  },
+  "dependencies": {
+    "convert-units": "^2.3.4",
+    "vite": "^6.3.3"
+  }
+}
