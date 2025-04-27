@@ -8,7 +8,7 @@
    ```bash
    git clone https://github.com/ruimage/zaKilo-extension.git
    cd zaKilo-extension
-   npm install
+   npm ci
    ```
 
 3. **Сборка dev-пакетов**:
