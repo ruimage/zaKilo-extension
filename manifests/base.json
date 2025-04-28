@@ -5,6 +5,7 @@
   "description": "Всё по справедливой цене: сравнивайте стоимость за единицу прямо в каталоге доставки",
   "permissions": ["tabs", "scripting"],
   "host_permissions": [
+    "*://*.ozon.ru/*",
     "*://*.auchan.ru/*",
     "*://market-delivery.yandex.ru/*",
     "*://eda.yandex.ru/*",

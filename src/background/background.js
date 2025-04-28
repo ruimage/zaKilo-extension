@@ -2,6 +2,10 @@ const api = typeof browser !== "undefined" ? browser : chrome;
 
 const siteMap = [
   {
+    match: ["*://*.ozon.ru/*"],
+    script: "src/content/ozon.js",
+  },
+  {
     match: ["*://*.auchan.ru/*"],
     script: "src/content/auchan.js",
   },

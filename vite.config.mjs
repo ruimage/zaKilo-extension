@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => {
           "src/content/delivery_club.js",
           "src/content/kuper.js",
           "src/content/magnit.js",
+          "src/content/ozon.js",
           "src/content/perekrestok.js",
           "src/content/pyaterochka.js",
           "src/content/samokat.js",

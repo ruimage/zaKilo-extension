@@ -1,8 +1,8 @@
-class AuchanProductCard {
-  // селекторы и константы для «Ашан»
-  static CARD_SELECTOR = "div[class*=styles_productCard][class*=styles_catalogListPage_item]";
-  static PRICE_SEL = "[class*=styles_productCardContentPanel_price]";
-  static NAME_SEL = "[class*=styles_productCardContentPanel_name]";
+class OzonProductCard {
+  // селекторы и константы для «Ozon»
+  static CARD_SELECTOR = "div.tile-root";
+  static PRICE_SEL = "span.tsHeadline500Medium ";
+  static NAME_SEL = "span.tsBody500Medium";
   static UNIT_PRICE_SEL = '[data-testid="unit-price"]';
 
   static mutationObserver = null;
@@ -10,32 +10,32 @@ class AuchanProductCard {
   static runAllInterval = null;
 
   static init() {
-    AuchanProductCard.log("=== INIT AuchanProductCard ===");
-    AuchanProductCard.runAll("init");
-    AuchanProductCard.watchMutations();
-    AuchanProductCard.setupScrollListener();
-    AuchanProductCard.setupRunAllInterval(5000);
+    OzonProductCard.log("=== INIT OzonProductCard ===");
+    OzonProductCard.runAll("init");
+    OzonProductCard.watchMutations();
+    OzonProductCard.setupScrollListener();
+    OzonProductCard.setupRunAllInterval(5000);
   }
 
   static log(...args) {
-    console.log("[auchan]", ...args);
+    console.log("[ozon]", ...args);
   }
 
   static runAll(source) {
-    const cards = Array.from(document.querySelectorAll(AuchanProductCard.CARD_SELECTOR));
-    AuchanProductCard.log(`${source}: found cards=${cards.length}`);
+    const cards = Array.from(document.querySelectorAll(OzonProductCard.CARD_SELECTOR));
+    OzonProductCard.log(`${source}: found cards=${cards.length}`);
     cards
       .filter(
         (el) =>
-          el.querySelector(AuchanProductCard.PRICE_SEL) &&
-          el.querySelector(AuchanProductCard.NAME_SEL) &&
-          !el.querySelector(AuchanProductCard.UNIT_PRICE_SEL),
+          el.querySelector(OzonProductCard.PRICE_SEL) &&
+          el.querySelector(OzonProductCard.NAME_SEL) &&
+          !el.querySelector(OzonProductCard.UNIT_PRICE_SEL),
       )
-      .forEach((el) => AuchanProductCard.tryProcess(el, source));
+      .forEach((el) => OzonProductCard.tryProcess(el, source));
   }
 
   static tryProcess(el, source) {
-    const inst = new AuchanProductCard(el);
+    const inst = new OzonProductCard(el);
     inst.log(`tryProcess [${source}]`);
     try {
       inst.process();
@@ -51,34 +51,34 @@ class AuchanProductCard {
       muts.forEach((m) => {
         m.addedNodes.forEach((n) => {
           if (!(n instanceof HTMLElement)) return;
-          if (n.matches(AuchanProductCard.CARD_SELECTOR)) {
-            AuchanProductCard.log("MO: new card", n);
-            AuchanProductCard.tryProcess(n, "MO");
+          if (n.matches(OzonProductCard.CARD_SELECTOR)) {
+            OzonProductCard.log("MO: new card", n);
+            OzonProductCard.tryProcess(n, "MO");
           }
-          n.querySelectorAll?.(AuchanProductCard.CARD_SELECTOR).forEach((el) => {
-            AuchanProductCard.log("MO: nested card", el);
-            AuchanProductCard.tryProcess(el, "MO");
+          n.querySelectorAll?.(OzonProductCard.CARD_SELECTOR).forEach((el) => {
+            OzonProductCard.log("MO: nested card", el);
+            OzonProductCard.tryProcess(el, "MO");
           });
         });
       });
     });
     mo.observe(container, { childList: true, subtree: true });
-    AuchanProductCard.mutationObserver = mo;
-    AuchanProductCard.log("watchMutations: started");
+    OzonProductCard.mutationObserver = mo;
+    OzonProductCard.log("watchMutations: started");
   }
 
   static setupScrollListener() {
-    const handler = AuchanProductCard.debounce(() => {
-      AuchanProductCard.runAll("scroll");
+    const handler = OzonProductCard.debounce(() => {
+      OzonProductCard.runAll("scroll");
     }, 300);
     window.addEventListener("scroll", handler, { passive: true });
-    AuchanProductCard.scrollHandler = handler;
-    AuchanProductCard.log("scroll listener: started");
+    OzonProductCard.scrollHandler = handler;
+    OzonProductCard.log("scroll listener: started");
   }
 
   static setupRunAllInterval(ms) {
-    AuchanProductCard.runAllInterval = setInterval(() => AuchanProductCard.runAll("interval"), ms);
-    AuchanProductCard.log(`interval runAll: every ${ms}ms`);
+    OzonProductCard.runAllInterval = setInterval(() => OzonProductCard.runAll("interval"), ms);
+    OzonProductCard.log(`interval runAll: every ${ms}ms`);
   }
 
   static debounce(fn, wait) {
@@ -99,8 +99,8 @@ class AuchanProductCard {
   }
 
   process() {
-    const priceEl = this.cardEl.querySelector(AuchanProductCard.PRICE_SEL);
-    const nameEl = this.cardEl.querySelector(AuchanProductCard.NAME_SEL);
+    const priceEl = this.cardEl.querySelector(OzonProductCard.PRICE_SEL);
+    const nameEl = this.cardEl.querySelector(OzonProductCard.NAME_SEL);
     if (!priceEl || !nameEl) {
       throw new Error("priceEl или nameEl не найдены");
     }
@@ -127,7 +127,7 @@ class AuchanProductCard {
     const unitPrice = Math.ceil(price * multiplier);
     this.log("unitPrice=", unitPrice);
 
-    wrapper.querySelectorAll(AuchanProductCard.UNIT_PRICE_SEL).forEach((el) => el.remove());
+    wrapper.querySelectorAll(OzonProductCard.UNIT_PRICE_SEL).forEach((el) => el.remove());
 
     const span = document.createElement("span");
     span.setAttribute("data-testid", "unit-price");
@@ -186,8 +186,8 @@ class AuchanProductCard {
 // автозапуск
 (function boot() {
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => AuchanProductCard.init());
+    document.addEventListener("DOMContentLoaded", () => OzonProductCard.init());
   } else {
-    AuchanProductCard.init();
+    OzonProductCard.init();
   }
 })();
