@@ -3,10 +3,7 @@
   "version": "1.0.0",
   "manifest_version": 3,
   "description": "Всё по справедливой цене: сравнивайте стоимость за единицу прямо в каталоге доставки",
-  "permissions": [
-    "tabs",
-    "scripting"
-  ],
+  "permissions": ["tabs", "scripting"],
   "host_permissions": [
     "*://*.auchan.ru/*",
     "*://market-delivery.yandex.ru/*",

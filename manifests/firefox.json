@@ -1,13 +1,7 @@
 {
-  "permissions": [
-    "tabs",
-    "activeTab",
-    "scripting"
-  ],
+  "permissions": ["tabs", "activeTab", "scripting"],
   "background": {
-    "scripts": [
-      "src/background/background.js"
-    ],
+    "scripts": ["src/background/background.js"],
     "persistent": false
   },
   "browser_specific_settings": {

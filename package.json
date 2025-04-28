@@ -13,6 +13,7 @@
   "license": "ISC",
   "devDependencies": {
     "lodash-es": "^4.17.21",
+    "prettier": "3.5.3",
     "vite-plugin-web-extension": "^4.4.3",
     "web-ext": "^8.6.0"
   },
