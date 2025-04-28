@@ -10,14 +10,8 @@ class ProductCard {
   }
 
   static runAll() {
-    const cards = document.querySelectorAll(
-      '[data-qa^="product-card-"], .productFilterGrid_cardContainer__oyUJZ',
-    );
-    console.log(
-      "economist:",
-      "стартовая инициализация, найдено карточек:",
-      cards.length,
-    );
+    const cards = document.querySelectorAll('[data-qa^="product-card-"], .productFilterGrid_cardContainer__oyUJZ');
+    console.log("economist:", "стартовая инициализация, найдено карточек:", cards.length);
     cards.forEach((el) => ProductCard._tryProcess(el));
   }
 
@@ -28,42 +22,26 @@ class ProductCard {
       ProductCard.processed.add(el);
       ProductCard.failed.delete(el);
     } catch (err) {
-      console.error(
-        "economist:",
-        "не удалось обработать, добавляем в очередь повторов",
-        el,
-        err,
-      );
+      console.error("economist:", "не удалось обработать, добавляем в очередь повторов", el, err);
       ProductCard.failed.add(el);
     }
   }
 
   static watchMutations() {
-    const container = document.querySelector(
-      ".chakra-stack.catalogPage_container__zsZjW",
-    );
+    const container = document.querySelector(".chakra-stack.catalogPage_container__zsZjW");
     if (!container) {
-      console.error(
-        "economist:",
-        "контейнер каталога не найден для наблюдения",
-      );
+      console.error("economist:", "контейнер каталога не найден для наблюдения");
       return;
     }
     const mo = new MutationObserver((muts) => {
       muts.forEach((m) => {
         m.addedNodes.forEach((n) => {
           if (!(n instanceof HTMLElement)) return;
-          if (
-            n.matches(
-              '[data-qa^="product-card-"], .productFilterGrid_cardContainer__oyUJZ',
-            )
-          ) {
+          if (n.matches('[data-qa^="product-card-"], .productFilterGrid_cardContainer__oyUJZ')) {
             console.log("economist:", "обнаружена новая карточка");
             ProductCard._tryProcess(n);
           }
-          n.querySelectorAll?.(
-            '[data-qa^="product-card-"], .productFilterGrid_cardContainer__oyUJZ',
-          ).forEach((el) => {
+          n.querySelectorAll?.('[data-qa^="product-card-"], .productFilterGrid_cardContainer__oyUJZ').forEach((el) => {
             console.log("economist:", "обнаружена вложенная карточка");
             ProductCard._tryProcess(el);
           });
@@ -77,19 +55,13 @@ class ProductCard {
   static startRetryLoop(interval = 5000) {
     setInterval(() => {
       if (ProductCard.failed.size === 0) return;
-      console.log(
-        `economist: повторная попытка обработки ${ProductCard.failed.size} карточек…`,
-      );
+      console.log(`economist: повторная попытка обработки ${ProductCard.failed.size} карточек…`);
       [...ProductCard.failed].forEach((el) => ProductCard._tryProcess(el));
     }, interval);
   }
 
   process() {
-    console.log(
-      this.logPrefix,
-      "начинаем process()",
-      this.cardEl.dataset.qa || this.cardEl.id,
-    );
+    console.log(this.logPrefix, "начинаем process()", this.cardEl.dataset.qa || this.cardEl.id);
 
     this._applyFontSizeToExistingPrice();
 
@@ -137,9 +109,7 @@ class ProductCard {
 
   _parseQuantity(input) {
     const s = input.trim().toLowerCase().replace(/,/g, ".");
-    const mulMatch = s.match(
-      /^(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*([^\s\d]+)/i,
-    );
+    const mulMatch = s.match(/^(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*([^\s\d]+)/i);
     let total;
     let unit;
     if (mulMatch) {
@@ -174,11 +144,8 @@ class ProductCard {
   _getEffectivePrice() {
     const pc = this.cardEl.querySelector(this.priceSel);
     if (!pc) throw new Error("price container не найден");
-    const disc = pc.querySelector(
-      ".priceContainer_discountInternalContainer__MhRsi",
-    );
-    const block =
-      disc || pc.querySelector(".priceContainer_totalContainer__rvZ0b");
+    const disc = pc.querySelector(".priceContainer_discountInternalContainer__MhRsi");
+    const block = disc || pc.querySelector(".priceContainer_totalContainer__rvZ0b");
     if (!block) throw new Error("блок с цифрами цены не найден");
     const ps = block.querySelectorAll("p");
     const whole = parseInt(ps[0]?.textContent, 10);

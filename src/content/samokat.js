@@ -21,9 +21,7 @@ class SamokatProductCard {
   }
 
   static runAll(source) {
-    const cards = Array.from(
-      document.querySelectorAll(SamokatProductCard.CARD_SELECTOR),
-    );
+    const cards = Array.from(document.querySelectorAll(SamokatProductCard.CARD_SELECTOR));
     SamokatProductCard.log(`${source}: найдено карточек=${cards.length}`);
     cards
       .filter(
@@ -47,22 +45,16 @@ class SamokatProductCard {
   }
 
   static watchMutations() {
-    const container = document.querySelector(
-      SamokatProductCard.OBSERVE_CONTAINER,
-    );
-    if (!container)
-      return SamokatProductCard.log("watchMutations: контейнер не найден");
+    const container = document.querySelector(SamokatProductCard.OBSERVE_CONTAINER);
+    if (!container) return SamokatProductCard.log("watchMutations: контейнер не найден");
     const mo = new MutationObserver((mutations) => {
       for (const m of mutations) {
         for (const node of m.addedNodes) {
           if (!(node instanceof HTMLElement)) continue;
-          if (node.matches(SamokatProductCard.CARD_SELECTOR))
-            SamokatProductCard.tryProcess(node, "watchMutations");
+          if (node.matches(SamokatProductCard.CARD_SELECTOR)) SamokatProductCard.tryProcess(node, "watchMutations");
           node
             .querySelectorAll?.(SamokatProductCard.CARD_SELECTOR)
-            .forEach((el) =>
-              SamokatProductCard.tryProcess(el, "watchMutations"),
-            );
+            .forEach((el) => SamokatProductCard.tryProcess(el, "watchMutations"));
         }
       }
     });
@@ -71,19 +63,13 @@ class SamokatProductCard {
   }
 
   static setupScrollListener() {
-    const handler = SamokatProductCard.debounce(
-      () => SamokatProductCard.runAll("scroll"),
-      300,
-    );
+    const handler = SamokatProductCard.debounce(() => SamokatProductCard.runAll("scroll"), 300);
     window.addEventListener("scroll", handler, { passive: true });
     SamokatProductCard.scrollHandler = handler;
   }
 
   static setupRunAllInterval(ms) {
-    SamokatProductCard.runAllInterval = setInterval(
-      () => SamokatProductCard.runAll("interval"),
-      ms,
-    );
+    SamokatProductCard.runAllInterval = setInterval(() => SamokatProductCard.runAll("interval"), ms);
   }
 
   static debounce(fn, wait) {
@@ -102,22 +88,16 @@ class SamokatProductCard {
     const priceEl = this.cardEl.querySelector(SamokatProductCard.PRICE_NEW_SEL);
     const weightEl = this.cardEl.querySelector(SamokatProductCard.WEIGHT_SEL);
     const details = this.cardEl.querySelector(SamokatProductCard.DETAILS_SEL);
-    if (!priceEl || !weightEl || !details)
-      throw new Error("Не найдены необходимые элементы");
+    if (!priceEl || !weightEl || !details) throw new Error("Не найдены необходимые элементы");
 
     const price = this._parsePriceText(priceEl.textContent);
-    const { name, multiplier } = this._parseQuantity(
-      weightEl.textContent.trim(),
-    );
+    const { name, multiplier } = this._parseQuantity(weightEl.textContent.trim());
     const rawUnit = price * multiplier;
-    const unitPrice =
-      rawUnit < 20 ? Math.round(rawUnit * 100) / 100 : Math.ceil(rawUnit);
+    const unitPrice = rawUnit < 20 ? Math.round(rawUnit * 100) / 100 : Math.ceil(rawUnit);
     const displayPrice = rawUnit < 20 ? unitPrice.toFixed(2) : unitPrice;
 
     // Удаляем старые
-    details
-      .querySelectorAll(SamokatProductCard.UNIT_PRICE_SEL)
-      .forEach((e) => e.remove());
+    details.querySelectorAll(SamokatProductCard.UNIT_PRICE_SEL).forEach((e) => e.remove());
 
     const span = document.createElement("span");
     span.setAttribute("data-testid", "unit-price");
@@ -145,9 +125,7 @@ class SamokatProductCard {
     // Заменяем запятые на точки и удаляем лишние пробелы
     const s = input.toLowerCase().replace(/,/g, ".").trim();
     // Формат NxM (например, "6x45 г" или "6×45 г")
-    const mulMatch = s.match(
-      /^(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*([^\s\d]+)$/i,
-    );
+    const mulMatch = s.match(/^(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*([^\s\d]+)$/i);
     let total;
     let unit;
     if (mulMatch) {
@@ -184,9 +162,6 @@ class SamokatProductCard {
 
 // Автозапуск
 (function () {
-  if (document.readyState === "loading")
-    document.addEventListener("DOMContentLoaded", () =>
-      SamokatProductCard.init(),
-    );
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => SamokatProductCard.init());
   else SamokatProductCard.init();
 })();

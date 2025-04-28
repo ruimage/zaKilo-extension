@@ -1,7 +1,6 @@
 class MagnitProductCard {
   static CARD_SELECTOR = ".unit-catalog-product-preview";
-  static PRICE_NORMAL_SEL =
-    ".unit-catalog-product-preview-prices__regular span";
+  static PRICE_NORMAL_SEL = ".unit-catalog-product-preview-prices__regular span";
   static PRICE_SALE_SEL = ".unit-catalog-product-preview-prices__sale span";
   static TITLE_SEL = ".unit-catalog-product-preview-title";
   static UNIT_PRICE_SEL = '[data-testid="unit-price"]';
@@ -19,17 +18,14 @@ class MagnitProductCard {
   }
 
   static runAll(source) {
-    const cards = Array.from(
-      document.querySelectorAll(MagnitProductCard.CARD_SELECTOR),
-    );
+    const cards = Array.from(document.querySelectorAll(MagnitProductCard.CARD_SELECTOR));
     MagnitProductCard.log(source + ": найдено карточек=" + cards.length);
     cards
       .filter(
         (el) =>
           !el.querySelector(MagnitProductCard.UNIT_PRICE_SEL) &&
           el.querySelector(MagnitProductCard.TITLE_SEL) &&
-          (el.querySelector(MagnitProductCard.PRICE_NORMAL_SEL) ||
-            el.querySelector(MagnitProductCard.PRICE_SALE_SEL)),
+          (el.querySelector(MagnitProductCard.PRICE_NORMAL_SEL) || el.querySelector(MagnitProductCard.PRICE_SALE_SEL)),
       )
       .forEach((el) => MagnitProductCard.tryProcess(el, source));
   }
@@ -45,17 +41,13 @@ class MagnitProductCard {
   }
 
   static watchMutations() {
-    const container = document.querySelector(
-      MagnitProductCard.OBSERVE_CONTAINER,
-    );
-    if (!container)
-      return MagnitProductCard.log("watchMutations: контейнер не найден");
+    const container = document.querySelector(MagnitProductCard.OBSERVE_CONTAINER);
+    if (!container) return MagnitProductCard.log("watchMutations: контейнер не найден");
     const mo = new MutationObserver((muts) => {
       muts.forEach((m) => {
         m.addedNodes.forEach((n) => {
           if (!(n instanceof HTMLElement)) return;
-          if (n.matches(MagnitProductCard.CARD_SELECTOR))
-            MagnitProductCard.tryProcess(n, "watchMutations");
+          if (n.matches(MagnitProductCard.CARD_SELECTOR)) MagnitProductCard.tryProcess(n, "watchMutations");
           n.querySelectorAll(MagnitProductCard.CARD_SELECTOR).forEach((el) =>
             MagnitProductCard.tryProcess(el, "watchMutations"),
           );
@@ -79,9 +71,7 @@ class MagnitProductCard {
     const title = titleEl ? titleEl.textContent.trim() : "";
     const { unitLabel, multiplier } = this._parseQuantityFromName(title);
 
-    const normEl = this.cardEl.querySelector(
-      MagnitProductCard.PRICE_NORMAL_SEL,
-    );
+    const normEl = this.cardEl.querySelector(MagnitProductCard.PRICE_NORMAL_SEL);
     if (!normEl) throw new Error("Цена не найдена");
     const priceTxtElement = normEl.textContent;
     const price = this._parsePriceText(priceTxtElement);
@@ -90,13 +80,9 @@ class MagnitProductCard {
     const unitValue = raw < 20 ? Math.round(raw * 100) / 100 : Math.ceil(raw);
     const display = raw < 20 ? unitValue.toFixed(2) : unitValue;
 
-    const priceContainer = this.cardEl.querySelector(
-      ".unit-catalog-product-preview-prices",
-    );
+    const priceContainer = this.cardEl.querySelector(".unit-catalog-product-preview-prices");
     if (!priceContainer) throw new Error("price container not found");
-    priceContainer
-      .querySelectorAll(MagnitProductCard.UNIT_PRICE_SEL)
-      .forEach((e) => e.remove());
+    priceContainer.querySelectorAll(MagnitProductCard.UNIT_PRICE_SEL).forEach((e) => e.remove());
 
     const span = document.createElement("span");
     span.setAttribute("data-testid", "unit-price");
@@ -150,9 +136,6 @@ class MagnitProductCard {
 
 // Автозапуск
 (function () {
-  if (document.readyState === "loading")
-    document.addEventListener("DOMContentLoaded", () =>
-      MagnitProductCard.init(),
-    );
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => MagnitProductCard.init());
   else MagnitProductCard.init();
 })();

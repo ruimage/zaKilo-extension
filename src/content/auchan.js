@@ -1,7 +1,6 @@
 class AuchanProductCard {
   // селекторы и константы для «Ашан»
-  static CARD_SELECTOR =
-    "div.styles_productCard__Qy_9h.styles_catalogListPage_item__NAAw9";
+  static CARD_SELECTOR = "div.styles_productCard__Qy_9h.styles_catalogListPage_item__NAAw9";
   static PRICE_SEL = ".styles_productCardContentPanel_price__MqlWB";
   static NAME_SEL = ".styles_productCardContentPanel_name__072Y7";
   static UNIT_PRICE_SEL = '[data-testid="unit-price"]';
@@ -23,9 +22,7 @@ class AuchanProductCard {
   }
 
   static runAll(source) {
-    const cards = Array.from(
-      document.querySelectorAll(AuchanProductCard.CARD_SELECTOR),
-    );
+    const cards = Array.from(document.querySelectorAll(AuchanProductCard.CARD_SELECTOR));
     AuchanProductCard.log(`${source}: found cards=${cards.length}`);
     cards
       .filter(
@@ -58,12 +55,10 @@ class AuchanProductCard {
             AuchanProductCard.log("MO: new card", n);
             AuchanProductCard.tryProcess(n, "MO");
           }
-          n.querySelectorAll?.(AuchanProductCard.CARD_SELECTOR).forEach(
-            (el) => {
-              AuchanProductCard.log("MO: nested card", el);
-              AuchanProductCard.tryProcess(el, "MO");
-            },
-          );
+          n.querySelectorAll?.(AuchanProductCard.CARD_SELECTOR).forEach((el) => {
+            AuchanProductCard.log("MO: nested card", el);
+            AuchanProductCard.tryProcess(el, "MO");
+          });
         });
       });
     });
@@ -82,10 +77,7 @@ class AuchanProductCard {
   }
 
   static setupRunAllInterval(ms) {
-    AuchanProductCard.runAllInterval = setInterval(
-      () => AuchanProductCard.runAll("interval"),
-      ms,
-    );
+    AuchanProductCard.runAllInterval = setInterval(() => AuchanProductCard.runAll("interval"), ms);
     AuchanProductCard.log(`interval runAll: every ${ms}ms`);
   }
 
@@ -135,9 +127,7 @@ class AuchanProductCard {
     const unitPrice = Math.ceil(price * multiplier);
     this.log("unitPrice=", unitPrice);
 
-    wrapper
-      .querySelectorAll(AuchanProductCard.UNIT_PRICE_SEL)
-      .forEach((el) => el.remove());
+    wrapper.querySelectorAll(AuchanProductCard.UNIT_PRICE_SEL).forEach((el) => el.remove());
 
     const span = document.createElement("span");
     span.setAttribute("data-testid", "unit-price");
@@ -196,9 +186,7 @@ class AuchanProductCard {
 // автозапуск
 (function boot() {
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () =>
-      AuchanProductCard.init(),
-    );
+    document.addEventListener("DOMContentLoaded", () => AuchanProductCard.init());
   } else {
     AuchanProductCard.init();
   }

@@ -26,9 +26,7 @@ class DeliveryProductCard {
   }
 
   static runAll(source) {
-    const nodes = Array.from(
-      document.querySelectorAll(DeliveryProductCard.CARD_SELECTOR),
-    );
+    const nodes = Array.from(document.querySelectorAll(DeliveryProductCard.CARD_SELECTOR));
     DeliveryProductCard.log(`${source}: найдено узлов=${nodes.length}`);
     const toProcess = nodes.filter(
       (el) =>
@@ -36,9 +34,7 @@ class DeliveryProductCard {
         el.querySelector(DeliveryProductCard.WEIGHT_SEL) &&
         !el.querySelector(DeliveryProductCard.UNIT_PRICE_SEL),
     );
-    DeliveryProductCard.log(
-      `${source}: карточек для обработки=${toProcess.length}`,
-    );
+    DeliveryProductCard.log(`${source}: карточек для обработки=${toProcess.length}`);
     toProcess.forEach((el) => DeliveryProductCard.tryProcess(el, source));
   }
 
@@ -55,9 +51,7 @@ class DeliveryProductCard {
 
   static setupMutationObserver() {
     const containers = Array.from(
-      document.querySelectorAll(
-        ".DesktopComponentsSlidedCarousel_listContainer, .DesktopGoodsList_list",
-      ),
+      document.querySelectorAll(".DesktopComponentsSlidedCarousel_listContainer, .DesktopGoodsList_list"),
     );
     if (!containers.length) {
       DeliveryProductCard.log("setupMutationObserver: контейнеры не найдены");
@@ -71,18 +65,14 @@ class DeliveryProductCard {
             DeliveryProductCard.log("MO: новая карточка", n);
             DeliveryProductCard.tryProcess(n, "MO");
           }
-          n.querySelectorAll?.(DeliveryProductCard.CARD_SELECTOR).forEach(
-            (el) => {
-              DeliveryProductCard.log("MO: вложенная карточка", el);
-              DeliveryProductCard.tryProcess(el, "MO");
-            },
-          );
+          n.querySelectorAll?.(DeliveryProductCard.CARD_SELECTOR).forEach((el) => {
+            DeliveryProductCard.log("MO: вложенная карточка", el);
+            DeliveryProductCard.tryProcess(el, "MO");
+          });
         }),
       );
     });
-    containers.forEach((c) =>
-      mo.observe(c, { childList: true, subtree: true }),
-    );
+    containers.forEach((c) => mo.observe(c, { childList: true, subtree: true }));
     DeliveryProductCard.mutationObserver = mo;
     DeliveryProductCard.log("setupMutationObserver: запущен");
   }
@@ -97,10 +87,7 @@ class DeliveryProductCard {
   }
 
   static setupRunAllInterval(ms) {
-    DeliveryProductCard.runAllInterval = setInterval(
-      () => DeliveryProductCard.runAll("interval"),
-      ms,
-    );
+    DeliveryProductCard.runAllInterval = setInterval(() => DeliveryProductCard.runAll("interval"), ms);
     DeliveryProductCard.log(`setupRunAllInterval: каждые ${ms}ms`);
   }
 
@@ -145,9 +132,7 @@ class DeliveryProductCard {
     this.log("unitPriceRub (округл вверх)=", unitPriceRub);
 
     // удаляем старое
-    wrapper
-      .querySelectorAll(DeliveryProductCard.UNIT_PRICE_SEL)
-      .forEach((el) => el.remove());
+    wrapper.querySelectorAll(DeliveryProductCard.UNIT_PRICE_SEL).forEach((el) => el.remove());
 
     // создаём новый
     const span = document.createElement("span");
@@ -203,9 +188,7 @@ class DeliveryProductCard {
 // автозапуск
 (function boot() {
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () =>
-      DeliveryProductCard.init(),
-    );
+    document.addEventListener("DOMContentLoaded", () => DeliveryProductCard.init());
   } else {
     DeliveryProductCard.init();
   }

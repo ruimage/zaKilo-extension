@@ -7,11 +7,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       webExtension({
-        manifest: () =>
-          merge(
-            require("./manifests/base.json"),
-            require(`./manifests/${target}.json`),
-          ),
+        manifest: () => merge(require("./manifests/base.json"), require(`./manifests/${target}.json`)),
         additionalInputs: [
           "src/content/auchan.js",
           "src/content/delivery_club.js",

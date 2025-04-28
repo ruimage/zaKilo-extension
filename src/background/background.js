@@ -36,9 +36,7 @@ const siteMap = [
 ];
 
 function matches(url, patterns) {
-  return patterns.some((p) =>
-    new RegExp("^" + p.replace(/\*/g, ".*") + "$").test(url),
-  );
+  return patterns.some((p) => new RegExp("^" + p.replace(/\*/g, ".*") + "$").test(url));
 }
 
 // инъекция с учётом Firefox

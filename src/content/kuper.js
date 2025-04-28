@@ -23,9 +23,7 @@ class CooperProductCard {
   }
 
   static runAll(source) {
-    const cards = Array.from(
-      document.querySelectorAll(CooperProductCard.CARD_SELECTOR),
-    );
+    const cards = Array.from(document.querySelectorAll(CooperProductCard.CARD_SELECTOR));
     CooperProductCard.log(`${source}: найдено карточек=${cards.length}`);
     cards
       .filter(
@@ -48,17 +46,13 @@ class CooperProductCard {
   }
 
   static watchMutations() {
-    const container = document.querySelector(
-      CooperProductCard.OBSERVE_CONTAINER,
-    );
-    if (!container)
-      return CooperProductCard.log("watchMutations: контейнер не найден");
+    const container = document.querySelector(CooperProductCard.OBSERVE_CONTAINER);
+    if (!container) return CooperProductCard.log("watchMutations: контейнер не найден");
     const mo = new MutationObserver((muts) => {
       muts.forEach((m) => {
         m.addedNodes.forEach((n) => {
           if (!(n instanceof HTMLElement)) return;
-          if (n.matches(CooperProductCard.CARD_SELECTOR))
-            CooperProductCard.tryProcess(n, "watchMutations");
+          if (n.matches(CooperProductCard.CARD_SELECTOR)) CooperProductCard.tryProcess(n, "watchMutations");
           n.querySelectorAll(CooperProductCard.CARD_SELECTOR).forEach((el) =>
             CooperProductCard.tryProcess(el, "watchMutations"),
           );
@@ -87,15 +81,9 @@ class CooperProductCard {
     if (/₽\s*за\s*1\s*кг/i.test(volText)) {
       // выдираем число из текста volEl
       const match = volText.match(/([\d.,]+)\s*₽/);
-      if (!match)
-        throw new Error(
-          "Не удалось распарсить unit-цену из объёма: " + volText,
-        );
+      if (!match) throw new Error("Не удалось распарсить unit-цену из объёма: " + volText);
       const unitPrice = parseFloat(match[1].replace(",", "."));
-      const unitValue =
-        unitPrice < 20
-          ? Math.round(unitPrice * 100) / 100
-          : Math.ceil(unitPrice);
+      const unitValue = unitPrice < 20 ? Math.round(unitPrice * 100) / 100 : Math.ceil(unitPrice);
       const display = unitPrice < 20 ? unitValue.toFixed(2) : unitValue;
 
       const span = document.createElement("span");
@@ -111,22 +99,16 @@ class CooperProductCard {
         fontSize: "18px",
       });
 
-      const priceContainer = priceEl.closest(
-        ".ProductCard_price__LnWjd.CommonProductCard_price__XM9uA",
-      );
+      const priceContainer = priceEl.closest(".ProductCard_price__LnWjd.CommonProductCard_price__XM9uA");
       if (!priceContainer) throw new Error("Контейнер цены не найден");
-      priceContainer
-        .querySelectorAll(CooperProductCard.UNIT_PRICE_SEL)
-        .forEach((e) => e.remove());
+      priceContainer.querySelectorAll(CooperProductCard.UNIT_PRICE_SEL).forEach((e) => e.remove());
       priceContainer.appendChild(span);
       return;
     }
     // --- /Специальный кейс ---
 
     // Обычный расчёт по весу или объёму
-    const priceContainer = priceEl.closest(
-      ".ProductCard_price__LnWjd.CommonProductCard_price__XM9uA",
-    );
+    const priceContainer = priceEl.closest(".ProductCard_price__LnWjd.CommonProductCard_price__XM9uA");
     if (!priceContainer) throw new Error("Контейнер цены не найден");
 
     // Получаем числовую цену из priceEl
@@ -138,21 +120,13 @@ class CooperProductCard {
 
     // Получаем total и multiplier из текста volEl
     const { name, multiplier } = this._parseQuantity(volEl.textContent);
-    CooperProductCard.log(
-      "DEBUG multiplier:",
-      multiplier,
-      "base price:",
-      price,
-    );
+    CooperProductCard.log("DEBUG multiplier:", multiplier, "base price:", price);
 
     const rawUnit = price * multiplier;
-    const unitValue =
-      rawUnit < 20 ? Math.round(rawUnit * 100) / 100 : Math.ceil(rawUnit);
+    const unitValue = rawUnit < 20 ? Math.round(rawUnit * 100) / 100 : Math.ceil(rawUnit);
     const display = rawUnit < 20 ? unitValue.toFixed(2) : unitValue;
 
-    priceContainer
-      .querySelectorAll(CooperProductCard.UNIT_PRICE_SEL)
-      .forEach((e) => e.remove());
+    priceContainer.querySelectorAll(CooperProductCard.UNIT_PRICE_SEL).forEach((e) => e.remove());
 
     const span = document.createElement("span");
     span.setAttribute("data-testid", "unit-price");
@@ -178,9 +152,7 @@ class CooperProductCard {
 
   _parseQuantity(input) {
     const s = input.toLowerCase().replace(/,/g, ".").trim();
-    const mulMatch = s.match(
-      /^(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*([^\s\d]+)/i,
-    );
+    const mulMatch = s.match(/^(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*([^\s\d]+)/i);
     let total, unit;
     if (mulMatch) {
       total = parseFloat(mulMatch[1]) * parseFloat(mulMatch[2]);
@@ -214,9 +186,7 @@ class CooperProductCard {
 // Автозапуск
 (function () {
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () =>
-      CooperProductCard.init(),
-    );
+    document.addEventListener("DOMContentLoaded", () => CooperProductCard.init());
   } else {
     CooperProductCard.init();
   }

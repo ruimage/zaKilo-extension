@@ -23,9 +23,7 @@ class PerekrestokProductCard {
   }
 
   static runAll(source) {
-    const cards = Array.from(
-      document.querySelectorAll(PerekrestokProductCard.CARD_SELECTOR),
-    );
+    const cards = Array.from(document.querySelectorAll(PerekrestokProductCard.CARD_SELECTOR));
     PerekrestokProductCard.log(`${source}: найдено карточек=${cards.length}`);
     cards
       .filter(
@@ -49,9 +47,7 @@ class PerekrestokProductCard {
   }
 
   static watchMutations() {
-    const container = document.querySelector(
-      PerekrestokProductCard.OBSERVE_CONTAINER,
-    );
+    const container = document.querySelector(PerekrestokProductCard.OBSERVE_CONTAINER);
     if (!container) {
       PerekrestokProductCard.log("watchMutations: контейнер не найден");
       return;
@@ -64,15 +60,10 @@ class PerekrestokProductCard {
             PerekrestokProductCard.log("watchMutations: новая карточка", node);
             PerekrestokProductCard.tryProcess(node, "watchMutations");
           }
-          node
-            .querySelectorAll?.(PerekrestokProductCard.CARD_SELECTOR)
-            .forEach((el) => {
-              PerekrestokProductCard.log(
-                "watchMutations: вложенная карточка",
-                el,
-              );
-              PerekrestokProductCard.tryProcess(el, "watchMutations");
-            });
+          node.querySelectorAll?.(PerekrestokProductCard.CARD_SELECTOR).forEach((el) => {
+            PerekrestokProductCard.log("watchMutations: вложенная карточка", el);
+            PerekrestokProductCard.tryProcess(el, "watchMutations");
+          });
         }
       }
     });
@@ -91,10 +82,7 @@ class PerekrestokProductCard {
   }
 
   static setupRunAllInterval(ms) {
-    PerekrestokProductCard.runAllInterval = setInterval(
-      () => PerekrestokProductCard.runAll("interval"),
-      ms,
-    );
+    PerekrestokProductCard.runAllInterval = setInterval(() => PerekrestokProductCard.runAll("interval"), ms);
     PerekrestokProductCard.log(`setupRunAllInterval: каждые ${ms}ms`);
   }
 
@@ -116,12 +104,8 @@ class PerekrestokProductCard {
   }
 
   process() {
-    const priceNewEl = this.cardEl.querySelector(
-      PerekrestokProductCard.PRICE_NEW_SEL,
-    );
-    const weightEl = this.cardEl.querySelector(
-      PerekrestokProductCard.WEIGHT_SEL,
-    );
+    const priceNewEl = this.cardEl.querySelector(PerekrestokProductCard.PRICE_NEW_SEL);
+    const weightEl = this.cardEl.querySelector(PerekrestokProductCard.WEIGHT_SEL);
     if (!priceNewEl || !weightEl) {
       throw new Error("priceNewEl или weightEl не найдены");
     }
@@ -146,9 +130,7 @@ class PerekrestokProductCard {
     const unitRub = Math.ceil(price * multiplier);
     this.log("unitPriceRub=", unitRub);
 
-    wrapper
-      .querySelectorAll(PerekrestokProductCard.UNIT_PRICE_SEL)
-      .forEach((el) => el.remove());
+    wrapper.querySelectorAll(PerekrestokProductCard.UNIT_PRICE_SEL).forEach((el) => el.remove());
 
     const span = document.createElement("span");
     span.setAttribute("data-testid", "unit-price");
@@ -203,9 +185,7 @@ class PerekrestokProductCard {
 // Автозапуск
 (function boot() {
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () =>
-      PerekrestokProductCard.init(),
-    );
+    document.addEventListener("DOMContentLoaded", () => PerekrestokProductCard.init());
   } else {
     PerekrestokProductCard.init();
   }
