@@ -1,5 +1,5 @@
-import {BaseParser} from "../clases/BaseParser";
-import {AuchanStrategy} from "../clases/AuchanStrategy";
+import {BaseParser} from "../parsers/BaseParser";
+import {AuchanStrategy} from "../parsers/AuchanStrategy";
 
 
 (function boot() {

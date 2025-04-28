@@ -1,4 +1,7 @@
 export class BaseParser {
+
+    cards
+
     constructor(strategy) {
         this.strategy = strategy;
         this.scrollTimeoutId = null;
@@ -24,11 +27,16 @@ export class BaseParser {
         this.setupInterval(5000);
     }
 
-    runAll(source) {
+    _selectCards() {
         const selector = this.strategy.getCardSelector();
-        const cards = Array.from(document.querySelectorAll(selector));
-        this.strategy.log(`${source}: found ${cards.length} cards`);
-        cards
+        this.cards = Array.from(document.querySelectorAll(selector));
+        this.strategy.log(`found ${this.cards.length} cards`);
+    }
+
+    runAll(source) {
+        this._selectCards();
+        if (!this.cards.length) return;
+        this.cards
             .filter(el => this.strategy.shouldProcess(el))
             .forEach(el => this.tryProcess(el, source));
     }

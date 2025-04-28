@@ -1,9 +1,11 @@
-import {getUnitParsedWeight} from "../utils/covertValues";
 import {ParserStrategy} from "./ParserStrategy";
+import { getUnitParsedWeight } from "../utils/converters";
 
 export class AuchanStrategy extends ParserStrategy {
+
     constructor() {
         super();
+        this.strategyName = 'Auchan';
         this.selectors = {
             card: 'div.styles_productCard__Qy_9h.styles_catalogListPage_item__NAAw9',
             price: '.styles_productCardContentPanel_price__MqlWB',
@@ -12,41 +14,24 @@ export class AuchanStrategy extends ParserStrategy {
         };
     }
 
-    getCardSelector() {
-        return this.selectors.card;
-    }
 
-    shouldProcess(cardEl) {
+    shouldProcess(cardEl){
+        if (!this.selectors.price) throw new Error('price selector not defined');
         return cardEl.querySelector(this.selectors.price)
-            && cardEl.querySelector(this.selectors.name)
-            && !cardEl.querySelector(this.selectors.unitPrice);
+          && cardEl.querySelector(this.selectors.name)
+          && !cardEl.querySelector(this.selectors.unitPrice);
     }
 
-    process(cardEl) {
-        const priceText = cardEl.querySelector(this.selectors.price).textContent;
-        const price = this._parsePrice(priceText);
-
-        const nameText = cardEl.querySelector(this.selectors.name).textContent.trim();
-        const { unitLabel, multiplier } = this._parseQuantity(nameText);
-
-        const unitPrice = Math.ceil(price * multiplier);
-        this._renderUnitPrice(cardEl, unitPrice, unitLabel);
-    }
-
-    log(...args) {
-        console.log('[Auchan]', ...args);
-    }
-
-    _parsePrice(txt) {
-        const num = txt.replace(/[^\d,\.]/g, '').replace(',', '.');
+    _parsePrice(priceString) {
+        const num = priceString.replace(/[^\d,\.]/g, '').replace(',', '.');
         const v = parseFloat(num);
-        if (isNaN(v)) throw new Error('cannot parse price: ' + txt);
+        if (isNaN(v)) throw new Error('cannot parse price: ' + priceString);
         return v;
     }
 
-    _parseQuantity(text) {
+    _parseQuantity(volumeQuantityString) {
         const regex = /([\d.,]+)\s*(г|гр|кг|мл|л|шт)/i;
-        const match = text.match(regex);
+        const match = volumeQuantityString.match(regex);
         if (!match) return { unitLabel: '1 шт', multiplier: 1 };
         const value = parseFloat(match[1].replace(',', '.'));
         const unit  = match[2].toLowerCase();
