@@ -3,11 +3,7 @@
   "version": "1.0.0",
   "manifest_version": 3,
   "description": "Всё по справедливой цене: сравнивайте стоимость за единицу прямо в каталоге доставки",
-  "permissions": [
-    "tabs",
-    "activeTab",
-    "scripting"
-  ],
+  "permissions": ["tabs", "scripting"],
   "host_permissions": [
     "*://*.auchan.ru/*",
     "*://market-delivery.yandex.ru/*",
@@ -30,16 +26,10 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "background": {
-    "scripts": [
-      "background/background.js"
-    ],
-    "persistent": false
-  },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "zakilo@syrnikovpavel.ru",
-      "strict_min_version": "109.0"
+  "web_accessible_resources": [
+    {
+      "resources": ["src/content/*.js"],
+      "matches": ["<all_urls>"]
     }
-  }
+  ]
 }

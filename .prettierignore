@@ -1,0 +1,19 @@
+# игнорировать node_modules и сборку
+node_modules
+dist
+ext-dist
+build
+
+# игнорировать логи и кэш
+*.log
+.cache
+coverage
+
+# IDE и системные файлы
+    .vscode
+    .idea
+    .DS_Store
+
+# статичные ассеты (если не нужно форматировать)
+public/**/*.svg
+public/**/*.png
