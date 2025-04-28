@@ -7,11 +7,14 @@
     "build:chrome": "vite build --mode=chrome",
     "build:firefox": "vite build --mode=firefox",
     "pack:firefox": "vite build --mode=firefox && web-ext build --source-dir=dist/firefox --artifacts-dir=ext-dist --overwrite-dest --filename=zaKilo-firefox-{version}.zip",
-    "pack:chrome": "vite build --mode=chrome && web-ext build --source-dir=dist/chrome --artifacts-dir=ext-dist --overwrite-dest --filename=zaKilo-chrome-{version}.zip"
+    "pack:chrome": "vite build --mode=chrome && web-ext build --source-dir=dist/chrome --artifacts-dir=ext-dist --overwrite-dest --filename=zaKilo-chrome-{version}.zip",
+    "prepare": "husky"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.1",
     "lodash-es": "^4.17.21",
     "prettier": "3.5.3",
     "vite-plugin-web-extension": "^4.4.3",
@@ -20,5 +23,8 @@
   "dependencies": {
     "convert-units": "^2.3.4",
     "vite": "^6.3.3"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   }
 }
