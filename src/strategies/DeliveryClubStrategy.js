@@ -1,4 +1,4 @@
-import { ParserStrategy } from "./ParserStrategy";
+import { ParserStrategy } from "../core/ParserStrategy";
 
 export class DeliveryClubStrategy extends ParserStrategy {
   constructor() {

@@ -1,5 +1,5 @@
-import {ParserStrategy} from "./ParserStrategy";
 import { getUnitParsedWeight } from "../utils/converters";
+import { ParserStrategy } from "../core/ParserStrategy";
 
 export class AuchanStrategy extends ParserStrategy {
 

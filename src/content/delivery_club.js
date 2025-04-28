@@ -1,5 +1,5 @@
-import { DeliveryClubStrategy } from '../parsers/DeliveryClubStrategy';
-import { BaseParser } from '../parsers/BaseParser';
+import { DeliveryClubStrategy } from '../strategies';
+import { BaseParser } from '../core/BaseParser';
 
 
 // автозапуск

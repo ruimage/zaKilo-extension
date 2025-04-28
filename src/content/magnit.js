@@ -1,7 +1,6 @@
-
 // Автозапуск
-import { MagnitStrategy } from '../parsers/MagnitStrategy';
-import { BaseParser } from '../parsers/BaseParser';
+import { MagnitStrategy } from '../strategies';
+import { BaseParser } from '../core/BaseParser';
 
 (function() {
     const parser = new BaseParser(new MagnitStrategy());
