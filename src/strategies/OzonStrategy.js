@@ -1,14 +1,14 @@
 import { getUnitParsedWeight } from "../utils/converters";
 import { ParserStrategy } from "../core/ParserStrategy";
 
-export class AuchanStrategy extends ParserStrategy {
+export class OzonStrategy extends ParserStrategy {
   constructor() {
     super();
-    this.strategyName = "Auchan";
+    this.strategyName = "Ozon";
     this.selectors = {
-      card: "div.styles_productCard__Qy_9h.styles_catalogListPage_item__NAAw9",
-      price: ".styles_productCardContentPanel_price__MqlWB",
-      name: ".styles_productCardContentPanel_name__072Y7",
+      card: "div.tile-root",
+      price: "span.tsHeadline500Medium",
+      name: "span.tsBody500Medium",
       unitPrice: '[data-testid="unit-price"]',
     };
   }
@@ -31,8 +31,12 @@ export class AuchanStrategy extends ParserStrategy {
 
   _renderUnitPrice(cardEl, unitPrice, unitLabel) {
     const wrapper = cardEl.querySelector(this.selectors.price).closest("div");
-    const fz = "calc(0.95vw)";
 
+    if (!wrapper) {
+      throw new Error("wrapper for price not found");
+    }
+
+    const fz = "calc(0.95vw)";
     wrapper.style.fontSize = fz;
     wrapper.parentElement.style.fontSize = fz;
 
