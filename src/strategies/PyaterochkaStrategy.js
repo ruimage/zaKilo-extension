@@ -5,19 +5,19 @@ export class PyaterochkaStrategy extends ParserStrategy {
     super();
     this.strategyName = "Pyaterochka";
     this.selectors = {
-      card: '[data-qa^="product-card-"], .productFilterGrid_cardContainer__oyUJZ',
-      price: ".priceContainer_priceContainerCatalog__LIxni",
-      name: ".mainInformation_weight__o6cXn",
+      card: '[data-qa^="product-card-"], [class*="productFilterGrid_cardContainer"]',
+      price: '[class*="priceContainer_priceContainerCatalog"]',
+      name: '[class*="mainInformation_weight"]',
       unitPrice: '[data-testid="unit-price"]',
-      catalogContainer: ".chakra-stack.catalogPage_container__zsZjW",
+      catalogContainer: '[class*="catalogPage_container"]',
     };
   }
 
   _parsePrice(priceString) {
     const pc = priceString;
     if (!pc) throw new Error("price container не найден");
-    const disc = pc.querySelector(".priceContainer_discountInternalContainer__MhRsi");
-    const block = disc || pc.querySelector(".priceContainer_totalContainer__rvZ0b");
+    const disc = pc.querySelector('[class*="priceContainer_discountInternalContainer"]');
+    const block = disc || pc.querySelector('[class*="priceContainer_totalContainer"]');
     if (!block) throw new Error("блок с цифрами цены не найден");
     const ps = block.querySelectorAll("p");
     const whole = parseInt(ps[0]?.textContent, 10);

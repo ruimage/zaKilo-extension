@@ -6,9 +6,9 @@ export class OzonStrategy extends ParserStrategy {
     super();
     this.strategyName = "Ozon";
     this.selectors = {
-      card: "div.tile-root",
-      price: "span.tsHeadline500Medium",
-      name: "span.tsBody500Medium",
+      card: '[class*="tile-root"]',
+      price: '[class*="tsHeadline500Medium"]',
+      name: '[class*="tsBody500Medium"]',
       unitPrice: '[data-testid="unit-price"]',
     };
   }

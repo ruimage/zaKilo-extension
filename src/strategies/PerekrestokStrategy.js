@@ -6,10 +6,10 @@ export class PerekrestokStrategy extends ParserStrategy {
     super();
     this.strategyName = "Perekrestok";
     this.selectors = {
-      card: ".product-card",
-      price: ".product-card__price",
-      name: ".product-card__title",
-      catalogContainer: ".catalog-page__content",
+      card: '[class*="product-card"]',
+      price: '[class*="product-card__price"]',
+      name: '[class*="product-card__title"]',
+      catalogContainer: '[class*="catalog-page__content"]',
     };
   }
 

@@ -5,12 +5,12 @@ export class MagnitStrategy extends ParserStrategy {
     super();
     this.strategyName = "Magnit";
     this.selectors = {
-      card: ".unit-catalog-product-preview",
+      card: '[class*="unit-catalog-product-preview"]',
       price: [
-        ".unit-catalog-product-preview-prices__sale span",
-        ".unit-catalog-product-preview-prices__regular span",
+        '[class*="unit-catalog-product-preview-prices__sale"] span',
+        '[class*="unit-catalog-product-preview-prices__regular"] span',
       ].join(","),
-      name: ".unit-catalog-product-preview-title",
+      name: '[class*="unit-catalog-product-preview-title"]',
       unitPrice: '[data-testid="unit-price"]',
     };
   }
@@ -72,7 +72,7 @@ export class MagnitStrategy extends ParserStrategy {
   }
 
   _renderUnitPrice(cardEl, unitPrice, unitLabel) {
-    const priceContainer = cardEl.querySelector(".unit-catalog-product-preview-prices");
+    const priceContainer = cardEl.querySelector('[class*="unit-catalog-product-preview-prices"]');
     if (!priceContainer) throw new Error("Price container not found");
 
     priceContainer.querySelectorAll(this.selectors.unitPrice).forEach((el) => el.remove());
