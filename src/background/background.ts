@@ -1,6 +1,11 @@
+interface SiteConfig {
+  match: string[];
+  script: string;
+}
+
 const api = typeof browser !== "undefined" ? browser : chrome;
 
-const siteMap = [
+const siteMap: SiteConfig[] = [
   {
     match: ["*://*.ozon.ru/*"],
     script: "src/content/ozon.js",
@@ -39,14 +44,14 @@ const siteMap = [
   },
 ];
 
-function matches(url, patterns) {
+function matches(url: string, patterns: string[]): boolean {
   return patterns.some((p) => new RegExp("^" + p.replace(/\*/g, ".*") + "$").test(url));
 }
 
 // инъекция с учётом Firefox
-async function inject(tabId, files) {
+async function inject(tabId: number, files: string[]): Promise<void> {
   if (api.scripting && api.scripting.executeScript) {
-    return api.scripting.executeScript({ target: { tabId }, files });
+    await api.scripting.executeScript({ target: { tabId }, files });
   } else {
     for (const file of files) {
       await api.tabs.executeScript(tabId, { file });
@@ -54,16 +59,13 @@ async function inject(tabId, files) {
   }
 }
 
-api.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+api.tabs.onUpdated.addListener((tabId: number, changeInfo, tab): void => {
   if (changeInfo.status !== "complete" || !tab.url) return;
   for (const site of siteMap) {
     if (matches(tab.url, site.match)) {
-      try {
-        await inject(tabId, [site.script]);
-        console.log(`Injected ${site.script} into ${tab.url}`);
-      } catch (err) {
-        console.error("Injection failed:", err);
-      }
+      inject(tabId, [site.script])
+        .then(() => console.log(`Injected ${site.script} into ${tab.url}`))
+        .catch((err) => console.error("Injection failed:", err));
       break;
     }
   }

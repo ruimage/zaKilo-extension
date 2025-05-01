@@ -9,20 +9,25 @@ export default defineConfig(({ mode }) => {
       webExtension({
         manifest: () => merge(require("./manifests/base.json"), require(`./manifests/${target}.json`)),
         additionalInputs: [
-          "src/content/auchan.js",
-          "src/content/delivery_club.js",
-          "src/content/kuper.js",
-          "src/content/magnit.js",
-          "src/content/ozon.js",
-          "src/content/perekrestok.js",
-          "src/content/pyaterochka.js",
-          "src/content/samokat.js",
+          "src/content/auchan.ts",
+          "src/content/delivery_club.ts",
+          "src/content/kuper.ts",
+          "src/content/magnit.ts",
+          "src/content/ozon.ts",
+          "src/content/perekrestok.ts",
+          "src/content/pyaterochka.ts",
+          "src/content/samokat.ts",
         ],
         browser: target,
       }),
     ],
     build: {
       outDir: `dist/${target}`,
+    },
+    resolve: {
+      alias: {
+        "@": "/src",
+      },
     },
   };
 });

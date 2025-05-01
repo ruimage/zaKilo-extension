@@ -10,15 +10,21 @@
     "build:firefox": "vite build --mode=firefox",
     "pack:firefox": "vite build --mode=firefox && web-ext build --source-dir=dist/firefox --artifacts-dir=ext-dist --overwrite-dest --filename=zaKilo-firefox-{version}.zip",
     "pack:chrome": "vite build --mode=chrome && web-ext build --source-dir=dist/chrome --artifacts-dir=ext-dist --overwrite-dest --filename=zaKilo-chrome-{version}.zip",
-    "prepare": "husky"
+    "prepare": "husky",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint . --ext .ts,.tsx"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/chrome": "^0.0.317",
+    "@types/firefox-webext-browser": "^120.0.4",
+    "@types/node": "^22.15.3",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.1",
     "lodash-es": "^4.17.21",
     "prettier": "3.5.3",
+    "typescript": "^5.3.3",
     "vite-plugin-web-extension": "^4.4.3",
     "web-ext": "^8.6.0"
   },
