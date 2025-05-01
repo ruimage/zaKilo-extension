@@ -1,6 +1,8 @@
 import { ParserStrategy } from "../core/ParserStrategy";
 import { getUnitParsedWeight } from "../utils/converters";
 
+//TODO fix kuper selectors
+
 export class KuperStrategy extends ParserStrategy {
   constructor() {
     super();
