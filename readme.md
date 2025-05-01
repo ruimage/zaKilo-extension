@@ -4,7 +4,7 @@
 
 ### Установка и запуск
 
-1. **Клонировать репозиторий и установить зависимости**:
+1. Клонировать репозиторий и установить зависимости:
 
    ```bash
    git clone https://github.com/ruimage/zaKilo-extension.git
@@ -12,29 +12,43 @@
    npm ci
    ```
 
-2. **Сборка dev-пакетов**:
+2. Режим разработки с HMR
 
-   - **Chrome**:
+   Добавлен режим разработки с горячей перезагрузкой модулей (HMR). Для запуска локального сервера разработки выполните:
+
+   - Chrome:
      ```bash
-     npm run build:chrome
+      npm run build:chrome
      ```
-   - **Firefox**:
+   - Firefox:
      ```bash
      npm run build:firefox
      ```
 
-3. **Сборка продакшен-пакетов**:
+3. Сборка dev-пакетов:
 
-   - **Chrome**:
+   - Chrome:
+     ```bash
+     npm run build:chrome
+     ```
+   - Firefox:
+     ```bash
+     npm run build:firefox
+     ```
+
+4. Сборка продакшен-пакетов:
+
+   - Chrome:
      ```bash
      npm run pack:chrome
      ```
-   - **Firefox**:
+   - Firefox:
      ```bash
      npm run pack:firefox
      ```
 
-4. **Установка в браузере**:
+5. Установка в браузере:
+
    - **Chrome**:
      1. Открыть `chrome://extensions/`
      2. Включить «Режим разработчика»
@@ -50,7 +64,56 @@
 - `src/`
   - `background/` — фоновые скрипты
   - `content/` — контент-скрипты
+  - `core/` — базовые классы парсинга (BaseParser, ParserStrategy)
+  - `strategies/` — реализации стратегий для сайтов
+  - `utils/` — вспомогательные утилиты (конвертация единиц)
 - `public/icons/` — иконки расширения
 - `vite.config.mjs` — конфиг сборки
-- `dist/` — dev сборки пакетов для установки
-- `ext-dist/` — production сборки пакетов для установки
+- `dist/` — dev-сборки пакетов для установки
+- `ext-dist/` — production-сборки пакетов для установки
+
+## Инструкция для контрибьюторов
+
+Чтобы добавить поддержку нового сайта, выполните следующие шаги:
+
+1. **Создать файл стратегии** в `src/strategies/ИмяСайтаStrategy.js` на основе шаблона:
+
+   - Наследовать от `ParserStrategy`.
+   - Указать `strategyName` и селекторы для элементов карточки.
+   - Реализовать методы:
+     - `_parsePrice(priceString)` — извлечение числового значения цены.
+     - `_parseQuantity(volumeString)` — разбор объёма/количества.
+     - `_renderUnitPrice(cardEl, unitPrice, unitLabel)` — отображение расчёта единичной цены.
+
+2. **Зарегистрировать стратегию** в `src/strategies/index.js`:
+
+   ```js
+   export { default as ИмяСайтаStrategy } from "./ИмяСайтаStrategy";
+   ```
+
+3. **Создать контент-скрипт** `src/content/имясайта.js`:
+
+   ```js
+   import { ИмяСайтаStrategy } from "../strategies";
+   import { BaseParser } from "../core/BaseParser";
+
+   (function boot() {
+     const parser = new BaseParser(new ИмяСайтаStrategy());
+     parser.init();
+   })();
+   ```
+
+4. **Добавить правило** в `src/background/background.js`:
+
+   ```js
+   [
+     {
+       match: ["*://*.домен.ру/*"],
+       script: "src/content/имясайта.js",
+     },
+   ];
+   ```
+
+5. **Протестировать стратегию**, убедившись, что карточки обрабатываются корректно на целевом сайте.
+
+6. **Добавить юнит-тесты** для методов стратегии и обновить документацию при необходимости.
