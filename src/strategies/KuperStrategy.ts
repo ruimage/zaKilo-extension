@@ -1,5 +1,6 @@
-import { ParserStrategy } from "../core/ParserStrategy";
-import { getUnitParsedWeight } from "../utils/converters";
+import { ParserStrategy } from "@/core/ParserStrategy";
+import { getUnitParsedWeight } from "@/utils/converters";
+import { UnitLabel } from "@/types/IStrategy";
 
 export class KuperStrategy extends ParserStrategy {
   constructor() {
@@ -14,25 +15,25 @@ export class KuperStrategy extends ParserStrategy {
     };
   }
 
-  _parsePrice(cardEl) {
+  parsePrice(cardEl: HTMLElement): number {
     const priceString = cardEl.querySelector(this.selectors.price)?.textContent;
-    console.log("parsed price text", priceString);
     const priceRegex = /(\d+,\d+)/;
-    const match = priceString.match(priceRegex);
+    const match = priceString?.match(priceRegex);
     const textPrice = match ? match[1].replace(",", ".") : null;
-    const v = parseFloat(textPrice);
+    const v = parseFloat(textPrice ?? "");
     if (isNaN(v)) throw new Error("Цена не распознана: " + priceString);
     return v;
   }
 
-  _parseQuantity(cardEl) {
-    const nameText = cardEl.querySelector(this.selectors.name)?.textContent.trim();
+  parseQuantity(cardEl: HTMLElement): UnitLabel {
+    const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
     const weightRegex = /(\d+(?:,\d+)?)\s*([а-яА-Яa-zA-Z]+)/;
     const match = nameText.match(weightRegex);
 
     if (match) {
       const totalText = match[1].replace(",", ".");
-      const total = isNaN(Number(totalText)) ? null : Number(totalText);
+      const total = Number(totalText);
+      if (isNaN(total)) throw new Error("Неверный формат числа: " + totalText);
       const unit = match[2];
 
       this.log("totalText, total, unit", totalText, total, unit);
@@ -42,18 +43,21 @@ export class KuperStrategy extends ParserStrategy {
     }
   }
 
-  _renderUnitPrice(cardEl, unitPrice, unitLabel) {
-    const wrapper = cardEl.querySelector(this.selectors.price).closest("div");
+  renderUnitPrice(cardEl: Element, unitPrice: number, unitLabel: string): void {
+    const wrapper = cardEl.querySelector(this.selectors.price)?.closest("div");
+    if (!wrapper) throw new Error("Wrapper not found");
+
     const fz = "calc(0.95vw)";
 
     wrapper.style.fontSize = fz;
+    // @ts-expect-error
     wrapper.parentElement.style.fontSize = fz;
 
-    wrapper.querySelectorAll(this.selectors.unitPrice).forEach((el) => el.remove());
+    wrapper.querySelectorAll(this.selectors.unitPrice).forEach((el: Element) => el.remove());
 
     const span = document.createElement("span");
     span.setAttribute("data-testid", "unit-price");
-    span.textContent = `${unitPrice}\u2009₽ за ${unitLabel}`;
+    span.textContent = `${Math.ceil(unitPrice)}\u2009₽ за ${unitLabel}`;
     Object.assign(span.style, {
       display: "inline-block",
       marginLeft: "0.5em",

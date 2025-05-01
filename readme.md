@@ -2,6 +2,8 @@
 
 Расширение для сравнения цены за единицу товара в каталоге популярных сервисов доставки.
 
+> **Примечание:** Проект переведен с JavaScript на TypeScript для улучшения типобезопасности и поддержки кода.
+
 ### Установка и запуск
 
 1. Клонировать репозиторий и установить зависимости:
@@ -66,9 +68,12 @@
   - `content/` — контент-скрипты
   - `core/` — базовые классы парсинга (BaseParser, ParserStrategy)
   - `strategies/` — реализации стратегий для сайтов
+  - `types/` — TypeScript типы и интерфейсы
   - `utils/` — вспомогательные утилиты (конвертация единиц)
 - `public/icons/` — иконки расширения
 - `vite.config.mjs` — конфиг сборки
+- `tsconfig.json` — основной конфиг TypeScript
+- `tsconfig.node.json` — конфиг TypeScript для Node.js
 - `dist/` — dev-сборки пакетов для установки
 - `ext-dist/` — production-сборки пакетов для установки
 
@@ -76,40 +81,47 @@
 
 Чтобы добавить поддержку нового сайта, выполните следующие шаги:
 
-1. **Создать файл стратегии** в `src/strategies/ИмяСайтаStrategy.js` на основе шаблона:
+1. **Создать файл стратегии** в `src/strategies/ИмяСайтаStrategy.ts` на основе шаблона:
 
    - Наследовать от `ParserStrategy`.
    - Указать `strategyName` и селекторы для элементов карточки.
    - Реализовать методы:
-     - `_parsePrice(priceString)` — извлечение числового значения цены.
-     - `_parseQuantity(volumeString)` — разбор объёма/количества.
-     - `_renderUnitPrice(cardEl, unitPrice, unitLabel)` — отображение расчёта единичной цены.
+     - `parsePrice(cardEl: HTMLElement): number` — извлечение числового значения цены.
+     - `parseQuantity(cardEl: HTMLElement): UnitLabel` — разбор объёма/количества.
+     - `renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void` — отображение расчёта
+       единичной цены.
 
-2. **Зарегистрировать стратегию** в `src/strategies/index.js`:
+2. **Зарегистрировать стратегию** в `src/strategies/index.ts`:
 
-   ```js
-   export { default as ИмяСайтаStrategy } from "./ИмяСайтаStrategy";
+   ```typescript
+   import { ИмяСайтаStrategy } from "./ИмяСайтаStrategy";
+
+   export {
+     // ... существующие стратегии
+     ИмяСайтаStrategy,
+   };
    ```
 
-3. **Создать контент-скрипт** `src/content/имясайта.js`:
+3. **Создать контент-скрипт** `src/content/имясайта.ts`:
 
-   ```js
+   ```typescript
    import { ИмяСайтаStrategy } from "../strategies";
    import { BaseParser } from "../core/BaseParser";
 
-   (function boot() {
+   (function boot(): void {
      const parser = new BaseParser(new ИмяСайтаStrategy());
      parser.init();
    })();
    ```
 
-4. **Добавить правило** в `src/background/background.js`:
+4. **Добавить правило** в `src/background/background.ts`:
 
-   ```js
-   [
+   ```typescript
+   const siteMap: SiteConfig[] = [
+     // ... существующие правила
      {
        match: ["*://*.домен.ру/*"],
-       script: "src/content/имясайта.js",
+       script: "src/content/имясайта.js", // Обратите внимание: расширение .js используется для скомпилированных файлов
      },
    ];
    ```

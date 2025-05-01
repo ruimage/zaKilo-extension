@@ -1,5 +1,6 @@
-import { getUnitParsedWeight } from "../utils/converters";
-import { ParserStrategy } from "../core/ParserStrategy";
+import { getUnitParsedWeight } from "@/utils/converters";
+import { ParserStrategy } from "@/core/ParserStrategy";
+import { UnitLabel } from "@/types/IStrategy";
 
 export class AuchanStrategy extends ParserStrategy {
   constructor() {
@@ -10,20 +11,31 @@ export class AuchanStrategy extends ParserStrategy {
       price: '[class*="styles_productCardContentPanel_price"]',
       name: '[class*="styles_productCardContentPanel_name"]',
       unitPrice: '[data-testid="unit-price"]',
+      volume: '[class*="productCardContentPanel_type"]',
     };
   }
 
-  _parsePrice(cardEl) {
+  parsePrice(cardEl: HTMLElement): number {
     const priceString = cardEl.querySelector(this.selectors.price)?.textContent;
     console.log("parsed price text", priceString);
-    const num = priceString.replace(/[^\d,\.]/g, "").replace(",", ".");
+    const num = priceString?.replace(/[^\d,\.]/g, "").replace(",", ".") ?? "";
     const v = parseFloat(num);
     if (isNaN(v)) throw new Error("cannot parse price: " + priceString);
     return v;
   }
 
-  _parseQuantity(cardEl) {
-    const nameText = cardEl.querySelector(this.selectors.name)?.textContent.trim();
+  parseQuantity(cardEl: HTMLElement): UnitLabel {
+    let nameText: string;
+
+    nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
+
+    if (this.selectors?.volume) {
+      const volumeText = cardEl.querySelector(this.selectors.volume)?.textContent?.trim() ?? "";
+      if (volumeText) {
+        nameText = volumeText;
+      }
+    }
+
     const regex = /([\d.,]+)\s*(г|гр|кг|мл|л|шт)/i;
     const match = nameText.match(regex);
     if (!match) return { unitLabel: "1 шт", multiplier: 1 };
@@ -32,18 +44,21 @@ export class AuchanStrategy extends ParserStrategy {
     return getUnitParsedWeight(value, unit);
   }
 
-  _renderUnitPrice(cardEl, unitPrice, unitLabel) {
-    const wrapper = cardEl.querySelector(this.selectors.price).closest("div");
+  renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {
+    const wrapper = cardEl.querySelector(this.selectors.price)?.closest("div");
+    if (!wrapper) throw new Error("Wrapper not found");
+
     const fz = "calc(0.95vw)";
 
     wrapper.style.fontSize = fz;
+    // @ts-expect-error
     wrapper.parentElement.style.fontSize = fz;
 
     wrapper.querySelectorAll(this.selectors.unitPrice).forEach((el) => el.remove());
 
     const span = document.createElement("span");
     span.setAttribute("data-testid", "unit-price");
-    span.textContent = `${unitPrice}\u2009₽ за ${unitLabel}`;
+    span.textContent = `${Math.ceil(unitPrice)}\u2009₽ за ${unitLabel}`;
     Object.assign(span.style, {
       display: "inline-block",
       marginLeft: "0.5em",
