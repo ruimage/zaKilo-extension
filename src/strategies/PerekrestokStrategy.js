@@ -6,10 +6,11 @@ export class PerekrestokStrategy extends ParserStrategy {
     super();
     this.strategyName = "Perekrestok";
     this.selectors = {
-      card: '[class*="product-card"]',
-      price: '[class*="product-card__price"]',
-      name: '[class*="product-card__title"]',
-      catalogContainer: '[class*="catalog-page__content"]',
+      card: "[class*=product-card]",
+      price: "[class*=product-card__price]",
+      name: "[class*=product-card__title]",
+      unitPrice: "[data-testid='unit-price']",
+      catalogContainer: "[class*=catalog-page__content]",
     };
   }
 
@@ -18,10 +19,20 @@ export class PerekrestokStrategy extends ParserStrategy {
   }
 
   _parsePrice(priceString) {
-    const priceText = priceString.textContent.trim();
-    const match = priceText.match(/(\d+)\s*₽/);
-    if (!match) throw new Error("Не удалось распознать цену");
-    return parseFloat(match[1]);
+    const priceRegex = /(?<!\d)([0-9]{1,3}(?:[ \u00A0][0-9]{3})*(?:[.,][0-9]+)?)[ \u00A0]*₽/u;
+    const match = priceString.match(priceRegex);
+    if (!match) {
+      throw new Error("Цена не распознана: " + priceString);
+    }
+
+    let textPrice = match[1].replace(/[ \u00A0]/g, "").replace(",", ".");
+
+    const value = parseFloat(textPrice);
+    if (isNaN(value)) {
+      throw new Error("Цена не распознана: " + priceString);
+    }
+
+    return value;
   }
 
   _parseQuantity(input) {
@@ -44,41 +55,27 @@ export class PerekrestokStrategy extends ParserStrategy {
   }
 
   _renderUnitPrice(cardEl, unitPrice, unitLabel) {
-    const price = this._parsePrice(cardEl.querySelector(this.selectors.price));
-    const rawUnit = unitPrice;
-    let rounded;
-    if (rawUnit < 20) {
-      rounded = Math.round(rawUnit * 100) / 100;
-    } else {
-      rounded = Math.ceil(rawUnit);
-    }
-    const whole = Math.floor(rounded);
-    const cents = Math.round((rounded - whole) * 100);
+    const wrapper = cardEl.querySelector(this.selectors.price).closest("div");
+    const fz = "calc(0.95vw)";
 
-    const container = document.createElement("div");
-    container.style.display = "flex";
-    container.style.flexDirection = "column";
-    container.style.alignItems = "flex-start";
+    wrapper.style.fontSize = fz;
+    wrapper.parentElement.style.fontSize = fz;
 
-    const oldSpan = document.createElement("span");
-    oldSpan.textContent = `${price.toFixed(2).replace(/\.00$/, "")}\u2009₽`;
-    oldSpan.style.fontSize = "0.96em";
-    oldSpan.style.color = "rgb(166, 166, 166)";
+    wrapper.querySelectorAll(this.selectors.unitPrice).forEach((el) => el.remove());
 
-    const newSpan = document.createElement("span");
-    newSpan.setAttribute("data-testid", "unit-price");
-    const display = whole + cents / 100;
-    newSpan.textContent = `${(display < 1 && display.toFixed(2)) || display}\u2009₽ за ${unitLabel}`;
-    newSpan.style.display = "inline-block";
-    newSpan.style.color = "rgb(0, 0, 0)";
-    newSpan.style.backgroundColor = "rgb(230, 245, 239)";
-    newSpan.style.padding = "2px 6px 2px 0px";
-    newSpan.style.borderRadius = "4px";
-    newSpan.style.fontWeight = "600";
-    newSpan.style.fontSize = "18px";
-
-    container.append(oldSpan, newSpan);
-    const old = cardEl.querySelector(this.selectors.price);
-    old.replaceWith(container);
+    const span = document.createElement("span");
+    span.setAttribute("data-testid", "unit-price");
+    span.textContent = `${unitPrice}\u2009₽ за ${unitLabel}`;
+    Object.assign(span.style, {
+      display: "inline-block",
+      marginLeft: "0.5em",
+      color: "#000",
+      background: "var(--accent-color, #00C66A20)",
+      padding: "2px 6px",
+      borderRadius: "4px",
+      fontWeight: "900",
+      fontSize: fz,
+    });
+    wrapper.append(span);
   }
 }
