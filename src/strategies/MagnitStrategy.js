@@ -1,4 +1,5 @@
 import { ParserStrategy } from "../core/ParserStrategy";
+import { getUnitParsedWeight } from "../utils/converters";
 
 export class MagnitStrategy extends ParserStrategy {
   constructor() {
@@ -36,39 +37,9 @@ export class MagnitStrategy extends ParserStrategy {
     if (!match) {
       return { unitLabel: "1 шт", multiplier: 1 };
     }
-    //TODO исправить расчет цены по весу
-    //https://magnit.ru/catalog/4834-moloko_syr_yaytsa?shopCode=992301&shopType=6
     const value = parseFloat(match[1]);
     const unit = match[2];
-    let unitLabel, multiplier;
-    switch (unit) {
-      case "г":
-      case "гр":
-        unitLabel = "1 кг";
-        multiplier = value / 1000;
-        break;
-      case "кг":
-        unitLabel = "1 кг";
-        multiplier = value;
-        break;
-      case "мл":
-        unitLabel = "1 л";
-        multiplier = value / 1000;
-        break;
-      case "л":
-        unitLabel = "1 л";
-        multiplier = value;
-        break;
-      case "шт":
-      case "шт.":
-        unitLabel = "1 шт";
-        multiplier = value;
-        break;
-      default:
-        unitLabel = `1 ${unit}`;
-        multiplier = value;
-    }
-    return { unitLabel, multiplier };
+    return getUnitParsedWeight(value, unit);
   }
 
   _renderUnitPrice(cardEl, unitPrice, unitLabel) {
