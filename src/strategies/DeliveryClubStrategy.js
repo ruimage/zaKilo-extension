@@ -1,4 +1,5 @@
 import { ParserStrategy } from "../core/ParserStrategy";
+import { getUnitParsedWeight } from "../utils/converters";
 
 export class DeliveryClubStrategy extends ParserStrategy {
   constructor() {
@@ -14,36 +15,23 @@ export class DeliveryClubStrategy extends ParserStrategy {
     };
   }
 
-  _parsePrice(txt) {
-    const cleaned = txt.replace(/\s|&thinsp;/g, "").replace("₽", "");
+  _parsePrice(cardEl) {
+    const priceString = cardEl.querySelector(this.selectors.price)?.textContent;
+    console.log("parsed price text", priceString);
+    const cleaned = priceString.replace(/\s|&thinsp;/g, "").replace("₽", "");
     const v = parseFloat(cleaned);
-    if (isNaN(v)) throw new Error("Invalid price: " + txt);
+    if (isNaN(v)) throw new Error("Invalid price: " + priceString);
     return v;
   }
 
-  _parseQuantity(input) {
-    const s = input.toLowerCase().replace(",", ".").trim();
+  _parseQuantity(cardEl) {
+    const nameText = cardEl.querySelector(this.selectors.name)?.textContent.trim();
+    const s = nameText.toLowerCase().replace(",", ".").trim();
     const m = s.match(/([\d.]+)\s*([^\s\d]+)/);
-    if (!m) throw new Error("Invalid quantity: " + input);
+    if (!m) throw new Error("Invalid quantity: " + nameText);
     const num = parseFloat(m[1]);
     const unit = m[2];
-    switch (unit) {
-      case "г":
-      case "гр":
-        return { unitLabel: "1 кг", multiplier: 1000 / num };
-      case "кг":
-        return { unitLabel: "1 кг", multiplier: 1 / num };
-      case "мл":
-        return { unitLabel: "1 л", multiplier: 1000 / num };
-      case "л":
-        return { unitLabel: "1 л", multiplier: 1 / num };
-      case "шт":
-        return { unitLabel: "1 шт", multiplier: 1 / num };
-      case "шт.":
-        return { unitLabel: "1 шт", multiplier: 1 / num };
-      default:
-        throw new Error("Unknown unit: " + unit);
-    }
+    return getUnitParsedWeight(num, unit);
   }
 
   _renderUnitPrice(cardEl, unitPrice, unitLabel) {

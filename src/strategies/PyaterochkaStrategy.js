@@ -14,7 +14,9 @@ export class PyaterochkaStrategy extends ParserStrategy {
     };
   }
 
-  _parsePrice(priceString) {
+  _parsePrice(cardEl) {
+    const priceString = cardEl.querySelector(this.selectors.price)?.textContent;
+    console.log("parsed price text", priceString);
     const priceRegex = /(?<!\d)([0-9]+(?:[ \u00A0][0-9]{3})*(?:[.,][0-9]+)?)[ \u00A0]*₽/u;
 
     const match = priceString.match(priceRegex);
@@ -29,12 +31,14 @@ export class PyaterochkaStrategy extends ParserStrategy {
       throw new Error("Цена не распознана: " + priceString);
     }
 
-    const kopeyekInRuble = 100;
-    return value / kopeyekInRuble;
+    const kopeckInRuble = 100;
+    return value / kopeckInRuble;
   }
 
-  _parseQuantity(input) {
-    const s = input.trim().toLowerCase().replace(/,/g, ".");
+  _parseQuantity(cardEl) {
+    const nameText = cardEl.querySelector(this.selectors.name)?.textContent.trim();
+
+    const s = nameText.trim().toLowerCase().replace(/,/g, ".");
     const mulMatch = s.match(/^(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*([^\s\d]+)/i);
     let total;
     let unit;
@@ -45,7 +49,7 @@ export class PyaterochkaStrategy extends ParserStrategy {
       total = count * per;
     } else {
       const m = s.match(/([\d.]+)\s*([^\s\d]+)/);
-      if (!m) throw new Error(`не распознано количество: "${input}"`);
+      if (!m) throw new Error(`не распознано количество: "${nameText}"`);
       total = parseFloat(m[1]);
       unit = m[2];
     }

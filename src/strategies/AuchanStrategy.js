@@ -13,16 +13,19 @@ export class AuchanStrategy extends ParserStrategy {
     };
   }
 
-  _parsePrice(priceString) {
+  _parsePrice(cardEl) {
+    const priceString = cardEl.querySelector(this.selectors.price)?.textContent;
+    console.log("parsed price text", priceString);
     const num = priceString.replace(/[^\d,\.]/g, "").replace(",", ".");
     const v = parseFloat(num);
     if (isNaN(v)) throw new Error("cannot parse price: " + priceString);
     return v;
   }
 
-  _parseQuantity(volumeQuantityString) {
+  _parseQuantity(cardEl) {
+    const nameText = cardEl.querySelector(this.selectors.name)?.textContent.trim();
     const regex = /([\d.,]+)\s*(г|гр|кг|мл|л|шт)/i;
-    const match = volumeQuantityString.match(regex);
+    const match = nameText.match(regex);
     if (!match) return { unitLabel: "1 шт", multiplier: 1 };
     const value = parseFloat(match[1].replace(",", "."));
     const unit = match[2].toLowerCase();

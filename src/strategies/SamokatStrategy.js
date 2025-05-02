@@ -15,17 +15,24 @@ export class SamokatStrategy extends ParserStrategy {
     };
   }
 
-  _parsePrice(priceString) {
+  _parsePrice(cardEl) {
+    const priceString = cardEl.querySelector(this.selectors.price)?.textContent;
+    console.log("parsed price text", priceString);
     const num = priceString.replace(/[^\d,\.]/g, "").replace(",", ".");
     const v = parseFloat(num);
     if (isNaN(v)) throw new Error("Цена не распознана: " + priceString);
     return v;
   }
 
-  _parseQuantity(volumeQuantityString) {
-    // Заменяем запятые на точки и удаляем лишние пробелы
-    const s = volumeQuantityString.toLowerCase().replace(/,/g, ".").trim();
-    // Формат NxM (например, "6x45 г" или "6×45 г")
+  _parseQuantity(cardEl) {
+    let nameText;
+    if (this.selectors?.volume) {
+      nameText = cardEl.querySelector(this.selectors.volume)?.textContent.trim();
+    } else {
+      nameText = cardEl.querySelector(this.selectors.name)?.textContent.trim();
+    }
+
+    const s = nameText.toLowerCase().replace(/,/g, ".").trim();
     const mulMatch = s.match(/^(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*([^\s\d]+)$/i);
     let total;
     let unit;

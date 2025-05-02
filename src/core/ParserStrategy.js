@@ -9,23 +9,10 @@ export class ParserStrategy {
 
   process(cardEl) {
     this.log("processing card", cardEl);
-
-    const priceText = cardEl.querySelector(this.selectors.price)?.textContent;
-    console.log("parsed price text", priceText);
-    const price = this._parsePrice(priceText);
-
+    const price = this._parsePrice(cardEl);
     this.log("parsed price", price);
 
-    let nameText;
-    if (this.selectors?.volume) {
-      nameText = cardEl.querySelector(this.selectors.volume)?.textContent.trim();
-    } else {
-      nameText = cardEl.querySelector(this.selectors.name)?.textContent.trim();
-    }
-    this.log("parsed name/volume", nameText);
-
-    const { unitLabel, multiplier } = this._parseQuantity(nameText);
-
+    const { unitLabel, multiplier } = this._parseQuantity(cardEl);
     this.log("parsed unitLabel, multiplier", unitLabel, multiplier);
 
     const unitPrice = Math.ceil(price * multiplier);

@@ -24,15 +24,19 @@ export class MagnitStrategy extends ParserStrategy {
     );
   }
 
-  _parsePrice(txt) {
-    const num = txt.replace(/[^\d.,]/g, "").replace(",", ".");
+  _parsePrice(cardEl) {
+    const priceString = cardEl.querySelector(this.selectors.price)?.textContent;
+    console.log("parsed price text", priceString);
+    const num = priceString.replace(/[^\d.,]/g, "").replace(",", ".");
     const v = parseFloat(num);
-    if (isNaN(v)) throw new Error("Cannot parse price: " + txt);
+    if (isNaN(v)) throw new Error("Cannot parse price: " + priceString);
     return v;
   }
 
-  _parseQuantity(text) {
-    const s = text.trim().toLowerCase().replace(",", ".");
+  _parseQuantity(cardEl) {
+    const nameText = cardEl.querySelector(this.selectors.name)?.textContent.trim();
+
+    const s = nameText.trim().toLowerCase().replace(",", ".");
     const match = s.match(/([\d]+(?:\.\d+)?)\s*(г|гр|кг|мл|л|шт)\.?/i);
     if (!match) {
       return { unitLabel: "1 шт", multiplier: 1 };

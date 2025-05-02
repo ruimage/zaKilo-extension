@@ -18,7 +18,9 @@ export class PerekrestokStrategy extends ParserStrategy {
     return cardEl.querySelector(this.selectors.price) && cardEl.querySelector(this.selectors.name);
   }
 
-  _parsePrice(priceString) {
+  _parsePrice(cardEl) {
+    const priceString = cardEl.querySelector(this.selectors.price)?.textContent;
+    console.log("parsed price text", priceString);
     const priceRegex = /(?<!\d)([0-9]{1,3}(?:[ \u00A0][0-9]{3})*(?:[.,][0-9]+)?)[ \u00A0]*₽/u;
     const match = priceString.match(priceRegex);
     if (!match) {
@@ -35,8 +37,9 @@ export class PerekrestokStrategy extends ParserStrategy {
     return value;
   }
 
-  _parseQuantity(input) {
-    const s = input.trim().toLowerCase().replace(/,/g, ".");
+  _parseQuantity(cardEl) {
+    const nameText = cardEl.querySelector(this.selectors.name)?.textContent.trim();
+    const s = nameText.trim().toLowerCase().replace(/,/g, ".");
     const mulMatch = s.match(/^(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*([^\s\d]+)/i);
     let total;
     let unit;

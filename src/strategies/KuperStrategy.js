@@ -14,7 +14,9 @@ export class KuperStrategy extends ParserStrategy {
     };
   }
 
-  _parsePrice(priceString) {
+  _parsePrice(cardEl) {
+    const priceString = cardEl.querySelector(this.selectors.price)?.textContent;
+    console.log("parsed price text", priceString);
     const priceRegex = /(\d+,\d+)/;
     const match = priceString.match(priceRegex);
     const textPrice = match ? match[1].replace(",", ".") : null;
@@ -23,9 +25,10 @@ export class KuperStrategy extends ParserStrategy {
     return v;
   }
 
-  _parseQuantity(volumeQuantityString) {
+  _parseQuantity(cardEl) {
+    const nameText = cardEl.querySelector(this.selectors.name)?.textContent.trim();
     const weightRegex = /(\d+(?:,\d+)?)\s*([а-яА-Яa-zA-Z]+)/;
-    const match = volumeQuantityString.match(weightRegex);
+    const match = nameText.match(weightRegex);
 
     if (match) {
       const totalText = match[1].replace(",", ".");
