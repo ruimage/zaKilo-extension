@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev:chrome": "vite --mode=chrome",
+    "dev:firefox": "vite --mode=firefox",
     "build:chrome": "vite build --mode=chrome",
     "build:firefox": "vite build --mode=firefox",
     "pack:firefox": "vite build --mode=firefox && web-ext build --source-dir=dist/firefox --artifacts-dir=ext-dist --overwrite-dest --filename=zaKilo-firefox-{version}.zip",
