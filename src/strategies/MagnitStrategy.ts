@@ -1,5 +1,5 @@
-import { ParserStrategy } from "../core/ParserStrategy";
-import { getUnitParsedWeight } from "../utils/converters";
+import { ParserStrategy } from "@/core/ParserStrategy";
+import { getUnitParsedWeight } from "@/utils/converters";
 
 export class MagnitStrategy extends ParserStrategy {
   constructor() {
@@ -16,26 +16,25 @@ export class MagnitStrategy extends ParserStrategy {
     };
   }
 
-  shouldProcess(cardEl) {
+  shouldProcess(cardEl: Element): boolean {
     return (
-      cardEl.querySelector(this.selectors.price) &&
-      cardEl.querySelector(this.selectors.name) &&
-      !cardEl.querySelector(this.selectors.unitPrice)
+      (cardEl.querySelector(this.selectors.price) &&
+        cardEl.querySelector(this.selectors.name) &&
+        !cardEl.querySelector(this.selectors.unitPrice)) ||
+      false
     );
   }
 
-  _parsePrice(cardEl) {
+  parsePrice(cardEl: HTMLElement): number {
     const priceString = cardEl.querySelector(this.selectors.price)?.textContent;
-    console.log("parsed price text", priceString);
-    const num = priceString.replace(/[^\d.,]/g, "").replace(",", ".");
+    const num = priceString?.replace(/[^\d.,]/g, "").replace(",", ".") ?? "";
     const v = parseFloat(num);
     if (isNaN(v)) throw new Error("Cannot parse price: " + priceString);
     return v;
   }
 
-  _parseQuantity(cardEl) {
-    const nameText = cardEl.querySelector(this.selectors.name)?.textContent.trim();
-
+  parseQuantity(cardEl: HTMLElement): { unitLabel: string; multiplier: number } {
+    const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
     const s = nameText.trim().toLowerCase().replace(",", ".");
     const match = s.match(/([\d]+(?:\.\d+)?)\s*(г|гр|кг|мл|л|шт)\.?/i);
     if (!match) {
@@ -46,11 +45,11 @@ export class MagnitStrategy extends ParserStrategy {
     return getUnitParsedWeight(value, unit);
   }
 
-  _renderUnitPrice(cardEl, unitPrice, unitLabel) {
+  renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {
     const priceContainer = cardEl.querySelector('[class*="unit-catalog-product-preview-prices"]');
     if (!priceContainer) throw new Error("Price container not found");
 
-    priceContainer.querySelectorAll(this.selectors.unitPrice).forEach((el) => el.remove());
+    priceContainer.querySelectorAll(this.selectors.unitPrice).forEach((el: Element) => el.remove());
 
     const displayValue = unitPrice < 20 ? unitPrice.toFixed(2) : Math.ceil(unitPrice).toString();
 

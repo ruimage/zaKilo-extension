@@ -1,5 +1,5 @@
-import { ParserStrategy } from "../core/ParserStrategy";
-import { getUnitParsedWeight } from "../utils/converters";
+import { ParserStrategy } from "@/core/ParserStrategy";
+import { getUnitParsedWeight } from "@/utils/converters";
 
 export class DeliveryClubStrategy extends ParserStrategy {
   constructor() {
@@ -15,17 +15,17 @@ export class DeliveryClubStrategy extends ParserStrategy {
     };
   }
 
-  _parsePrice(cardEl) {
+  parsePrice(cardEl: HTMLElement): number {
     const priceString = cardEl.querySelector(this.selectors.price)?.textContent;
     console.log("parsed price text", priceString);
-    const cleaned = priceString.replace(/\s|&thinsp;/g, "").replace("₽", "");
+    const cleaned = priceString?.replace(/\s|&thinsp;/g, "").replace("₽", "") ?? "";
     const v = parseFloat(cleaned);
     if (isNaN(v)) throw new Error("Invalid price: " + priceString);
     return v;
   }
 
-  _parseQuantity(cardEl) {
-    const nameText = cardEl.querySelector(this.selectors.name)?.textContent.trim();
+  parseQuantity(cardEl: HTMLElement): { unitLabel: string; multiplier: number } {
+    const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
     const s = nameText.toLowerCase().replace(",", ".").trim();
     const m = s.match(/([\d.]+)\s*([^\s\d]+)/);
     if (!m) throw new Error("Invalid quantity: " + nameText);
@@ -34,8 +34,10 @@ export class DeliveryClubStrategy extends ParserStrategy {
     return getUnitParsedWeight(num, unit);
   }
 
-  _renderUnitPrice(cardEl, unitPrice, unitLabel) {
+  renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {
     const priceEl = cardEl.querySelector(this.selectors.price);
+    if (!priceEl) throw new Error("Price element not found");
+
     const wrapper = priceEl.closest('div[aria-hidden="true"]');
     if (!wrapper) throw new Error("Wrapper not found");
 
@@ -47,7 +49,6 @@ export class DeliveryClubStrategy extends ParserStrategy {
     span.setAttribute("data-testid", "product-card-unit-price");
     span.textContent = `${Math.ceil(unitPrice)}\u2009₽ за ${unitLabel}`;
 
-    // стили
     Object.assign(span.style, {
       color: "#000",
       backgroundColor: "rgba(0, 198, 106, 0.1)",

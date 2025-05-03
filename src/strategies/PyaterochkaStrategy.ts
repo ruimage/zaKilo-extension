@@ -1,5 +1,6 @@
-import { ParserStrategy } from "../core/ParserStrategy";
-import { getUnitParsedWeight } from "../utils/converters";
+import { ParserStrategy } from "@/core/ParserStrategy";
+import { getUnitParsedWeight } from "@/utils/converters";
+import { UnitLabel } from "@/types/IStrategy";
 
 export class PyaterochkaStrategy extends ParserStrategy {
   constructor() {
@@ -10,16 +11,15 @@ export class PyaterochkaStrategy extends ParserStrategy {
       price: '[class*="priceContainer_priceContainerCatalog"]',
       name: '[class*="mainInformation_weight"]',
       unitPrice: '[data-testid="unit-price"]',
-      catalogContainer: '[class*="catalogPage_container"]',
     };
   }
 
-  _parsePrice(cardEl) {
+  parsePrice(cardEl: HTMLElement): number {
     const priceString = cardEl.querySelector(this.selectors.price)?.textContent;
     console.log("parsed price text", priceString);
     const priceRegex = /(?<!\d)([0-9]+(?:[ \u00A0][0-9]{3})*(?:[.,][0-9]+)?)[ \u00A0]*₽/u;
 
-    const match = priceString.match(priceRegex);
+    const match = priceString?.match(priceRegex);
     if (!match) {
       throw new Error("Цена не распознана: " + priceString);
     }
@@ -35,13 +35,13 @@ export class PyaterochkaStrategy extends ParserStrategy {
     return value / kopeckInRuble;
   }
 
-  _parseQuantity(cardEl) {
-    const nameText = cardEl.querySelector(this.selectors.name)?.textContent.trim();
+  parseQuantity(cardEl: HTMLElement): UnitLabel {
+    const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
 
     const s = nameText.trim().toLowerCase().replace(/,/g, ".");
     const mulMatch = s.match(/^(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*([^\s\d]+)/i);
-    let total;
-    let unit;
+    let total: number;
+    let unit: string;
     if (mulMatch) {
       const count = parseFloat(mulMatch[1]);
       const per = parseFloat(mulMatch[2]);
@@ -56,18 +56,21 @@ export class PyaterochkaStrategy extends ParserStrategy {
     return getUnitParsedWeight(total, unit);
   }
 
-  _renderUnitPrice(cardEl, unitPrice, unitLabel) {
-    const wrapper = cardEl.querySelector(this.selectors.price).closest("div");
+  renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {
+    const wrapper = cardEl.querySelector(this.selectors.price)?.closest("div");
+    if (!wrapper) throw new Error("Не найден элемент для отображения цены");
+
     const fz = "calc(0.95vw)";
 
     wrapper.style.fontSize = fz;
+    // @ts-expect-error
     wrapper.parentElement.style.fontSize = fz;
 
     wrapper.querySelectorAll(this.selectors.unitPrice).forEach((el) => el.remove());
 
     const span = document.createElement("span");
     span.setAttribute("data-testid", "unit-price");
-    span.textContent = `${unitPrice}\u2009₽ за ${unitLabel}`;
+    span.textContent = `${Math.ceil(unitPrice)}\u2009₽ за ${unitLabel}`;
     Object.assign(span.style, {
       display: "inline-block",
       marginLeft: "0.5em",
@@ -81,5 +84,3 @@ export class PyaterochkaStrategy extends ParserStrategy {
     wrapper.append(span);
   }
 }
-
-export default PyaterochkaStrategy;
