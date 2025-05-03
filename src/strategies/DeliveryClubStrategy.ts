@@ -1,5 +1,5 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
-import { getUnitParsedWeight } from "@/utils/converters";
+import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
 
 export class DeliveryClubStrategy extends ParserStrategy {
   constructor() {
@@ -47,7 +47,7 @@ export class DeliveryClubStrategy extends ParserStrategy {
     const span = document.createElement("span");
     span.className = priceEl.className;
     span.setAttribute("data-testid", "product-card-unit-price");
-    span.textContent = `${Math.ceil(unitPrice)}\u2009₽ за ${unitLabel}`;
+    span.textContent = `${roundNumber(unitPrice, 0)}\u2009₽ за ${unitLabel}`;
 
     Object.assign(span.style, {
       color: "#000",

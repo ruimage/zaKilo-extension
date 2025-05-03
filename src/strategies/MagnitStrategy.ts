@@ -1,5 +1,5 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
-import { getUnitParsedWeight } from "@/utils/converters";
+import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
 
 export class MagnitStrategy extends ParserStrategy {
   constructor() {
@@ -51,7 +51,7 @@ export class MagnitStrategy extends ParserStrategy {
 
     priceContainer.querySelectorAll(this.selectors.unitPrice).forEach((el: Element) => el.remove());
 
-    const displayValue = unitPrice < 20 ? unitPrice.toFixed(2) : Math.ceil(unitPrice).toString();
+    const displayValue = unitPrice < 20 ? roundNumber(unitPrice, 2).toString() : roundNumber(unitPrice, 0).toString();
 
     const span = document.createElement("span");
     span.setAttribute("data-testid", "unit-price");

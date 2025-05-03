@@ -1,5 +1,5 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
-import { getUnitParsedWeight } from "@/utils/converters";
+import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
 import { UnitLabel } from "@/types/IStrategy";
 
 export class KuperStrategy extends ParserStrategy {
@@ -57,7 +57,7 @@ export class KuperStrategy extends ParserStrategy {
 
     const span = document.createElement("span");
     span.setAttribute("data-testid", "unit-price");
-    span.textContent = `${Math.ceil(unitPrice)}\u2009₽ за ${unitLabel}`;
+    span.textContent = `${roundNumber(unitPrice, 0)}\u2009₽ за ${unitLabel}`;
     Object.assign(span.style, {
       display: "inline-block",
       marginLeft: "0.5em",

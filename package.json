@@ -12,20 +12,29 @@
     "pack:chrome": "vite build --mode=chrome && web-ext build --source-dir=dist/chrome --artifacts-dir=ext-dist --overwrite-dest --filename=zaKilo-chrome-{version}.zip",
     "prepare": "husky",
     "type-check": "tsc --noEmit",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint . --ext .ts,.tsx",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@testing-library/dom": "^9.3.4",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.1",
     "@types/chrome": "^0.0.317",
     "@types/firefox-webext-browser": "^120.0.4",
+    "@types/jest": "^29.5.12",
     "@types/node": "^22.15.3",
+    "@types/testing-library__jest-dom": "^5.14.9",
     "husky": "^9.1.7",
+    "jsdom": "^24.0.0",
     "lint-staged": "^15.5.1",
     "lodash-es": "^4.17.21",
     "prettier": "3.5.3",
     "typescript": "^5.3.3",
     "vite-plugin-web-extension": "^4.4.3",
+    "vitest": "^1.3.1",
     "web-ext": "^8.6.0"
   },
   "dependencies": {

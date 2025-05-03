@@ -1,5 +1,5 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
-import { getUnitParsedWeight } from "@/utils/converters";
+import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
 import { UnitLabel } from "@/types/IStrategy";
 
 export class SamokatStrategy extends ParserStrategy {
@@ -56,8 +56,8 @@ export class SamokatStrategy extends ParserStrategy {
     if (!details) throw new Error("Не найдены необходимые элементы");
 
     const rawUnit = unitPrice;
-    const calculatedUnitPrice = rawUnit < 20 ? Math.round(rawUnit * 100) / 100 : Math.ceil(rawUnit);
-    const displayPrice = rawUnit < 20 ? calculatedUnitPrice.toFixed(2) : calculatedUnitPrice;
+    const calculatedUnitPrice = rawUnit < 20 ? roundNumber(rawUnit, 2) : roundNumber(rawUnit, 0);
+    const displayPrice = rawUnit < 20 ? calculatedUnitPrice.toString() : calculatedUnitPrice;
 
     // Удаляем старые
     details.querySelectorAll(this.selectors.unitPrice).forEach((e) => e.remove());
