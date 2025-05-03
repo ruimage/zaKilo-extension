@@ -8,8 +8,8 @@ export class KuperStrategy extends ParserStrategy {
     this.strategyName = "Kuper";
     this.selectors = {
       card: "[class*=ProductCardGridLayout]",
-      name: '[class*="ProductCard_title"]',
-      volume: '[class*="volume"]',
+      name: "[class*=ProductCard_title]",
+      volume: "[class*=volume]",
       price: "[class*=priceText]",
       unitPrice: '[data-testid="unit-price"]',
     };

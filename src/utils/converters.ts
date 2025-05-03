@@ -12,16 +12,6 @@ export function roundNumber(value: number, decimalPlaces: number = 2): number {
   return Math.round(value * factor) / factor;
 }
 
-/**
- * @deprecated Use roundNumber instead
- * Rounds a number to 2 decimal places
- * @param value - The number to round
- * @returns The rounded number
- */
-export function roundToTwoDecimals(value: number): number {
-  return roundNumber(value, 2);
-}
-
 export function getUnitParsedWeight(value: number, unit: string): UnitLabel {
   switch (unit) {
     case "г":

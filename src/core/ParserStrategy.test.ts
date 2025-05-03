@@ -25,9 +25,7 @@ class TestStrategy extends ParserStrategy {
   parseQuantity(cardEl: HTMLElement): UnitLabel {
     const nameEl = cardEl.querySelector(this.selectors.name!);
     if (!nameEl) throw new Error("Name element not found");
-    // Mock implementation that extracts quantity from product name
-    // e.g., "Product Name 500g" -> 500g
-    const match = (nameEl.textContent || "").match(/(\d+)\s*(г|кг|мл|л|шт)/);
+    const match = (nameEl.textContent || "").match(/(\d+(?:\.\d+)?)\s*(г|кг|мл|л|шт)/);
     if (!match) return { unitLabel: "1 шт", multiplier: 1 };
 
     const value = parseFloat(match[1]);
@@ -89,7 +87,6 @@ describe("ParserStrategy", () => {
     // Card has price and name but no unit price, so it should be processed
     expect(strategy.shouldProcess(mockCard)).toBe(true);
 
-    // Add unit price element, now it should not be processed
     const unitPriceEl = document.createElement("span");
     unitPriceEl.className = "unit-price";
     mockCard.appendChild(unitPriceEl);
@@ -143,13 +140,13 @@ describe("ParserStrategy", () => {
     nameEl.textContent = "Test Product 750мл";
     expect(strategy.parseQuantity(mockCard)).toEqual({
       unitLabel: "1 л",
-      multiplier: 1.33333, // 1000 / 750, rounded in test
+      multiplier: 1.3333333333333333, // 1000 / 750, exact value
     });
 
     nameEl.textContent = "Test Product 1.5л";
     expect(strategy.parseQuantity(mockCard)).toEqual({
       unitLabel: "1 л",
-      multiplier: 0.66667, // 1 / 1.5, rounded in test
+      multiplier: 0.6666666666666666, // 1 / 1.5, exact value
     });
 
     nameEl.textContent = "Test Product 10шт";
