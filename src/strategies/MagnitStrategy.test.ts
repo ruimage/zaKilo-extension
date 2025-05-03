@@ -1,11 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { AuchanStrategy } from "./AuchanStrategy";
+import { MagnitStrategy } from "./MagnitStrategy";
 import { loadAllTestCards } from "./__test_data__/loadTestData";
 import { roundNumber } from "@/utils/converters";
 
-describe("AuchanStrategy", () => {
-  const strategy = new AuchanStrategy();
-  const testCards = loadAllTestCards("auchan");
+describe("MagnitStrategy", () => {
+  const strategy = new MagnitStrategy();
+  const testCards = loadAllTestCards("magnit");
 
   testCards.forEach((testCard, index) => {
     describe(`Card ${index + 1}`, () => {
