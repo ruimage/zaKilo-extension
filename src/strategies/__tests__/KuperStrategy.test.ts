@@ -1,11 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { DeliveryClubStrategy } from "@/strategies";
+import { KuperStrategy } from "@/strategies";
 import { loadAllTestCards } from "../__test_data__/loadTestData";
 import { roundNumber } from "@/utils/converters";
 
-describe("DeliveryClubStrategy", () => {
-  const strategy = new DeliveryClubStrategy();
-  const testCards = loadAllTestCards("delivery-club");
+describe("KuperStrategy", () => {
+  const strategy = new KuperStrategy();
+  const testCards = loadAllTestCards("kuper");
 
   testCards.forEach((testCard, index) => {
     describe(`Card ${index + 1}`, () => {
@@ -15,7 +15,7 @@ describe("DeliveryClubStrategy", () => {
 
       it("should parse price correctly", () => {
         const price = strategy.parsePrice(cardEl);
-        expect(roundNumber(price, 1)).toBe(testCard.expectedParsedPrice);
+        expect(roundNumber(price, 2)).toBe(testCard.expectedParsedPrice);
       });
 
       it("should parse quantity correctly", () => {
@@ -29,9 +29,9 @@ describe("DeliveryClubStrategy", () => {
 
         strategy.renderUnitPrice(cardEl, price, label);
 
-        const renderedUnitPrice = cardEl.querySelector('[data-testid="product-card-unit-price"]');
+        const renderedUnitPrice = cardEl.querySelector('[data-testid="unit-price"]');
         expect(renderedUnitPrice).toBeTruthy();
-        expect(renderedUnitPrice?.textContent).toBe(`${price}\u2009₽ за ${label}`);
+        expect(renderedUnitPrice?.textContent).toBe(`${roundNumber(price, 0)}\u2009₽ за ${label}`);
 
         const styles = window.getComputedStyle(renderedUnitPrice as HTMLElement);
 

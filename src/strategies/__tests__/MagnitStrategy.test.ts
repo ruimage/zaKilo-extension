@@ -15,13 +15,13 @@ describe("MagnitStrategy", () => {
 
       it("should parse price correctly", () => {
         const price = strategy.parsePrice(cardEl);
-        expect(roundNumber(price, 1)).toBe(testCard.expectedPrice);
+        expect(roundNumber(price, 1)).toBe(testCard.expectedParsedPrice);
       });
 
       it("should parse quantity correctly", () => {
         const quantity = strategy.parseQuantity(cardEl);
-        expect(roundNumber(quantity.multiplier, 3)).toEqual(roundNumber(testCard.expectedQuantity.multiplier, 3));
-        expect(quantity.unitLabel).toEqual(testCard.expectedQuantity.unitLabel);
+        expect(roundNumber(quantity.multiplier, 3)).toEqual(roundNumber(testCard.expectedParsedQuantity.multiplier, 3));
+        expect(quantity.unitLabel).toEqual(testCard.expectedParsedQuantity.unitLabel);
       });
 
       it("should render unit price correctly", () => {
