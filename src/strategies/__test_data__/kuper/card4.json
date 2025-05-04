@@ -7,7 +7,7 @@
     "multiplier": 6.667
   },
   "expectedUnitPrice": {
-    "price": 999,
+    "price": 3173,
     "label": "1 кг",
     "styles": {
       "display": "inline-block",

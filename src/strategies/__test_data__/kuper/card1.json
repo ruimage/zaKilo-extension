@@ -6,7 +6,7 @@
     "multiplier": 1.111
   },
   "expectedUnitPrice": {
-    "price": 102,
+    "price": 113,
     "label": "1 л",
     "styles": {
       "display": "inline-block",

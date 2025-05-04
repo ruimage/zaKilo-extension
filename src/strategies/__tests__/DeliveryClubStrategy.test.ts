@@ -27,7 +27,8 @@ describe("DeliveryClubStrategy", () => {
       it("should render unit price correctly", () => {
         const { price, label, styles: expectedStyles } = testCard.expectedUnitPrice;
 
-        strategy.renderUnitPrice(cardEl, price, label);
+        const calculatedPrice = testCard.expectedParsedPrice * testCard.expectedParsedQuantity.multiplier;
+        strategy.renderUnitPrice(cardEl, calculatedPrice, label);
 
         const renderedUnitPrice = cardEl.querySelector('[data-testid="product-card-unit-price"]');
         expect(renderedUnitPrice).toBeTruthy();
