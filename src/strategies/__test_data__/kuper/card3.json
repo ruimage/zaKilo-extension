@@ -6,7 +6,7 @@
     "multiplier": 1
   },
   "expectedUnitPrice": {
-    "price": 450,
+    "price": 900,
     "label": "1 кг",
     "styles": {
       "display": "inline-block",

@@ -8,7 +8,7 @@ export class KuperStrategy extends ParserStrategy {
     this.strategyName = "Kuper";
     this.selectors = {
       card: "[class*=ProductCardGridLayout]",
-      name: "[class*=ProductCard_title]",
+      name: "[class*=ProductCard_title_]",
       volume: "[class*=volume]",
       price: "[class*=priceText]",
       unitPrice: '[data-testid="unit-price"]',
@@ -17,18 +17,19 @@ export class KuperStrategy extends ParserStrategy {
 
   parsePrice(cardEl: HTMLElement): number {
     const priceString = cardEl.querySelector(this.selectors.price)?.textContent;
-    const priceRegex = /(\d+,\d+)/;
-    const match = priceString?.match(priceRegex);
-    const textPrice = match ? match[1].replace(",", ".") : null;
-    const v = parseFloat(textPrice ?? "");
-    if (isNaN(v)) throw new Error("Цена не распознана: " + priceString);
-    return v;
+    const fallbackPriceRegex = /(\d+,\d+)/;
+    const fallbackMatch = priceString?.match(fallbackPriceRegex);
+    const fallbackTextPrice = fallbackMatch ? fallbackMatch[1].replace(",", ".") : null;
+    const fallbackV = parseFloat(fallbackTextPrice ?? "");
+    if (isNaN(fallbackV)) throw new Error("Цена не распознана: " + priceString);
+    return fallbackV;
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel {
-    const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
-    const weightRegex = /(\d+(?:,\d+)?)\s*([а-яА-Яa-zA-Z]+)/;
-    const match = nameText.match(weightRegex);
+    const nameElement = cardEl.querySelector(this.selectors.name);
+    const nameText = nameElement?.getAttribute("title") ?? nameElement?.textContent ?? "";
+    const s = nameText.trim().toLowerCase().replace(",", ".");
+    const match = s.match(/([\d]+(?:\.\d+)?)\s*(г|гр|кг|мл|л|шт)\.?/i);
 
     if (match) {
       const totalText = match[1].replace(",", ".");
@@ -36,7 +37,7 @@ export class KuperStrategy extends ParserStrategy {
       if (isNaN(total)) throw new Error("Неверный формат числа: " + totalText);
       const unit = match[2];
 
-      this.log("totalText, total, unit", totalText, total, unit);
+      this.log("Name: totalText, total, unit", totalText, total, unit);
       return getUnitParsedWeight(total, unit);
     } else {
       throw new Error("Обьем не распознан.");
