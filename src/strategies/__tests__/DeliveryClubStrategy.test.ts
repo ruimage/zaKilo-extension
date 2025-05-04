@@ -1,11 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { AuchanStrategy } from "./AuchanStrategy";
-import { loadAllTestCards } from "./__test_data__/loadTestData";
+import { DeliveryClubStrategy } from "@/strategies";
+import { loadAllTestCards } from "../__test_data__/loadTestData";
 import { roundNumber } from "@/utils/converters";
 
-describe("AuchanStrategy", () => {
-  const strategy = new AuchanStrategy();
-  const testCards = loadAllTestCards("auchan");
+describe("DeliveryClubStrategy", () => {
+  const strategy = new DeliveryClubStrategy();
+  const testCards = loadAllTestCards("delivery-club");
 
   testCards.forEach((testCard, index) => {
     describe(`Card ${index + 1}`, () => {
@@ -29,7 +29,7 @@ describe("AuchanStrategy", () => {
 
         strategy.renderUnitPrice(cardEl, price, label);
 
-        const renderedUnitPrice = cardEl.querySelector('[data-testid="unit-price"]');
+        const renderedUnitPrice = cardEl.querySelector('[data-testid="product-card-unit-price"]');
         expect(renderedUnitPrice).toBeTruthy();
         expect(renderedUnitPrice?.textContent).toBe(`${price}\u2009₽ за ${label}`);
 

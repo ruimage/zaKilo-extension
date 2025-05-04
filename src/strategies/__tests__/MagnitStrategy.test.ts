@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { MagnitStrategy } from "./MagnitStrategy";
-import { loadAllTestCards } from "./__test_data__/loadTestData";
+import { MagnitStrategy } from "@/strategies";
+import { loadAllTestCards } from "../__test_data__/loadTestData";
 import { roundNumber } from "@/utils/converters";
 
 describe("MagnitStrategy", () => {
