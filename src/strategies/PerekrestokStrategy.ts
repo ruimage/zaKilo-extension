@@ -1,14 +1,16 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
 import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
+import { UnitLabel } from "@/types/IStrategy";
 
 export class PerekrestokStrategy extends ParserStrategy {
   constructor() {
     super();
     this.strategyName = "Perekrestok";
     this.selectors = {
-      card: "[class*=product-card]",
-      price: "[class*=product-card__price]",
-      name: "[class*=product-card__title]",
+      card: "[data-testid=product-card-root]",
+      price: "[data-testid=product-card-price]",
+      name: "[data-testid=product-card-name]",
+      volume: "[data-testid=product-card-weight]",
       unitPrice: "[data-testid='unit-price']",
     };
   }
@@ -36,9 +38,15 @@ export class PerekrestokStrategy extends ParserStrategy {
     return value;
   }
 
-  parseQuantity(cardEl: HTMLElement): { unitLabel: string; multiplier: number } {
-    const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
-    const s = nameText.trim().toLowerCase().replace(/,/g, ".");
+  parseQuantity(cardEl: HTMLElement): UnitLabel {
+    let quantityText: string;
+    if (this.selectors?.volume) {
+      quantityText = cardEl.querySelector(this.selectors.volume)?.textContent?.trim() ?? "";
+    } else {
+      quantityText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
+    }
+
+    const s = quantityText.trim().toLowerCase().replace(/,/g, ".");
     const mulMatch = s.match(/^(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*([^\s\d]+)/i);
     let total: number;
     let unit: string;
@@ -49,7 +57,7 @@ export class PerekrestokStrategy extends ParserStrategy {
       total = count * per;
     } else {
       const m = s.match(/([\d.]+)\s*([^\s\d]+)/);
-      if (!m) throw new Error(`не распознано количество: "${nameText}"`);
+      if (!m) throw new Error(`не распознано количество: "${quantityText}"`);
       total = parseFloat(m[1]);
       unit = m[2];
     }

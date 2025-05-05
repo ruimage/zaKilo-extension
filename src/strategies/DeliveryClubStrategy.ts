@@ -1,5 +1,6 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
 import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
+import { UnitLabel } from "@/types/IStrategy";
 
 export class DeliveryClubStrategy extends ParserStrategy {
   constructor() {
@@ -24,7 +25,7 @@ export class DeliveryClubStrategy extends ParserStrategy {
     return v;
   }
 
-  parseQuantity(cardEl: HTMLElement): { unitLabel: string; multiplier: number } {
+  parseQuantity(cardEl: HTMLElement): UnitLabel {
     const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
     const s = nameText.toLowerCase().replace(",", ".").trim();
     const m = s.match(/([\d.]+)\s*([^\s\d]+)/);
