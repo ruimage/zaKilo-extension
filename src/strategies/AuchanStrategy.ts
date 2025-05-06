@@ -7,9 +7,9 @@ export class AuchanStrategy extends ParserStrategy {
     super();
     this.strategyName = "Auchan";
     this.selectors = {
-      card: '[class*="styles_productCard"][class*="styles_catalogListPage_item"]',
-      price: '[class*="styles_productCardContentPanel_price"]',
-      name: '[class*="styles_productCardContentPanel_name"]',
+      card: '[class*="styles_productCard"][class*="styles_catalogListPage_item"],div[class*=digi-product]',
+      price: '[class*="styles_productCardContentPanel_price"],[class*=digi-product__price]',
+      name: '[class*="styles_productCardContentPanel_name"],[class*=digi-product__label]',
       unitPrice: '[data-testid="unit-price"]',
       volume: '[class*="productCardContentPanel_type"]',
     };
