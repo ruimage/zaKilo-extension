@@ -1,7 +1,16 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, test } from "vitest";
 import { roundNumber, getUnitParsedWeight } from "./converters";
 
 describe("converters", () => {
+  describe("edge cases", () => {
+    it("should handle zero value", () => {
+      expect(() => getUnitParsedWeight(0, "г")).toThrow("Значение не может быть нулевым");
+    });
+
+    it("should handle negative value", () => {
+      expect(() => getUnitParsedWeight(-100, "г")).toThrow("Значение не может быть отрицательным");
+    });
+  });
   describe("roundToTwoDecimals (using roundNumber)", () => {
     it("should round numbers to 2 decimal places", () => {
       expect(roundNumber(123.456)).toBe(123.46);
@@ -52,6 +61,22 @@ describe("converters", () => {
       expect(roundNumber(-123.456, 2)).toBe(-123.46);
       expect(roundNumber(-123.454, 2)).toBe(-123.45);
       expect(roundNumber(-127.13, -1)).toBe(-130);
+      expect(roundNumber(-0.005, 2)).toBe(-0.01);
+    });
+
+    test.each([
+      [123.456, undefined, 123.46],
+      [123.456, 0, 123],
+      [123.456, 1, 123.5],
+      [123.456, 3, 123.456],
+      [123.456, 4, 123.456],
+      [123.456, -1, 120],
+      [123.456, -2, 100],
+      [0.0049, 2, 0],
+      [0.005, 2, 0.01],
+      [999.999, 2, 1000],
+    ])("roundNumber(%f, %i)", (value, decimalPlaces, expected) => {
+      expect(roundNumber(value, decimalPlaces)).toBe(expected);
     });
   });
 
@@ -101,6 +126,24 @@ describe("converters", () => {
 
     it("should throw error for unknown units", () => {
       expect(() => getUnitParsedWeight(5, "unknown")).toThrow("Неизвестная единица: unknown");
+      expect(() => getUnitParsedWeight(5, "")).toThrow("Неизвестная единица: ");
+      expect(() => getUnitParsedWeight(5, " ")).toThrow("Неизвестная единица:  ");
+    });
+
+    test.each([
+      [250, "г", { unitLabel: "1 кг", multiplier: 4 }],
+      [1000, "г", { unitLabel: "1 кг", multiplier: 1 }],
+      [1, "кг", { unitLabel: "1 кг", multiplier: 1 }],
+      [0.5, "кг", { unitLabel: "1 кг", multiplier: 2 }],
+      [300, "мл", { unitLabel: "1 л", multiplier: 3.3333333333333335 }],
+      [1000, "мл", { unitLabel: "1 л", multiplier: 1 }],
+      [1, "л", { unitLabel: "1 л", multiplier: 1 }],
+      [2, "л", { unitLabel: "1 л", multiplier: 0.5 }],
+      [10, "шт", { unitLabel: "1 шт", multiplier: 0.1 }],
+      [1, "шт", { unitLabel: "1 шт", multiplier: 1 }],
+      [4, "шт.", { unitLabel: "1 шт", multiplier: 0.25 }],
+    ])("getUnitParsedWeight(%i, '%s')", (value, unit, expected) => {
+      expect(getUnitParsedWeight(value, unit)).toEqual(expected);
     });
   });
 });

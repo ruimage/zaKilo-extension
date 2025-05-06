@@ -13,6 +13,12 @@ export function roundNumber(value: number, decimalPlaces: number = 2): number {
 }
 
 export function getUnitParsedWeight(value: number, unit: string): UnitLabel {
+  if (value === 0) {
+    throw new Error("Значение не может быть нулевым");
+  }
+  if (value < 0) {
+    throw new Error("Значение не может быть отрицательным");
+  }
   switch (unit) {
     case "г":
     case "гр":
