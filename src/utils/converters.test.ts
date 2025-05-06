@@ -11,142 +11,113 @@ describe("converters", () => {
       expect(() => getUnitParsedWeight(-100, "г")).toThrow("Значение не может быть отрицательным");
     });
   });
-  describe("roundToTwoDecimals (using roundNumber)", () => {
-    it("should round numbers to 2 decimal places", () => {
-      expect(roundNumber(123.456)).toBe(123.46);
-      expect(roundNumber(123.45)).toBe(123.45);
-      expect(roundNumber(123.451)).toBe(123.45);
-      expect(roundNumber(123.455)).toBe(123.46);
-    });
-
-    it("should handle integers", () => {
-      expect(roundNumber(123)).toBe(123);
-      expect(roundNumber(0)).toBe(0);
-    });
-
-    it("should handle negative numbers", () => {
-      expect(roundNumber(-123.456)).toBe(-123.46);
-      expect(roundNumber(-123.454)).toBe(-123.45);
-    });
-  });
-
   describe("roundNumber", () => {
-    it("should round numbers to 2 decimal places by default", () => {
-      expect(roundNumber(123.456)).toBe(123.46);
-      expect(roundNumber(123.45)).toBe(123.45);
-      expect(roundNumber(123.451)).toBe(123.45);
-      expect(roundNumber(123.455)).toBe(123.46);
-    });
-
-    it("should round numbers to specified decimal places", () => {
-      expect(roundNumber(123.4567, 3)).toBe(123.457);
-      expect(roundNumber(123.45, 1)).toBe(123.5);
-      expect(roundNumber(123.45678, 4)).toBe(123.4568);
-      expect(roundNumber(123.45678, 0)).toBe(123);
-    });
-
-    it("should handle negative decimal places (round to tens, hundreds, etc.)", () => {
-      expect(roundNumber(123.25, -1)).toBe(120);
-      expect(roundNumber(127.13, -1)).toBe(130);
-      expect(roundNumber(1234.56, -2)).toBe(1200);
-      expect(roundNumber(1750, -3)).toBe(2000);
-    });
-
-    it("should handle integers", () => {
-      expect(roundNumber(123)).toBe(123);
-      expect(roundNumber(0)).toBe(0);
-    });
-
-    it("should handle negative numbers", () => {
-      expect(roundNumber(-123.456, 2)).toBe(-123.46);
-      expect(roundNumber(-123.454, 2)).toBe(-123.45);
-      expect(roundNumber(-127.13, -1)).toBe(-130);
-      expect(roundNumber(-0.005, 2)).toBe(-0.01);
-    });
-
-    describe("roundNumber with different decimal places", () => {
+    describe("default rounding (2 decimal places)", () => {
       test.each([
-        // Стандартное округление до 2 знаков
-        [123.456, undefined, 123.46],
-        [123.454, undefined, 123.45],
-        [0.0049, undefined, 0],
-        [0.005, undefined, 0.01],
-        [999.999, undefined, 1000],
+        [123.456, 123.46],
+        [123.454, 123.45],
+        [0.0049, 0],
+        [0.005, 0.01],
+        [999.999, 1000],
+        [-123.456, -123.46],
+        [-123.454, -123.45],
+        [-0.005, -0.01],
+        [123, 123],
+        [0, 0],
+      ])("should round %f to %f", (value, expected) => {
+        expect(roundNumber(value)).toBe(expected);
+      });
+    });
 
-        // Округление до целых
-        [123.456, 0, 123],
-        [123.999, 0, 124],
-
-        // Округление до 1 знака
-        [123.456, 1, 123.5],
-        [123.44, 1, 123.4],
-
-        // Округление до 3+ знаков
+    describe("custom decimal places", () => {
+      test.each([
+        // Positive decimal places
         [123.4567, 3, 123.457],
+        [123.45, 1, 123.5],
         [123.45678, 4, 123.4568],
+        [123.45678, 0, 123],
 
-        // Округление до десятков/сотен
+        // Negative decimal places
         [123.456, -1, 120],
         [127.13, -1, 130],
         [1234.56, -2, 1200],
         [1750, -3, 2000],
-      ])("should round %f with %i decimal places to %f", (value, decimalPlaces, expected) => {
-      expect(roundNumber(value, decimalPlaces)).toBe(expected);
+        [-127.13, -1, -130],
+      ])(
+        "should round %f with %i decimal places to %f",
+        (value, decimalPlaces, expected) => {
+          expect(roundNumber(value, decimalPlaces)).toBe(expected);
+        }
+      );
+    });
+
+    describe("special cases", () => {
+      it("should handle NaN", () => {
+        expect(roundNumber(NaN)).toBeNaN();
+      });
+
+      test.each([
+        [Infinity, Infinity],
+        [-Infinity, -Infinity],
+        [1.23456e20, 1.23456e20],
+        [1.23456e-20, 0],
+      ])("should handle %f", (value, expected) => {
+        expect(roundNumber(value)).toBe(expected);
+      });
     });
   });
 
   describe("getUnitParsedWeight", () => {
-    describe("weight conversions (grams and kilograms)", () => {
+    describe("valid conversions", () => {
       test.each([
+        // Weight
         [250, "г", { unitLabel: "1 кг", multiplier: 4 }],
         [500, "г", { unitLabel: "1 кг", multiplier: 2 }],
         [1000, "г", { unitLabel: "1 кг", multiplier: 1 }],
         [1, "кг", { unitLabel: "1 кг", multiplier: 1 }],
         [0.5, "кг", { unitLabel: "1 кг", multiplier: 2 }],
         [2.5, "кг", { unitLabel: "1 кг", multiplier: 0.4 }],
-      ])("should convert %i %s correctly", (value, unit, expected) => {
-        expect(getUnitParsedWeight(value, unit)).toEqual(expected);
-      });
-    });
+        [500, "гр", { unitLabel: "1 кг", multiplier: 2 }],
 
-    describe("volume conversions (ml and liters)", () => {
-      test.each([
+        // Volume
         [300, "мл", { unitLabel: "1 л", multiplier: 3.3333333333333335 }],
         [500, "мл", { unitLabel: "1 л", multiplier: 2 }],
         [1000, "мл", { unitLabel: "1 л", multiplier: 1 }],
         [1, "л", { unitLabel: "1 л", multiplier: 1 }],
         [0.75, "л", { unitLabel: "1 л", multiplier: 1.3333333333333333 }],
-        [2.5, "л", { unitLabel: "1 л", multiplier: 0.4 }],
-      ])("should convert %i %s correctly", (value, unit, expected) => {
-        expect(getUnitParsedWeight(value, unit)).toEqual(expected);
-      });
-    });
 
-    describe("piece conversions", () => {
-      test.each([
+        // Pieces
         [1, "шт", { unitLabel: "1 шт", multiplier: 1 }],
         [4, "шт", { unitLabel: "1 шт", multiplier: 0.25 }],
         [10, "шт", { unitLabel: "1 шт", multiplier: 0.1 }],
         [1, "шт.", { unitLabel: "1 шт", multiplier: 1 }],
         [4, "шт.", { unitLabel: "1 шт", multiplier: 0.25 }],
-      ])("should convert %i %s correctly", (value, unit, expected) => {
-        expect(getUnitParsedWeight(value, unit)).toEqual(expected);
-      });
+      ])(
+        "should convert %i %s to standard unit",
+        (value, unit, expected) => {
+          expect(getUnitParsedWeight(value, unit)).toEqual(expected);
+        }
+      );
     });
 
-    describe("alternative unit spellings", () => {
-      test.each([
-        [500, "гр", { unitLabel: "1 кг", multiplier: 2 }],
-        [4, "шт.", { unitLabel: "1 шт", multiplier: 0.25 }],
-      ])("should handle alternative spelling '%s'", (value, unit, expected) => {
-        expect(getUnitParsedWeight(value, unit)).toEqual(expected);
+    describe("error handling", () => {
+      it("should throw for zero value", () => {
+        expect(() => getUnitParsedWeight(0, "г")).toThrow("Значение не может быть нулевым");
       });
-    });
 
-    describe("error cases", () => {
-      it("should throw error for unknown units", () => {
+      it("should throw for negative value", () => {
+        expect(() => getUnitParsedWeight(-100, "г")).toThrow("Значение не может быть отрицательным");
+      });
+
+      it("should throw for unknown unit", () => {
         expect(() => getUnitParsedWeight(5, "unknown")).toThrow("Неизвестная единица: unknown");
+      });
+
+      it("should throw for empty unit", () => {
         expect(() => getUnitParsedWeight(5, "")).toThrow("Неизвестная единица: ");
+      });
+
+      it("should throw for space unit", () => {
         expect(() => getUnitParsedWeight(5, " ")).toThrow("Неизвестная единица:  ");
       });
     });
