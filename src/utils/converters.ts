@@ -9,7 +9,8 @@ import { UnitLabel } from "@/types/IStrategy";
  */
 export function roundNumber(value: number, decimalPlaces: number = 2): number {
   const factor = Math.pow(10, decimalPlaces);
-  return Math.round(value * factor) / factor;
+  const rounded = Math.round(Math.abs(value) * factor) / factor;
+  return value < 0 ? -rounded : rounded;
 }
 
 export function getUnitParsedWeight(value: number, unit: string): UnitLabel {
