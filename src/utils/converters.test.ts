@@ -95,95 +95,60 @@ describe("converters", () => {
     });
   });
 
-  describe("getUnitParsedWeight", () => {
-    it("should convert grams to kilograms", () => {
-      expect(getUnitParsedWeight(500, "г")).toEqual({
-        unitLabel: "1 кг",
-        multiplier: 2, // 1000 / 500
-      });
-      expect(getUnitParsedWeight(500, "гр")).toEqual({
-        unitLabel: "1 кг",
-        multiplier: 2, // 1000 / 500
-      });
-    });
-
-    it("should handle kilograms", () => {
-      expect(getUnitParsedWeight(2, "кг")).toEqual({
-        unitLabel: "1 кг",
-        multiplier: 0.5, // 1 / 2
+  describe("getUnitParsedWeight conversions", () => {
+    describe("weight conversions (grams and kilograms)", () => {
+      test.each([
+        [250, "г", { unitLabel: "1 кг", multiplier: 4 }],
+        [500, "г", { unitLabel: "1 кг", multiplier: 2 }],
+        [1000, "г", { unitLabel: "1 кг", multiplier: 1 }],
+        [1, "кг", { unitLabel: "1 кг", multiplier: 1 }],
+        [0.5, "кг", { unitLabel: "1 кг", multiplier: 2 }],
+        [2.5, "кг", { unitLabel: "1 кг", multiplier: 0.4 }],
+      ])("should convert %i %s correctly", (value, unit, expected) => {
+        expect(getUnitParsedWeight(value, unit)).toEqual(expected);
       });
     });
 
-    it("should convert milliliters to liters", () => {
-      expect(getUnitParsedWeight(500, "мл")).toEqual({
-        unitLabel: "1 л",
-        multiplier: 2, // 1000 / 500
+    describe("volume conversions (ml and liters)", () => {
+      test.each([
+        [300, "мл", { unitLabel: "1 л", multiplier: 3.3333333333333335 }],
+        [500, "мл", { unitLabel: "1 л", multiplier: 2 }],
+        [1000, "мл", { unitLabel: "1 л", multiplier: 1 }],
+        [1, "л", { unitLabel: "1 л", multiplier: 1 }],
+        [0.75, "л", { unitLabel: "1 л", multiplier: 1.3333333333333333 }],
+        [2.5, "л", { unitLabel: "1 л", multiplier: 0.4 }],
+      ])("should convert %i %s correctly", (value, unit, expected) => {
+        expect(getUnitParsedWeight(value, unit)).toEqual(expected);
       });
     });
 
-    it("should handle liters", () => {
-      expect(getUnitParsedWeight(2, "л")).toEqual({
-        unitLabel: "1 л",
-        multiplier: 0.5, // 1 / 2
+    describe("piece conversions", () => {
+      test.each([
+        [1, "шт", { unitLabel: "1 шт", multiplier: 1 }],
+        [4, "шт", { unitLabel: "1 шт", multiplier: 0.25 }],
+        [10, "шт", { unitLabel: "1 шт", multiplier: 0.1 }],
+        [1, "шт.", { unitLabel: "1 шт", multiplier: 1 }],
+        [4, "шт.", { unitLabel: "1 шт", multiplier: 0.25 }],
+      ])("should convert %i %s correctly", (value, unit, expected) => {
+        expect(getUnitParsedWeight(value, unit)).toEqual(expected);
       });
     });
 
-    it("should handle pieces", () => {
-      expect(getUnitParsedWeight(5, "шт")).toEqual({
-        unitLabel: "1 шт",
-        multiplier: 0.2, // 1 / 5
-      });
-      expect(getUnitParsedWeight(5, "шт.")).toEqual({
-        unitLabel: "1 шт",
-        multiplier: 0.2, // 1 / 5
+    describe("alternative unit spellings", () => {
+      test.each([
+        [500, "гр", { unitLabel: "1 кг", multiplier: 2 }],
+        [4, "шт.", { unitLabel: "1 шт", multiplier: 0.25 }],
+      ])("should handle alternative spelling '%s'", (value, unit, expected) => {
+        expect(getUnitParsedWeight(value, unit)).toEqual(expected);
       });
     });
 
-    it("should throw error for unknown units", () => {
-      expect(() => getUnitParsedWeight(5, "unknown")).toThrow("Неизвестная единица: unknown");
-      expect(() => getUnitParsedWeight(5, "")).toThrow("Неизвестная единица: ");
-      expect(() => getUnitParsedWeight(5, " ")).toThrow("Неизвестная единица:  ");
-    });
-
-    describe("getUnitParsedWeight conversions", () => {
-      describe("weight conversions (grams and kilograms)", () => {
-        test.each([
-          [250, "г", { unitLabel: "1 кг", multiplier: 4 }],
-          [500, "г", { unitLabel: "1 кг", multiplier: 2 }],
-          [1000, "г", { unitLabel: "1 кг", multiplier: 1 }],
-          [1, "кг", { unitLabel: "1 кг", multiplier: 1 }],
-          [0.5, "кг", { unitLabel: "1 кг", multiplier: 2 }],
-          [2.5, "кг", { unitLabel: "1 кг", multiplier: 0.4 }],
-        ])("should convert %i %s correctly", (value, unit, expected) => {
+    describe("error cases", () => {
+      it("should throw error for unknown units", () => {
+        expect(() => getUnitParsedWeight(5, "unknown")).toThrow("Неизвестная единица: unknown");
+        expect(() => getUnitParsedWeight(5, "")).toThrow("Неизвестная единица: ");
+        expect(() => getUnitParsedWeight(5, " ")).toThrow("Неизвестная единица:  ");
       });
-
-      describe("volume conversions (ml and liters)", () => {
-        test.each([
-          [300, "мл", { unitLabel: "1 л", multiplier: 3.3333333333333335 }],
-          [500, "мл", { unitLabel: "1 л", multiplier: 2 }],
-          [1000, "мл", { unitLabel: "1 л", multiplier: 1 }],
-          [1, "л", { unitLabel: "1 л", multiplier: 1 }],
-          [0.75, "л", { unitLabel: "1 л", multiplier: 1.3333333333333333 }],
-          [2.5, "л", { unitLabel: "1 л", multiplier: 0.4 }],
-        ])("should convert %i %s correctly", (value, unit, expected) => {
-      });
-
-      describe("piece conversions", () => {
-        test.each([
-          [1, "шт", { unitLabel: "1 шт", multiplier: 1 }],
-          [4, "шт", { unitLabel: "1 шт", multiplier: 0.25 }],
-          [10, "шт", { unitLabel: "1 шт", multiplier: 0.1 }],
-          [1, "шт.", { unitLabel: "1 шт", multiplier: 1 }],
-          [4, "шт.", { unitLabel: "1 шт", multiplier: 0.25 }],
-        ])("should convert %i %s correctly", (value, unit, expected) => {
-      });
-
-      describe("alternative unit spellings", () => {
-        test.each([
-          [500, "гр", { unitLabel: "1 кг", multiplier: 2 }],
-          [4, "шт.", { unitLabel: "1 шт", multiplier: 0.25 }],
-        ])("should handle alternative spelling '%s'", (value, unit, expected) => {
-      expect(getUnitParsedWeight(value, unit)).toEqual(expected);
     });
   });
 });
