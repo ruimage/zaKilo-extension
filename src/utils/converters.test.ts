@@ -95,7 +95,7 @@ describe("converters", () => {
     });
   });
 
-  describe("getUnitParsedWeight conversions", () => {
+  describe("getUnitParsedWeight", () => {
     describe("weight conversions (grams and kilograms)", () => {
       test.each([
         [250, "г", { unitLabel: "1 кг", multiplier: 4 }],
