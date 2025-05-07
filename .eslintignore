@@ -1,0 +1,6 @@
+# Игнорируемые пути
+dist/
+node_modules/
+ext-dist/
+.*.js
+*.md
