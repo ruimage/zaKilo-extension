@@ -1,6 +1,6 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
 import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
-import { UnitLabel } from "@/types/IStrategy";
+import type { UnitLabel } from "@/types/IStrategy";
 
 export class PyaterochkaStrategy extends ParserStrategy {
   constructor() {
@@ -8,14 +8,23 @@ export class PyaterochkaStrategy extends ParserStrategy {
     this.strategyName = "Pyaterochka";
     this.selectors = {
       card: '[data-qa^="product-card-"], [class*="productFilterGrid_cardContainer"]',
-      price: '[class*="priceContainer_priceContainerCatalog"]',
+      price: '[class*="priceContainer_totalContainer_"]',
+      discountPrice: '[class*="priceContainer_discountContainer"]',
       name: '[class*="mainInformation_weight"]',
       unitPrice: '[data-testid="unit-price"]',
     };
   }
 
   parsePrice(cardEl: HTMLElement): number {
-    const priceString = cardEl.querySelector(this.selectors.price)?.textContent;
+    const discountPriceString = this.selectors?.discountPrice
+      ? cardEl.querySelector(this.selectors.discountPrice)?.textContent || ""
+      : "";
+    const regularPriceString = this.selectors?.price
+      ? cardEl.querySelector(this.selectors.price)?.textContent || ""
+      : "";
+
+    const priceString = discountPriceString || regularPriceString;
+
     console.log("parsed price text", priceString);
     const priceRegex = /(?<!\d)([0-9]+(?:[ \u00A0][0-9]{3})*(?:[.,][0-9]+)?)[ \u00A0]*₽/u;
 
@@ -24,7 +33,7 @@ export class PyaterochkaStrategy extends ParserStrategy {
       throw new Error("Цена не распознана: " + priceString);
     }
 
-    let textPrice = match[1].replace(/[ \u00A0]/g, "").replace(",", ".");
+    const textPrice = match[1].replace(/[ \u00A0]/g, "").replace(",", ".");
 
     const value = parseFloat(textPrice);
     if (isNaN(value)) {
@@ -63,7 +72,7 @@ export class PyaterochkaStrategy extends ParserStrategy {
     const fz = "calc(0.95vw)";
 
     wrapper.style.fontSize = fz;
-    // @ts-expect-error
+    // @ts-expect-error неизвестно наличие стилей
     wrapper.parentElement.style.fontSize = fz;
 
     wrapper.querySelectorAll(this.selectors.unitPrice).forEach((el) => el.remove());
