@@ -6,7 +6,7 @@
     "multiplier": 0.05
   },
   "expectedUnitPrice": {
-    "price": 13.4,
+    "price": 13,
     "label": "1 шт",
     "styles": {
       "display": "inline-block",

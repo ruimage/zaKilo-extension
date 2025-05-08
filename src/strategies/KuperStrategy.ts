@@ -1,6 +1,6 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
 import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
-import { UnitLabel } from "@/types/IStrategy";
+import type { UnitLabel } from "@/types/IStrategy";
 
 export class KuperStrategy extends ParserStrategy {
   constructor() {
@@ -8,8 +8,8 @@ export class KuperStrategy extends ParserStrategy {
     this.strategyName = "Kuper";
     this.selectors = {
       card: "[class*=ProductCardGridLayout]",
-      name: "[class*=ProductCard_title_]",
-      volume: "[class*=volume]",
+      name: "[data-qa$=_title]",
+      volume: "[data-qa$=_volume]",
       price: "[class*=priceText]",
       unitPrice: '[data-testid="unit-price"]',
     };
@@ -26,9 +26,14 @@ export class KuperStrategy extends ParserStrategy {
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel {
-    const nameElement = cardEl.querySelector(this.selectors.name);
-    const nameText = nameElement?.getAttribute("title") ?? nameElement?.textContent ?? "";
-    const s = nameText.trim().toLowerCase().replace(",", ".");
+    const volumeText = this.selectors?.volume ? cardEl.querySelector(this.selectors.volume)?.textContent || "" : "";
+    const nameText = cardEl.querySelector(this.selectors.name)?.getAttribute("title") || "";
+    const volumeString = nameText || volumeText;
+
+    console.log("volumeString", volumeText);
+    console.log("nameText", nameText);
+
+    const s = volumeString.trim().toLowerCase().replace(",", ".");
     const match = s.match(/([\d]+(?:\.\d+)?)\s*(г|гр|кг|мл|л|шт)\.?/i);
 
     if (match) {
