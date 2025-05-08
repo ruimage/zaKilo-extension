@@ -7,9 +7,9 @@ export class AuchanStrategy extends ParserStrategy {
     super();
     this.strategyName = "Auchan";
     this.selectors = {
-      card: '[class*="styles_productCard"][class*="styles_catalogListPage_item"]',
-      price: '[class*="styles_productCardContentPanel_price"]',
-      name: '[class*="styles_productCardContentPanel_name"]',
+      card: '[class*="styles_productCard"][class*="styles_catalogListPage_item"],div[class*=digi-product]',
+      price: '[class*="styles_productCardContentPanel_price"],[class*=digi-product__price]',
+      name: '[class*="styles_productCardContentPanel_name"],[class*=digi-product__label]',
       unitPrice: '[data-testid="unit-price"]',
       volume: '[class*="productCardContentPanel_type"]',
     };
@@ -36,7 +36,15 @@ export class AuchanStrategy extends ParserStrategy {
       }
     }
 
-    const regex = /([\d.,]+)\s*(г|гр|кг|мл|л|шт)/i;
+
+    if (this.selectors?.volume) {
+      const volumeText = cardEl.querySelector(this.selectors.volume)?.textContent?.trim() ?? "";
+      if (volumeText) {
+        nameText = volumeText;
+      }
+    }
+
+    const regex = /([\d.,]+)\s*(г(?!од)|гр|кг|мл|л|шт)/i;
     const match = nameText.match(regex);
     if (!match) return { unitLabel: "1 шт", multiplier: 1 };
     const value = parseFloat(match[1].replace(",", "."));
