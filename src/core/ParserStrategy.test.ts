@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ParserStrategy } from "./ParserStrategy";
-import { UnitLabel } from "@/types/IStrategy";
+import type { UnitLabel } from "@/types/IStrategy";
 import { getUnitParsedWeight } from "@/utils/converters";
 
 // Concrete implementation of ParserStrategy for testing

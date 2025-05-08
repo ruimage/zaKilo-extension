@@ -17,7 +17,7 @@ export class SamokatStrategy extends ParserStrategy {
 
   parsePrice(cardEl: HTMLElement): number {
     const priceString = this.selectors?.price ? cardEl.querySelector(this.selectors.price)?.textContent || "" : "";
-    console.log("parsed price text", priceString);
+    this.log("parsed price text", priceString);
     const num = priceString?.replace(/[^\d,.]/g, "").replace(",", ".") ?? "";
     const v = parseFloat(num);
     if (isNaN(v)) throw new Error("Цена не распознана: " + priceString);

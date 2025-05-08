@@ -1,6 +1,6 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
 import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
-import { UnitLabel } from "@/types/IStrategy";
+import type { UnitLabel } from "@/types/IStrategy";
 
 export class MagnitStrategy extends ParserStrategy {
   constructor() {

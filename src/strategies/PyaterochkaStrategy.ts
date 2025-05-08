@@ -25,7 +25,7 @@ export class PyaterochkaStrategy extends ParserStrategy {
 
     const priceString = discountPriceString || regularPriceString;
 
-    console.log("parsed price text", priceString);
+    this.log("parsed price text", priceString);
     const priceRegex = /(?<!\d)([0-9]+(?:[ \u00A0][0-9]{3})*(?:[.,][0-9]+)?)[ \u00A0]*₽/u;
 
     const match = priceString?.match(priceRegex);

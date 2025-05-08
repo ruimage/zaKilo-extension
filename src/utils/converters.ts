@@ -1,4 +1,4 @@
-import { UnitLabel } from "@/types/IStrategy";
+import type { UnitLabel } from "@/types/IStrategy";
 
 /**
  * Rounds a number to the specified number of decimal places

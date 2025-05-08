@@ -1,6 +1,6 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
 import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
-import { UnitLabel } from "@/types/IStrategy";
+import type { UnitLabel } from "@/types/IStrategy";
 
 export class PerekrestokStrategy extends ParserStrategy {
   constructor() {
@@ -21,14 +21,14 @@ export class PerekrestokStrategy extends ParserStrategy {
 
   parsePrice(cardEl: HTMLElement): number {
     const priceString = cardEl.querySelector(this.selectors.price)?.textContent;
-    console.log("parsed price text", priceString);
+    this.log("parsed price text", priceString);
     const priceRegex = /(?<!\d)([0-9]{1,3}(?:[ \u00A0][0-9]{3})*(?:[.,][0-9]+)?)[ \u00A0]*₽/u;
     const match = priceString?.match(priceRegex);
     if (!match) {
       throw new Error("Цена не распознана: " + priceString);
     }
 
-    let textPrice = match[1].replace(/[ \u00A0]/g, "").replace(",", ".");
+    const textPrice = match[1].replace(/[ \u00A0]/g, "").replace(",", ".");
 
     const value = parseFloat(textPrice);
     if (isNaN(value)) {

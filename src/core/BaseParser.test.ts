@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { BaseParser } from "./BaseParser";
-import { IStrategy, UnitLabel } from "@/types/IStrategy";
+import { type IStrategy, type UnitLabel } from "@/types/IStrategy";
 
 // Mock implementation of IStrategy for testing
 class MockStrategy implements IStrategy {

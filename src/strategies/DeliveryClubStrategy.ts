@@ -18,7 +18,7 @@ export class DeliveryClubStrategy extends ParserStrategy {
 
   parsePrice(cardEl: HTMLElement): number {
     const priceString = cardEl.querySelector(this.selectors.price)?.textContent;
-    console.log("parsed price text", priceString);
+    this.log("parsed price text", priceString);
     const cleaned = priceString?.replace(/\s|&thinsp;/g, "").replace("₽", "") ?? "";
     const v = parseFloat(cleaned);
     if (isNaN(v)) throw new Error("Invalid price: " + priceString);

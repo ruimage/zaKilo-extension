@@ -30,8 +30,8 @@ export class KuperStrategy extends ParserStrategy {
     const nameText = cardEl.querySelector(this.selectors.name)?.getAttribute("title") || "";
     const volumeString = nameText || volumeText;
 
-    console.log("volumeString", volumeText);
-    console.log("nameText", nameText);
+    this.log("volumeString", volumeText);
+    this.log("nameText", nameText);
 
     const s = volumeString.trim().toLowerCase().replace(",", ".");
     const match = s.match(/([\d]+(?:\.\d+)?)\s*(г|гр|кг|мл|л|шт)\.?/i);

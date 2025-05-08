@@ -4,3 +4,5 @@ node_modules/
 ext-dist/
 .*.js
 *.md
+vitest.config.ts
+vitest.setup.ts
