@@ -1,5 +1,5 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
-import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
+import { getUnitParsedWeight, roundNumber, parseQuantityFromText } from "@/utils/converters";
 import type { UnitLabel } from "@/types/IStrategy";
 
 export class MagnitStrategy extends ParserStrategy {
@@ -13,6 +13,7 @@ export class MagnitStrategy extends ParserStrategy {
       ].join(","),
       name: '[class*="unit-catalog-product-preview-title"]',
       unitPrice: '[data-testid="unit-price"]',
+      volume: '[class*="unit-catalog-product-preview-volume"]',
     };
   }
 
@@ -35,14 +36,11 @@ export class MagnitStrategy extends ParserStrategy {
 
   parseQuantity(cardEl: HTMLElement): UnitLabel {
     const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
-    const s = nameText.trim().toLowerCase().replace(",", ".");
-    const match = s.match(/([\d]+(?:\.\d+)?)\s*(г|гр|кг|мл|л|шт)\.?/i);
-    if (!match) {
-      return { unitLabel: "1 шт", multiplier: 1 };
-    }
-    const value = parseFloat(match[1]);
-    const unit = match[2];
-    return getUnitParsedWeight(value, unit);
+    const volumeText = this.selectors?.volume ? cardEl.querySelector(this.selectors.volume)?.textContent?.trim() ?? "" : "";
+    const quantityString = nameText || volumeText;
+    const parsed = parseQuantityFromText(quantityString.trim().toLowerCase().replace(",", "."));
+    if (!parsed) return { unitLabel: '1 шт', multiplier: 1 };
+    return getUnitParsedWeight(parsed.value, parsed.unit);
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {

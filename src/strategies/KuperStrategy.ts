@@ -1,5 +1,5 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
-import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
+import { getUnitParsedWeight, roundNumber, parseQuantityFromText } from "@/utils/converters";
 import type { UnitLabel } from "@/types/IStrategy";
 
 export class KuperStrategy extends ParserStrategy {
@@ -25,27 +25,15 @@ export class KuperStrategy extends ParserStrategy {
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel {
-    const volumeText = this.selectors?.volume ? cardEl.querySelector(this.selectors.volume)?.textContent || "" : "";
     const nameText = cardEl.querySelector(this.selectors.name)?.getAttribute("title") || "";
+    const volumeText = this.selectors?.volume ? cardEl.querySelector(this.selectors.volume)?.textContent || "" : "";
     const volumeString = nameText || volumeText;
-
     this.log("volumeString", volumeText);
     this.log("nameText", nameText);
 
-    const s = volumeString.trim().toLowerCase().replace(",", ".");
-    const match = s.match(/([\d]+(?:\.\d+)?)\s*(г|гр|кг|мл|л|шт)\.?/i);
-
-    if (match) {
-      const totalText = match[1].replace(",", ".");
-      const total = Number(totalText);
-      if (isNaN(total)) throw new Error("Неверный формат числа: " + totalText);
-      const unit = match[2];
-
-      this.log("Name: totalText, total, unit", totalText, total, unit);
-      return getUnitParsedWeight(total, unit);
-    } else {
-      throw new Error("Обьем не распознан.");
-    }
+    const parsed = parseQuantityFromText(volumeString.trim().toLowerCase().replace(",", "."));
+    if (!parsed) throw new Error("Обьем не распознан.");
+    return getUnitParsedWeight(parsed.value, parsed.unit);
   }
 
   renderUnitPrice(cardEl: Element, unitPrice: number, unitLabel: string): void {

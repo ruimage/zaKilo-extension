@@ -1,5 +1,5 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
-import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
+import { getUnitParsedWeight, roundNumber, parseQuantityFromText } from "@/utils/converters";
 import type { UnitLabel } from "@/types/IStrategy";
 
 enum Selectors {
@@ -7,7 +7,8 @@ enum Selectors {
   PRICE = '[class*="priceContainer_totalContainer_"]',
   DISCOUNT_PRICE = '[class*="priceContainer_discountContainer"]',
   NAME = '[class*="mainInformation_weight"]',
-  UNIT_PRICE = '[data-testid="unit-price"]'
+  UNIT_PRICE = '[data-testid="unit-price"]',
+  VOLUME = '[class*="mainInformation_volume"]'
 }
 
 export class PyaterochkaStrategy extends ParserStrategy {
@@ -18,7 +19,8 @@ export class PyaterochkaStrategy extends ParserStrategy {
       price: Selectors.PRICE,
       discountPrice: Selectors.DISCOUNT_PRICE,
       name: Selectors.NAME,
-      unitPrice: Selectors.UNIT_PRICE
+      unitPrice: Selectors.UNIT_PRICE,
+      volume: Selectors.VOLUME
     };
   }
 
@@ -53,8 +55,9 @@ export class PyaterochkaStrategy extends ParserStrategy {
 
   parseQuantity(cardEl: HTMLElement): UnitLabel {
     const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
-
-    const s = nameText.trim().toLowerCase().replace(/,/g, ".");
+    const volumeText = this.selectors?.volume ? cardEl.querySelector(this.selectors.volume)?.textContent?.trim() ?? "" : "";
+    const quantityString = nameText || volumeText;
+    const s = quantityString.trim().toLowerCase().replace(/,/g, ".");
     const mulMatch = s.match(/^(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*([^\s\d]+)/i);
     let total: number;
     let unit: string;
@@ -63,13 +66,12 @@ export class PyaterochkaStrategy extends ParserStrategy {
       const per = parseFloat(mulMatch[2]);
       unit = mulMatch[3];
       total = count * per;
+      return getUnitParsedWeight(total, unit);
     } else {
-      const m = s.match(/([\d.]+)\s*([^\s\d]+)/);
-      if (!m) throw new Error(`не распознано количество: "${nameText}"`);
-      total = parseFloat(m[1]);
-      unit = m[2];
+      const parsed = parseQuantityFromText(s);
+      if (!parsed) throw new Error(`не распознано количество: "${quantityString}"`);
+      return getUnitParsedWeight(parsed.value, parsed.unit);
     }
-    return getUnitParsedWeight(total, unit);
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {

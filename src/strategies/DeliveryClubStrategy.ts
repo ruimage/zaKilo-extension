@@ -1,12 +1,13 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
-import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
+import { getUnitParsedWeight, roundNumber, parseQuantityFromText } from "@/utils/converters";
 import type { UnitLabel } from "@/types/IStrategy";
 
 enum Selectors {
   CARD = 'li[data-carousel-item="true"],.DesktopGoodsList_list li,div[data-testid="product-card-root"]',
   PRICE = '[data-testid="product-card-price"]',
   NAME = '[data-testid="product-card-weight"]',
-  UNIT_PRICE = '[data-testid="product-card-unit-price"]'
+  UNIT_PRICE = '[data-testid="product-card-unit-price"]',
+  VOLUME = '[data-testid="product-card-volume"]'
 }
 
 export class DeliveryClubStrategy extends ParserStrategy {
@@ -16,7 +17,8 @@ export class DeliveryClubStrategy extends ParserStrategy {
       card: Selectors.CARD,
       price: Selectors.PRICE,
       name: Selectors.NAME,
-      unitPrice: Selectors.UNIT_PRICE
+      unitPrice: Selectors.UNIT_PRICE,
+      volume: Selectors.VOLUME
     };
   }
 
@@ -31,12 +33,11 @@ export class DeliveryClubStrategy extends ParserStrategy {
 
   parseQuantity(cardEl: HTMLElement): UnitLabel {
     const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
-    const s = nameText.toLowerCase().replace(",", ".").trim();
-    const m = s.match(/([\d.]+)\s*([^\s\d]+)/);
-    if (!m) throw new Error("Invalid quantity: " + nameText);
-    const num = parseFloat(m[1]);
-    const unit = m[2];
-    return getUnitParsedWeight(num, unit);
+    const volumeText = this.selectors?.volume ? cardEl.querySelector(this.selectors.volume)?.textContent?.trim() ?? "" : "";
+    const quantityString = nameText || volumeText;
+    const parsed = parseQuantityFromText(quantityString.toLowerCase().replace(",", ".").trim());
+    if (!parsed) throw new Error("Invalid quantity: " + quantityString);
+    return getUnitParsedWeight(parsed.value, parsed.unit);
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {

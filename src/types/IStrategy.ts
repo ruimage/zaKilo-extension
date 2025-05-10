@@ -6,19 +6,21 @@ export enum Unit {
 }
 
 export type UnitLabel = {
-  unitLabel: Unit;
+  unitLabel: '1 кг' | '1 л' | '1 шт';
   multiplier: number;
 };
 
-export type Selectors = {
+export interface BaseSelectors {
   card: string;
   price: string;
-  discountPrice?: string;
   name: string;
   unitPrice: string;
+  discountPrice?: string;
   volume?: string;
   renderRoot?: string;
-};
+}
+
+export type Selectors = BaseSelectors;
 
 export type StrategyName =
   | 'Ozon'

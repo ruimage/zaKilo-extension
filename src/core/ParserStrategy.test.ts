@@ -6,8 +6,7 @@ import { getUnitParsedWeight } from "@/utils/converters";
 // Concrete implementation of ParserStrategy for testing
 class TestStrategy extends ParserStrategy {
   constructor() {
-    super();
-    this.strategyName = "TestStrategy";
+    super('Ozon');
     this.selectors = {
       card: ".product-card",
       price: ".price",
@@ -26,7 +25,7 @@ class TestStrategy extends ParserStrategy {
     const nameEl = cardEl.querySelector(this.selectors.name!);
     if (!nameEl) throw new Error("Name element not found");
     const match = (nameEl.textContent || "").match(/(\d+(?:\.\d+)?)\s*(г|кг|мл|л|шт)/);
-    if (!match) return { unitLabel: "1 шт", multiplier: 1 };
+    if (!match) return { unitLabel: '1 шт', multiplier: 1 };
 
     const value = parseFloat(match[1]);
     const unit = match[2];
@@ -67,7 +66,7 @@ describe("ParserStrategy", () => {
   });
 
   it("should initialize with default values", () => {
-    expect(strategy.strategyName).toBe("TestStrategy");
+    expect(strategy.strategyName).toBe("Ozon");
     expect(strategy.selectors.card).toBe(".product-card");
     expect(strategy.selectors.price).toBe(".price");
     expect(strategy.selectors.name).toBe(".name");
@@ -95,7 +94,7 @@ describe("ParserStrategy", () => {
 
   it("should throw error if selectors are not set", () => {
     strategy.selectors = { card: "", price: "", name: "", unitPrice: "" };
-    expect(() => strategy.shouldProcess(mockCard)).toThrow("selectors not set for TestStrategy strategy");
+    expect(() => strategy.shouldProcess(mockCard)).toThrow("selectors not set for Ozon strategy");
   });
 
   it("should process a card correctly", () => {
@@ -176,6 +175,6 @@ describe("ParserStrategy", () => {
 
     strategy.log("test message", 123);
 
-    expect(consoleSpy).toHaveBeenCalledWith("[TestStrategy]", "test message", 123);
+    expect(consoleSpy).toHaveBeenCalledWith("[Ozon]", "test message", 123);
   });
 });

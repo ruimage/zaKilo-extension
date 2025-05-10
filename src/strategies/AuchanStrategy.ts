@@ -1,4 +1,4 @@
-import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
+import { getUnitParsedWeight, roundNumber, parseQuantityFromText } from "@/utils/converters";
 import { ParserStrategy } from "@/core/ParserStrategy";
 import type { UnitLabel } from "@/types/IStrategy";
 
@@ -24,31 +24,17 @@ export class AuchanStrategy extends ParserStrategy {
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel {
-    let nameText: string;
-
-    nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
-
-    if (this.selectors?.volume) {
-      const volumeText = cardEl.querySelector(this.selectors.volume)?.textContent?.trim() ?? "";
-      if (volumeText) {
-        nameText = volumeText;
-      }
+    const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
+    const volumeText = this.selectors?.volume ? cardEl.querySelector(this.selectors.volume)?.textContent?.trim() ?? "" : "";
+    let parsed = null;
+    if (volumeText) {
+      parsed = parseQuantityFromText(volumeText.toLowerCase().replace(/,/g, "."));
     }
-
-
-    if (this.selectors?.volume) {
-      const volumeText = cardEl.querySelector(this.selectors.volume)?.textContent?.trim() ?? "";
-      if (volumeText) {
-        nameText = volumeText;
-      }
+    if (!parsed && nameText) {
+      parsed = parseQuantityFromText(nameText.toLowerCase().replace(/,/g, "."));
     }
-
-    const regex = /([\d.,]+)\s*(г(?!од)|гр|кг|мл|л|шт)/i;
-    const match = nameText.match(regex);
-    if (!match) return { unitLabel: "1 шт", multiplier: 1 };
-    const value = parseFloat(match[1].replace(",", "."));
-    const unit = match[2].toLowerCase();
-    return getUnitParsedWeight(value, unit);
+    if (!parsed) return { unitLabel: '1 шт', multiplier: 1 };
+    return getUnitParsedWeight(parsed.value, parsed.unit);
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {

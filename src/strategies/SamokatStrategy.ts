@@ -1,5 +1,5 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
-import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
+import { getUnitParsedWeight, roundNumber, parseQuantityFromText } from "@/utils/converters";
 import type { UnitLabel } from "@/types/IStrategy";
 import { Unit } from "@/types/IStrategy";
 
@@ -33,14 +33,10 @@ export class SamokatStrategy extends ParserStrategy {
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel {
-    let nameText: string;
-    if (this.selectors?.volume) {
-      nameText = cardEl.querySelector(this.selectors.volume)?.textContent?.trim() ?? "";
-    } else {
-      nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
-    }
-
-    const s = nameText.toLowerCase().replace(/,/g, ".").trim();
+    const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
+    const volumeText = this.selectors?.volume ? cardEl.querySelector(this.selectors.volume)?.textContent?.trim() ?? "" : "";
+    const quantityString = volumeText || nameText;
+    const s = quantityString.toLowerCase().replace(/,/g, ".").trim();
     const mulMatch = s.match(/^(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*([^\s\d]+)$/i);
     let total: number;
     let unit: string;
@@ -49,14 +45,12 @@ export class SamokatStrategy extends ParserStrategy {
       const per = parseFloat(mulMatch[2]);
       unit = mulMatch[3];
       total = count * per;
+      return getUnitParsedWeight(total, unit);
     } else {
-      const m = s.match(/([\d.]+)\s*([^\s\d]+)/);
-      if (!m) return { unitLabel: Unit.PIECE, multiplier: 1 };
-      total = parseFloat(m[1]);
-      unit = m[2];
+      const parsed = parseQuantityFromText(s);
+      if (!parsed) return { unitLabel: '1 шт', multiplier: 1 };
+      return getUnitParsedWeight(parsed.value, parsed.unit);
     }
-
-    return getUnitParsedWeight(total, unit);
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {
