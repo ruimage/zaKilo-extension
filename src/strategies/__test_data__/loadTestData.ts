@@ -7,7 +7,7 @@ import path from "path";
  * @param cardName - The name of the card file without extension (e.g., 'card1')
  * @returns The test data from the JSON file
  */
-export function loadTestCard(strategyName: string, cardName: string) {
+export function loadTestCard(strategyName: string, cardName: string): unknown {
   const filePath = path.resolve(__dirname, strategyName, `${cardName}.json`);
   const fileContent = fs.readFileSync(filePath, "utf-8");
   return JSON.parse(fileContent);
@@ -18,7 +18,7 @@ export function loadTestCard(strategyName: string, cardName: string) {
  * @param strategyName - The name of the strategy (e.g., 'auchan')
  * @returns An array of test data objects
  */
-export function loadAllTestCards(strategyName: string) {
+export function loadAllTestCards(strategyName: string): unknown[] {
   const directoryPath = path.resolve(__dirname, strategyName);
   const files = fs.readdirSync(directoryPath).filter((file) => file.endsWith(".json"));
 

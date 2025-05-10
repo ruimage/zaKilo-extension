@@ -4,8 +4,7 @@ import type { UnitLabel } from "@/types/IStrategy";
 
 export class MagnitStrategy extends ParserStrategy {
   constructor() {
-    super();
-    this.strategyName = "Magnit";
+    super('Magnit');
     this.selectors = {
       card: '[class*="unit-catalog-product-preview"]',
       price: [

@@ -1,16 +1,23 @@
 import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
 import { ParserStrategy } from "@/core/ParserStrategy";
+import { Unit } from "@/types/IStrategy";
 import type { UnitLabel } from "@/types/IStrategy";
+
+enum Selectors {
+  CARD = '[class*="tile-root"]',
+  PRICE = '[class*="tsHeadline500Medium"]',
+  NAME = '[class*="tsBody500Medium"]',
+  UNIT_PRICE = '[data-testid="unit-price"]'
+}
 
 export class OzonStrategy extends ParserStrategy {
   constructor() {
-    super();
-    this.strategyName = "Ozon";
+    super('Ozon');
     this.selectors = {
-      card: '[class*="tile-root"]',
-      price: '[class*="tsHeadline500Medium"]',
-      name: '[class*="tsBody500Medium"]',
-      unitPrice: '[data-testid="unit-price"]',
+      card: Selectors.CARD,
+      price: Selectors.PRICE,
+      name: Selectors.NAME,
+      unitPrice: Selectors.UNIT_PRICE
     };
   }
 
@@ -27,7 +34,7 @@ export class OzonStrategy extends ParserStrategy {
     const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
     const regex = /([\d.,]+)\s*(г|гр|кг|мл|л|шт)/i;
     const match = nameText.match(regex);
-    if (!match) return { unitLabel: "1 шт", multiplier: 1 };
+    if (!match) return { unitLabel: Unit.PIECE, multiplier: 1 };
     const value = parseFloat(match[1].replace(",", "."));
     const unit = match[2].toLowerCase();
     return getUnitParsedWeight(value, unit);

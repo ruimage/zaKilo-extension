@@ -1,13 +1,13 @@
-import type { IStrategy, UnitLabel } from "@/types/IStrategy";
+import type { IStrategy, UnitLabel, StrategyName } from "@/types/IStrategy";
 
 const isDev = import.meta.env.DEV;
 
 export abstract class ParserStrategy implements IStrategy {
-  public strategyName: string;
+  public strategyName: StrategyName;
   public selectors: IStrategy["selectors"];
 
-  protected constructor() {
-    this.strategyName = "unknown";
+  protected constructor(strategyName: StrategyName) {
+    this.strategyName = strategyName;
     this.selectors = {
       card: "",
       price: "",

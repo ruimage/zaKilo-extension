@@ -4,8 +4,7 @@ import type { UnitLabel } from "@/types/IStrategy";
 
 export class KuperStrategy extends ParserStrategy {
   constructor() {
-    super();
-    this.strategyName = "Kuper";
+    super('Kuper');
     this.selectors = {
       card: "[class*=ProductCardGridLayout]",
       name: "[data-qa$=_title]",

@@ -2,17 +2,21 @@ import { ParserStrategy } from "@/core/ParserStrategy";
 import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
 import type { UnitLabel } from "@/types/IStrategy";
 
+enum Selectors {
+  CARD = 'li[data-carousel-item="true"],.DesktopGoodsList_list li,div[data-testid="product-card-root"]',
+  PRICE = '[data-testid="product-card-price"]',
+  NAME = '[data-testid="product-card-weight"]',
+  UNIT_PRICE = '[data-testid="product-card-unit-price"]'
+}
+
 export class DeliveryClubStrategy extends ParserStrategy {
   constructor() {
-    super();
-    this.strategyName = "DeliveryClub";
+    super('DeliveryClub');
     this.selectors = {
-      card: ['li[data-carousel-item="true"]', ".DesktopGoodsList_list li", 'div[data-testid="product-card-root"]'].join(
-        ",",
-      ),
-      price: '[data-testid="product-card-price"]',
-      name: '[data-testid="product-card-weight"]',
-      unitPrice: '[data-testid="product-card-unit-price"]',
+      card: Selectors.CARD,
+      price: Selectors.PRICE,
+      name: Selectors.NAME,
+      unitPrice: Selectors.UNIT_PRICE
     };
   }
 

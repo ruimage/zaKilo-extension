@@ -1,17 +1,25 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
 import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
 import type { UnitLabel } from "@/types/IStrategy";
+import { Unit } from "@/types/IStrategy";
+
+enum Selectors {
+  CARD = '[class*=ProductCard_root]',
+  PRICE = '[class*=ProductCardActions_text] span span:last-child',
+  NAME = '[class*=ProductCard_specification] span:first-child',
+  UNIT_PRICE = '[data-testid="unit-price"]',
+  RENDER_ROOT = '[class*=ProductCard_details]'
+}
 
 export class SamokatStrategy extends ParserStrategy {
   constructor() {
-    super();
-    this.strategyName = "Samokat";
+    super('Samokat');
     this.selectors = {
-      card: "[class*=ProductCard_root]",
-      price: "[class*=ProductCardActions_text] span span:last-child",
-      name: "[class*=ProductCard_specification] span:first-child",
-      unitPrice: '[data-testid="unit-price"]',
-      renderRoot: "[class*=ProductCard_details]",
+      card: Selectors.CARD,
+      price: Selectors.PRICE,
+      name: Selectors.NAME,
+      unitPrice: Selectors.UNIT_PRICE,
+      renderRoot: Selectors.RENDER_ROOT
     };
   }
 
@@ -43,7 +51,7 @@ export class SamokatStrategy extends ParserStrategy {
       total = count * per;
     } else {
       const m = s.match(/([\d.]+)\s*([^\s\d]+)/);
-      if (!m) return { unitLabel: "1 шт", multiplier: 1 };
+      if (!m) return { unitLabel: Unit.PIECE, multiplier: 1 };
       total = parseFloat(m[1]);
       unit = m[2];
     }

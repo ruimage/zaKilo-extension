@@ -4,8 +4,7 @@ import type { UnitLabel } from "@/types/IStrategy";
 
 export class AuchanStrategy extends ParserStrategy {
   constructor() {
-    super();
-    this.strategyName = "Auchan";
+    super('Auchan');
     this.selectors = {
       card: '[class*="styles_productCard"][class*="styles_catalogListPage_item"],div[class*=digi-product]',
       price: '[class*="styles_productCardContentPanel_price"],[class*=digi-product__price]',

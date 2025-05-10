@@ -1,6 +1,17 @@
+enum Script {
+  OZON = "src/content/ozon.js",
+  AUCHAN = "src/content/auchan.js",
+  DELIVERY_CLUB = "src/content/delivery_club.js",
+  KUPER = "src/content/kuper.js",
+  MAGNIT = "src/content/magnit.js",
+  PEREKRESTOK = "src/content/perekrestok.js",
+  PYATEROCHKA = "src/content/pyaterochka.js",
+  SAMOKAT = "src/content/samokat.js"
+}
+
 interface SiteConfig {
   match: string[];
-  script: string;
+  script: Script;
 }
 
 const api = typeof browser !== "undefined" ? browser : chrome;
@@ -8,39 +19,39 @@ const api = typeof browser !== "undefined" ? browser : chrome;
 const siteMap: SiteConfig[] = [
   {
     match: ["*://*.ozon.ru/*"],
-    script: "src/content/ozon.js",
+    script: Script.OZON,
   },
   {
     match: ["*://*.auchan.ru/*"],
-    script: "src/content/auchan.js",
+    script: Script.AUCHAN,
   },
   {
     match: ["*://market-delivery.yandex.ru/*"],
-    script: "src/content/delivery_club.js",
+    script: Script.DELIVERY_CLUB,
   },
   {
     match: ["*://eda.yandex.ru/*"],
-    script: "src/content/delivery_club.js",
+    script: Script.DELIVERY_CLUB,
   },
   {
     match: ["*://kuper.ru/*"],
-    script: "src/content/kuper.js",
+    script: Script.KUPER,
   },
   {
     match: ["*://magnit.ru/*"],
-    script: "src/content/magnit.js",
+    script: Script.MAGNIT,
   },
   {
     match: ["*://*.perekrestok.ru/*"],
-    script: "src/content/perekrestok.js",
+    script: Script.PEREKRESTOK,
   },
   {
     match: ["*://5ka.ru/*"],
-    script: "src/content/pyaterochka.js",
+    script: Script.PYATEROCHKA,
   },
   {
     match: ["*://samokat.ru/*"],
-    script: "src/content/samokat.js",
+    script: Script.SAMOKAT,
   },
 ];
 

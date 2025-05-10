@@ -1,5 +1,7 @@
 import { type IStrategy } from "@/types/IStrategy";
 
+type Source = 'init' | 'scroll' | 'interval' | 'MO';
+
 export class BaseParser {
   private strategy: IStrategy;
   private cards: HTMLElement[];
@@ -39,13 +41,13 @@ export class BaseParser {
     this.strategy.log(`found ${this.cards.length} cards`);
   }
 
-  runAll(source: string): void {
+  runAll(source: Source): void {
     this._selectCards();
     if (!this.cards.length) return;
     this.cards.filter((el) => this.strategy.shouldProcess(el)).forEach((el) => this.tryProcess(el, source));
   }
 
-  tryProcess(el: HTMLElement, source: string): void {
+  tryProcess(el: HTMLElement, source: Source): void {
     this.strategy.log(`tryProcess [${source}]`);
     try {
       this.strategy.process(el);
