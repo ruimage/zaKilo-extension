@@ -12,6 +12,7 @@ export default defineConfig(({ mode }) => {
           "src/content/auchan.ts",
           "src/content/delivery_club.ts",
           "src/content/kuper.ts",
+          "src/content/lenta.ts",
           "src/content/magnit.ts",
           "src/content/ozon.ts",
           "src/content/perekrestok.ts",

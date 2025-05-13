@@ -27,6 +27,10 @@ const siteMap: SiteConfig[] = [
     script: "src/content/kuper.js",
   },
   {
+    match: ["*://lenta.com/*"],
+    script: "src/content/lenta.js",
+  },
+  {
     match: ["*://magnit.ru/*"],
     script: "src/content/magnit.js",
   },

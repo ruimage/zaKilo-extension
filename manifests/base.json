@@ -1,6 +1,6 @@
 {
   "name": "заКило",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "manifest_version": 3,
   "description": "Всё по справедливой цене: сравнивайте стоимость за единицу прямо в каталоге доставки",
   "permissions": ["tabs", "scripting"],
@@ -10,6 +10,7 @@
     "*://market-delivery.yandex.ru/*",
     "*://eda.yandex.ru/*",
     "*://kuper.ru/*",
+    "*://lenta.com/*",
     "*://magnit.ru/*",
     "*://*.perekrestok.ru/*",
     "*://5ka.ru/*",
