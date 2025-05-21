@@ -1,6 +1,6 @@
 {
   "name": "заКило",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "manifest_version": 3,
   "description": "Всё по справедливой цене: сравнивайте стоимость за единицу прямо в каталоге доставки",
   "permissions": ["tabs", "scripting"],
@@ -9,9 +9,12 @@
     "*://*.auchan.ru/*",
     "*://market-delivery.yandex.ru/*",
     "*://eda.yandex.ru/*",
+    "*://lavka.yandex.ru/*",
     "*://kuper.ru/*",
+    "*://lenta.com/*",
     "*://magnit.ru/*",
     "*://*.perekrestok.ru/*",
+    "*://shop.samberi.com/*",
     "*://5ka.ru/*",
     "*://samokat.ru/*"
   ],

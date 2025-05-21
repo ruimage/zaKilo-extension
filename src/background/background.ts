@@ -23,8 +23,16 @@ const siteMap: SiteConfig[] = [
     script: "src/content/delivery_club.js",
   },
   {
+    match: ["*://lavka.yandex.ru/*"],
+    script: "src/content/lavka.js",
+  },
+  {
     match: ["*://kuper.ru/*"],
     script: "src/content/kuper.js",
+  },
+  {
+    match: ["*://lenta.com/*"],
+    script: "src/content/lenta.js",
   },
   {
     match: ["*://magnit.ru/*"],
@@ -33,6 +41,10 @@ const siteMap: SiteConfig[] = [
   {
     match: ["*://*.perekrestok.ru/*"],
     script: "src/content/perekrestok.js",
+  },
+  {
+    match: ["*://shop.samberi.com/*"],
+    script: "src/content/samberi.js",
   },
   {
     match: ["*://5ka.ru/*"],

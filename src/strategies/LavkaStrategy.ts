@@ -2,17 +2,15 @@ import { ParserStrategy } from "@/core/ParserStrategy";
 import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
 import type { UnitLabel } from "@/types/IStrategy";
 
-export class DeliveryClubStrategy extends ParserStrategy {
+export class LavkaStrategy extends ParserStrategy {
   constructor() {
     super();
-    this.strategyName = "DeliveryClub";
+    this.strategyName = "Lavka";
     this.selectors = {
-      card: ['li[data-carousel-item="true"]', ".DesktopGoodsList_list li", 'div[data-testid="product-card-root"]'].join(
-        ",",
-      ),
-      price: '[data-testid="product-card-price"]',
-      name: '[data-testid="product-card-weight"]',
-      unitPrice: '[data-testid="product-card-unit-price"]',
+      card: "[class*=p19kkpiw]",
+      price: "[class*=phcb3a1] [class*=b15aiivf][style*='color'], [class*=t18stym3][class*=bw441np][class*=r88klks][style*='color']",
+      name: "[class*=m12g4kzj]",
+      unitPrice: '[data-testid="unit-price"]',
     };
   }
 
@@ -39,7 +37,7 @@ export class DeliveryClubStrategy extends ParserStrategy {
     const priceEl = cardEl.querySelector(this.selectors.price);
     if (!priceEl) throw new Error("Price element not found");
 
-    const wrapper = priceEl.closest('div[aria-hidden="true"]');
+    const wrapper = priceEl.closest('[aria-hidden="true"]');
     if (!wrapper) throw new Error("Wrapper not found");
 
     // Ищем уже существующий unitPrice-бейдж
@@ -62,7 +60,7 @@ export class DeliveryClubStrategy extends ParserStrategy {
       backgroundColor: "rgba(0, 198, 106, 0.1)",
       padding: "2px 6px 2px 0.5px",
       borderRadius: "0.25em",
-      fontWeight: "500",
+      fontWeight: "500"
     });
 
     wrapper.appendChild(span);
