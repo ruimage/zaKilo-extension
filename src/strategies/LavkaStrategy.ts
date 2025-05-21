@@ -60,8 +60,18 @@ export class LavkaStrategy extends ParserStrategy {
 
     const formattedText = `${roundNumber(unitPrice, 0)}\u2009₽ за ${unitLabel}`;
 
+
+    const styles = {
+      color: "#000",
+      backgroundColor: "rgba(0, 198, 106, 0.1)",
+      padding: "2px 3px 2px 3px",
+      borderRadius: "0.25em",
+      fontWeight: "500",
+    };
+
     if (existingUnitPrice) {
       existingUnitPrice.textContent = formattedText;
+      Object.assign(existingUnitPrice.style, styles);
       return;
     }
 
@@ -70,13 +80,7 @@ export class LavkaStrategy extends ParserStrategy {
     span.setAttribute("data-testid", "unit-price");
     span.textContent = formattedText;
 
-    Object.assign(span.style, {
-      color: "#000",
-      backgroundColor: "rgba(0, 198, 106, 0.1)",
-      padding: "2px 3px 2px 3px",
-      borderRadius: "0.25em",
-      fontWeight: "500",
-    });
+    Object.assign(span.style, styles);
 
     wrapper.appendChild(span);
   }
