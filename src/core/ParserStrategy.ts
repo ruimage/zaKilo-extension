@@ -42,7 +42,7 @@ export abstract class ParserStrategy implements IStrategy {
 
     const parsedQuantity: UnitLabel | NoneUnitLabel = this.parseQuantity(cardEl);
 
-    if (isNoneUnitLabel(parsedQuantity)) {
+    if (isNoneUnitLabel(parsedQuantity) ) {
       this.log("none information about quantity");
       this.renderNoneUnitPrice(cardEl);
     }

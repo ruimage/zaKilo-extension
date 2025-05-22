@@ -17,11 +17,12 @@ export type NoneUnitLabel = Tagged<
 
 export const isUnitLabel = (value: UnitLabel | NoneUnitLabel): value is UnitLabel => {
   return (value as UnitLabel).unitLabel !== null;
-};  
+};
 
 export const isNoneUnitLabel = (value: UnitLabel | NoneUnitLabel): value is NoneUnitLabel => {
   return (value as NoneUnitLabel).unitLabel === null;
 };
+
 
 export interface IStrategy {
   strategyName: string /*  */;
@@ -39,6 +40,7 @@ export interface IStrategy {
   parsePrice(cardEl: HTMLElement): number;
   parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel;
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void;
+  renderNoneUnitPrice(cardEl: HTMLElement): void;
   shouldProcess(cardEl: HTMLElement): boolean;
   process(cardEl: HTMLElement): void;
   log(...args: any[]): void;

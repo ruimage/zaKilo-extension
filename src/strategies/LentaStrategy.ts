@@ -40,7 +40,6 @@ export class LentaStrategy extends ParserStrategy {
       }
     }
 
-    // 2) Ищем вес/объем в package
     const pkgEl = cardEl.querySelector(".card-name_package");
     if (pkgEl) {
       const pkgText = pkgEl.textContent?.trim() || "";
@@ -50,7 +49,6 @@ export class LentaStrategy extends ParserStrategy {
       }
     }
 
-    // 3) Ищем вес/объем в title
     const nameEl = cardEl.querySelector("[automation-id='catProductName']") as HTMLElement;
     if (nameEl) {
       const title = nameEl.getAttribute("title") || "";
@@ -60,7 +58,6 @@ export class LentaStrategy extends ParserStrategy {
       }
     }
 
-    // 4) Фоллбэк: читаем текст лейбла "Цена за X"
     const labelEl = cardEl.querySelector(".product-position-price .price");
     if (labelEl) {
       const labelTxt = labelEl.textContent?.trim() || "";
@@ -70,7 +67,10 @@ export class LentaStrategy extends ParserStrategy {
       }
     }
 
-    throw new Error("Вес/объем не распознан");
+    return {
+      unitLabel: null,
+      multiplier: null,
+    } as NoneUnitLabel;
   }
 
   renderUnitPrice(cardEl: Element, unitPrice: number, unitLabel: string): void {

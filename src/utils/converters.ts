@@ -15,10 +15,10 @@ export function roundNumber(value: number, decimalPlaces: number = 2): number {
 
 export function getUnitParsedWeight(value: number, unit: string): UnitLabel | NoneUnitLabel {
   if (value === 0) {
-    throw new Error("Значение не может быть нулевым");
+    return { unitLabel: null, multiplier: null } as NoneUnitLabel;
   }
   if (value < 0) {
-    throw new Error("Значение не может быть отрицательным");
+    return { unitLabel: null, multiplier: null } as NoneUnitLabel;
   }
   switch (unit) {
     case "г":
@@ -34,6 +34,6 @@ export function getUnitParsedWeight(value: number, unit: string): UnitLabel | No
     case "шт.":
       return { unitLabel: "1 шт", multiplier: 1 / value } as UnitLabel;
     default:
-      throw new Error("Неизвестная единица: " + unit);
+      return { unitLabel: null, multiplier: null } as NoneUnitLabel;
   }
 }

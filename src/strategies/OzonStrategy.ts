@@ -28,7 +28,7 @@ export class OzonStrategy extends ParserStrategy {
     const regex = /([\d.,]+)\s*(г|гр|кг|мл|л|шт)/i;
     const match = nameText.match(regex);
 
-    if (!match) return { unitLabel: "1 шт", multiplier: 1 } as UnitLabel;
+    if (!match) return { unitLabel: null, multiplier: null } as NoneUnitLabel;
 
     const value = parseFloat(match[1].replace(",", "."));
     const unit = match[2].toLowerCase();
