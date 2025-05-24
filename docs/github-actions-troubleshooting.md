@@ -10,18 +10,22 @@
 
 **Возможные причины:**
 
-- PR создан в той же ветке (нужно создавать из форка или feature ветки)
 - Изменения только в исключенных файлах (`.md`, `docs/`, `screenshots/`)
 - Проблемы с правами доступа к репозиторию
+- Неправильная настройка webhook'ов в репозитории
 
 **Решение:**
 
 ```bash
-# Проверить, что PR создан из правильной ветки
-git checkout -b feature/my-feature
-git push origin feature/my-feature
-# Затем создать PR из feature/my-feature в main
+# Убедиться что изменения не только в исключенных файлах
+git status
+git diff --name-only
+
+# Проверить права доступа к Actions
+# GitHub Settings → Actions → General → Allow all actions
 ```
+
+**Примечание:** PR checks теперь запускаются для любой целевой ветки, не только main/develop.
 
 ### 2. Ошибки установки зависимостей
 
@@ -38,6 +42,7 @@ ENOENT: no such file or directory, open 'package-lock.json'
 
 1. Убедиться, что `package-lock.json` закоммичен в репозиторий
 2. Проверить совместимость Node.js версий:
+
    ```json
    "engines": {
      "node": ">=18.0.0"
