@@ -1,6 +1,6 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
-import type { UnitLabel } from "@/types/IStrategy";
-import { getConvertedUnit, roundNumber } from "@/utils/converters";
+import type { NoneUnitLabel, UnitLabel } from "@/types/IStrategy";
+import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
 
 export class LentaStrategy extends ParserStrategy {
   constructor() {
@@ -30,8 +30,7 @@ export class LentaStrategy extends ParserStrategy {
     return price;
   }
 
-  parseQuantity(cardEl: HTMLElement): UnitLabel {
-    // 1) Проверяем, не стоит ли уже цена за единицу
+  parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel {
     const existing = cardEl.querySelector('[data-testid="unit-price"]');
     if (existing) {
       const txt = existing.textContent?.trim() || "";
@@ -41,7 +40,6 @@ export class LentaStrategy extends ParserStrategy {
       }
     }
 
-    // 2) Ищем вес/объем в package
     const pkgEl = cardEl.querySelector(".card-name_package");
     if (pkgEl) {
       const pkgText = pkgEl.textContent?.trim() || "";
@@ -51,7 +49,6 @@ export class LentaStrategy extends ParserStrategy {
       }
     }
 
-    // 3) Ищем вес/объем в title
     const nameEl = cardEl.querySelector("[automation-id='catProductName']") as HTMLElement;
     if (nameEl) {
       const title = nameEl.getAttribute("title") || "";
@@ -61,7 +58,6 @@ export class LentaStrategy extends ParserStrategy {
       }
     }
 
-    // 4) Фоллбэк: читаем текст лейбла "Цена за X"
     const labelEl = cardEl.querySelector(".product-position-price .price");
     if (labelEl) {
       const labelTxt = labelEl.textContent?.trim() || "";
@@ -70,21 +66,19 @@ export class LentaStrategy extends ParserStrategy {
         return getConvertedUnit(parseInt(mLabel[1], 10), mLabel[2].toLowerCase());
       }
     }
-
-    throw new Error("Вес/объем не распознан");
+    return {
+      unitLabel: null,
+      multiplier: null,
+    } as NoneUnitLabel;
   }
 
   renderUnitPrice(cardEl: Element, unitPrice: number, unitLabel: string): void {
-    // 1. Найти контейнер с ценой и кнопками
     const priceWrapper = cardEl.querySelector(".price-and-buttons") as HTMLElement;
     if (!priceWrapper) {
       throw new Error("Wrapper цены не найден");
     }
 
-    // 2. Удалить старые вставки unit-price по data-testid
     priceWrapper.querySelectorAll('[data-testid="unit-price"]').forEach((el) => el.remove());
-
-    // 3. Создать новый <span> для отображения цены за единицу
     const span = document.createElement("span");
     span.setAttribute("data-testid", "unit-price");
     span.textContent = `${roundNumber(unitPrice, 0)}\u2009₽/${unitLabel}`;
@@ -110,6 +104,41 @@ export class LentaStrategy extends ParserStrategy {
     }
 
     // 6. Вставить span сразу после .product-price
+    priceBlock.after(span);
+  }
+  renderNoneUnitPrice(cardEl: Element): void {
+    const priceWrapper = cardEl.querySelector(".price-and-buttons") as HTMLElement;
+    if (!priceWrapper) {
+      throw new Error("Wrapper цены не найден");
+    }
+
+    priceWrapper.querySelectorAll('[data-testid="unit-price"]').forEach((el) => el.remove());
+
+    const span = document.createElement("span");
+    span.setAttribute("data-testid", "unit-price");
+    span.textContent = "Нет инф.";
+
+    // Добавить стили
+    const fz = "calc(0.7vw)";
+    Object.assign(span.style, {
+      display: "inline-block",
+      marginLeft: "0.4em",
+      marginRight: "0.4em",
+      color: "rgb(0, 0, 0)",
+      padding: "2px",
+      borderRadius: "4px",
+      backgroundColor: "var(--accent-color,rgba(0, 69, 198, 0.13))",
+      fontWeight: "900",
+      fontSize: fz,
+    });
+
+    // Найти блок с основной ценой
+    const priceBlock = priceWrapper.querySelector(".product-price");
+    if (!priceBlock) {
+      throw new Error("Блок цены не найден");
+    }
+
+    // Вставить span сразу после .product-price
     priceBlock.after(span);
   }
 }

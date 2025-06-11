@@ -1,6 +1,6 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
-import type { UnitLabel } from "@/types/IStrategy";
-import { getConvertedUnit, roundNumber } from "@/utils/converters";
+import type { NoneUnitLabel, UnitLabel } from "@/types/IStrategy";
+import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
 
 export class SamberiStrategy extends ParserStrategy {
   constructor() {
@@ -23,7 +23,7 @@ export class SamberiStrategy extends ParserStrategy {
     return v;
   }
 
-  parseQuantity(cardEl: HTMLElement): UnitLabel {
+  parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel {
     const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
     this.log("parsed name text", nameText);
 
@@ -88,6 +88,40 @@ export class SamberiStrategy extends ParserStrategy {
     Object.assign(span.style, {
       color: "#000",
       backgroundColor: "rgba(0, 198, 106, 0.1)",
+      padding: "2px 6px 2px 0.5px",
+      borderRadius: "0.25em",
+      fontWeight: "500",
+      display: "block",
+      marginTop: "4px",
+      fontSize: "0.9em",
+    });
+
+    wrapper.appendChild(span);
+  }
+
+  renderNoneUnitPrice(cardEl: HTMLElement): void {
+    const priceEl = cardEl.querySelector(this.selectors.price);
+    if (!priceEl) throw new Error("Price element not found");
+
+    const wrapper = priceEl.closest("[class*=product-item-info-container]");
+    if (!wrapper) throw new Error("Wrapper not found");
+
+    // Ищем уже существующий unitPrice-бейдж
+    const existingUnitPrice = wrapper.querySelector('[data-testid="unit-price"]') as HTMLElement | null;
+
+    if (existingUnitPrice) {
+      existingUnitPrice.textContent = "Нет инф.";
+      return;
+    }
+
+    const span = document.createElement("span");
+    span.className = "product-item-price-current";
+    span.setAttribute("data-testid", "unit-price");
+    span.textContent = "Нет инф.";
+
+    Object.assign(span.style, {
+      color: "#000",
+      backgroundColor: "var(--accent-color,rgba(0, 69, 198, 0.13))",
       padding: "2px 6px 2px 0.5px",
       borderRadius: "0.25em",
       fontWeight: "500",
