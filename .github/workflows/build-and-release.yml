@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -33,13 +35,24 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Get package version
+      - name: Bump version
         id: package_version
         run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "tag=v$VERSION" >> $GITHUB_OUTPUT
-          echo "Package version: $VERSION"
+          # Автоматический подъем patch версии (1.0.3 -> 1.0.4)
+          NEW_VERSION=$(npm version patch --no-git-tag-version)
+          NEW_VERSION=${NEW_VERSION#v} # убираем префикс 'v'
+          
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "tag=v$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New version: $NEW_VERSION"
+
+      - name: Commit version bump
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add package.json package-lock.json
+          git commit -m "🔖 Bump version to ${{ steps.package_version.outputs.version }}"
+          git push
 
       - name: Run quality checks
         run: |
