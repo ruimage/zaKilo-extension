@@ -59,17 +59,23 @@ jobs:
           npm run build:firefox
           npm run pack:firefox
 
+      # Новый шаг для отладки — выводим содержимое директории с артефактами
+      - name: List ext-dist contents
+        run: ls -la ext-dist
+
       - name: Upload Chrome artifact
         uses: actions/upload-artifact@v4
         with:
           name: chrome-extension
           path: ext-dist/zaKilo-chrome-*.zip
+          if-no-files-found: error
 
       - name: Upload Firefox artifact
         uses: actions/upload-artifact@v4
         with:
           name: firefox-extension
           path: ext-dist/zaKilo-firefox-*.zip
+          if-no-files-found: error
 
   release:
     name: Create Release
@@ -80,6 +86,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      # Новый шаг для отладки — выводим содержимое release-artifacts после скачивания
+      - name: Prepare release artifacts directory
+        run: mkdir -p ./release-artifacts
 
       - name: Download Chrome artifact
         uses: actions/download-artifact@v4
@@ -92,6 +102,9 @@ jobs:
         with:
           name: firefox-extension
           path: ./release-artifacts
+
+      - name: List release-artifacts contents
+        run: ls -la ./release-artifacts
 
       - name: Generate release notes
         id: release_notes
