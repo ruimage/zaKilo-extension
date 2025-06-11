@@ -43,7 +43,7 @@ export class MagnitStrategy extends ParserStrategy {
     }
     const value = parseFloat(match[1]);
     const unit = match[2];
-    return getConvertedUnit(value, unit);
+    return getUnitParsedWeight(value, unit);
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {

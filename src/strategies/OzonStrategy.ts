@@ -32,7 +32,7 @@ export class OzonStrategy extends ParserStrategy {
 
     const value = parseFloat(match[1].replace(",", "."));
     const unit = match[2].toLowerCase();
-    return getConvertedUnit(value, unit);
+    return getUnitParsedWeight(value, unit);
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {

@@ -57,10 +57,10 @@ export class SamberiStrategy extends ParserStrategy {
 
     // Если это процент, конвертируем в граммы (предполагаем, что это процент от 100г)
     if (matches[0].includes("%")) {
-      return getConvertedUnit(num, "г");
+      return getUnitParsedWeight(num, "г");
     }
 
-    return getConvertedUnit(num, unit);
+    return getUnitParsedWeight(num, unit);
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {

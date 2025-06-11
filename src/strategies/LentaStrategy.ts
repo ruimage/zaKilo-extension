@@ -36,7 +36,7 @@ export class LentaStrategy extends ParserStrategy {
       const txt = existing.textContent?.trim() || "";
       const m = txt.match(/(\d+)\s*₽\/(г|гр|кг|мл|л|шт)/i);
       if (m) {
-        return getConvertedUnit(parseInt(m[1], 10), m[2].toLowerCase());
+        return getUnitParsedWeight(parseInt(m[1], 10), m[2].toLowerCase());
       }
     }
 
@@ -45,7 +45,7 @@ export class LentaStrategy extends ParserStrategy {
       const pkgText = pkgEl.textContent?.trim() || "";
       const mPkg = pkgText.match(/(\d+)(г|гр|кг|мл|л|шт)/i);
       if (mPkg) {
-        return getConvertedUnit(parseInt(mPkg[1], 10), mPkg[2].toLowerCase());
+        return getUnitParsedWeight(parseInt(mPkg[1], 10), mPkg[2].toLowerCase());
       }
     }
 
@@ -54,7 +54,7 @@ export class LentaStrategy extends ParserStrategy {
       const title = nameEl.getAttribute("title") || "";
       const mTitle = title.match(/(\d+)(г|гр|кг|мл|л|шт)/i);
       if (mTitle) {
-        return getConvertedUnit(parseInt(mTitle[1], 10), mTitle[2].toLowerCase());
+        return getUnitParsedWeight(parseInt(mTitle[1], 10), mTitle[2].toLowerCase());
       }
     }
 
@@ -63,7 +63,7 @@ export class LentaStrategy extends ParserStrategy {
       const labelTxt = labelEl.textContent?.trim() || "";
       const mLabel = labelTxt.match(/Цена за\s*(\d+)\s*(г|гр|кг|мл|л|шт)/i);
       if (mLabel) {
-        return getConvertedUnit(parseInt(mLabel[1], 10), mLabel[2].toLowerCase());
+        return getUnitParsedWeight(parseInt(mLabel[1], 10), mLabel[2].toLowerCase());
       }
     }
     return {

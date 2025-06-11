@@ -45,7 +45,7 @@ export class LavkaStrategy extends ParserStrategy {
     if (!m) throw new Error("Invalid quantity: " + nameText);
     const num = parseFloat(m[1]);
     const unit = m[2];
-    return getConvertedUnit(num, unit);
+    return getUnitParsedWeight(num, unit);
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {
@@ -80,13 +80,7 @@ export class LavkaStrategy extends ParserStrategy {
     span.setAttribute("data-testid", "unit-price");
     span.textContent = formattedText;
 
-    Object.assign(span.style, {
-      color: "#000",
-      backgroundColor: "rgba(0, 198, 106, 0.1)",
-      padding: "2px 6px 2px 0.5px",
-      borderRadius: "0.25em",
-      fontWeight: "500",
-    });
+    Object.assign(span.style, styles);
 
     wrapper.appendChild(span);
   }
@@ -111,13 +105,7 @@ export class LavkaStrategy extends ParserStrategy {
     span.setAttribute("data-testid", "unit-price");
     span.textContent = "Нет инф.";
 
-    Object.assign(span.style, {
-      color: "#000",
-      backgroundColor: "var(--accent-color,rgba(0, 69, 198, 0.13))",
-      padding: "2px 6px 2px 0.5px",
-      borderRadius: "0.25em",
-      fontWeight: "500",
-    });
+    Object.assign(span.style, styles);
 
     wrapper.appendChild(span);
   }
