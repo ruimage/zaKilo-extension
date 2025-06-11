@@ -3,12 +3,16 @@ import { getConvertedUnit, roundNumber } from "./converters";
 
 describe("converters", () => {
   describe("edge cases", () => {
-    it("should handle zero value", () => {
-      expect(() => getConvertedUnit(0, "г")).toThrow("Значение не может быть нулевым");
+    it("should return NoneUnitLabel for zero value", () => {
+      expect(getConvertedUnit(0, "г")).toEqual({ unitLabel: null, multiplier: null });
     });
 
-    it("should handle negative value", () => {
-      expect(() => getConvertedUnit(-100, "г")).toThrow("Значение не может быть отрицательным");
+    it("should return NoneUnitLabel for negative value", () => {
+      expect(getConvertedUnit(-100, "г")).toEqual({ unitLabel: null, multiplier: null });
+    });
+
+    it("should throw for unknown unit", () => {
+      expect(() => getConvertedUnit(100, "неизвестно")).toThrow("Неизвестная единица: неизвестно");
     });
   });
   describe("roundNumber", () => {
@@ -116,12 +120,12 @@ describe("converters", () => {
     });
 
     describe("error handling", () => {
-      it("should throw for zero value", () => {
-        expect(() => getConvertedUnit(0, "г")).toThrow("Значение не может быть нулевым");
+      it("should return NoneUnitLabel for zero value", () => {
+        expect(getConvertedUnit(0, "г")).toEqual({ unitLabel: null, multiplier: null });
       });
 
-      it("should throw for negative value", () => {
-        expect(() => getConvertedUnit(-100, "г")).toThrow("Значение не может быть отрицательным");
+      it("should return NoneUnitLabel for negative value", () => {
+        expect(getConvertedUnit(-100, "г")).toEqual({ unitLabel: null, multiplier: null });
       });
 
       it("should throw for unknown unit", () => {

@@ -7,29 +7,31 @@ export class DeliveryClubStrategy extends ParserStrategy {
     super();
     this.strategyName = "DeliveryClub";
     this.selectors = {
-      card: ['li[data-carousel-item="true"]', ".DesktopGoodsList_list li", 'div[data-testid="product-card-root"]'].join(
+      card: ['li[data-carousel-item="true"]', 'li.DesktopGoodsList_item', ".DesktopGoodsList_list li", 'div[data-testid="product-card-root"]'].join(
         ",",
       ),
-      price: '[data-testid="product-card-price"]',
-      name: '[data-testid="product-card-weight"]',
+      price: '.p1jdj7iy span',
+      name: '.nsawvb6',
       unitPrice: '[data-testid="product-card-unit-price"]',
+      volume: '.wpsxpb7'
     };
   }
 
   parsePrice(cardEl: HTMLElement): number {
-    const priceString = cardEl.querySelector(this.selectors.price)?.textContent;
+    const priceEl = cardEl.querySelector(this.selectors.price);
+    const priceString = priceEl?.textContent;
     this.log("parsed price text", priceString);
-    const cleaned = priceString?.replace(/\s|&thinsp;/g, "").replace("₽", "") ?? "";
+    const cleaned = priceString?.replace(/\s| |&thinsp;/g, "").replace("₽", "") ?? "";
     const v = parseFloat(cleaned);
     if (isNaN(v)) throw new Error("Invalid price: " + priceString);
     return v;
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel {
-    const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
-    const s = nameText.toLowerCase().replace(",", ".").trim();
+    const qtyText = cardEl.querySelector(this.selectors.volume as string)?.textContent?.trim() ?? "";
+    const s = qtyText.toLowerCase().replace(",", ".").trim();
     const m = s.match(/([\d.]+)\s*([^\s\d]+)/);
-    if (!m) throw new Error("Invalid quantity: " + nameText);
+    if (!m) throw new Error("Invalid quantity: " + qtyText);
     const num = parseFloat(m[1]);
     const unit = m[2];
     return getConvertedUnit(num, unit);

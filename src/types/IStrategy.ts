@@ -5,7 +5,7 @@ export type UnitLabel = Tagged<
     multiplier: number;
   },
   "UnitLabel"
->;
+  >;
 
 export type NoneUnitLabel = Tagged<
   {
@@ -13,7 +13,7 @@ export type NoneUnitLabel = Tagged<
     multiplier: null;
   },
   "NoneUnitLabel"
->;
+  >;
 
 export const isUnitLabel = (value: UnitLabel | NoneUnitLabel): value is UnitLabel => {
   return (value as UnitLabel).unitLabel !== null;
@@ -43,5 +43,5 @@ export interface IStrategy {
   renderNoneUnitPrice(cardEl: HTMLElement): void;
   shouldProcess(cardEl: HTMLElement): boolean;
   process(cardEl: HTMLElement): void;
-  log(...args: unknown[]): void;
+  log(...args: any[]): void;
 }

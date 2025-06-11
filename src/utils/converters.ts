@@ -1,6 +1,7 @@
-import type { UnitLabel } from "@/types/IStrategy";
+import type { NoneUnitLabel, UnitLabel } from "@/types/IStrategy";
 import type { Measure, Unit } from "convert-units";
 import convert from "convert-units";
+
 
 // Types
 type RussianUnit = keyof typeof rusToConvertUnit;
@@ -57,28 +58,30 @@ export function roundNumber(value: number, decimalPlaces: number = 2): number {
  * @returns Converted unit with label and multiplier
  * @throws {Error} If conversion is not possible
  */
-export function getConvertedUnit(value: number, unit: string): UnitLabel {
-  validateInputValue(value);
+export function getConvertedUnit(
+  value: number,
+  unit: string
+): UnitLabel | NoneUnitLabel {
+  // Handle invalid values: zero or negative
+  if (value <= 0) {
+    return { unitLabel: null, multiplier: null };
+  }
 
+  // Normalize and validate unit
   const normalizedUnit = normalizeUnit(unit);
-
-  if (normalizedUnit === "ea") {
-    return convertEachUnit(value);
+  if (!normalizedUnit) {
+    return { unitLabel: null, multiplier: null };
   }
 
-  return convertMeasurableUnit(value, normalizedUnit as MeasurableUnit);
-}
-
-/**
- * Validates input value for conversion
- * @throws {Error} If value is invalid
- */
-function validateInputValue(value: number): void {
-  if (value === 0) {
-    throw new Error(ERROR_MESSAGES.ZERO_VALUE);
-  }
-  if (value < 0) {
-    throw new Error(ERROR_MESSAGES.NEGATIVE_VALUE);
+  try {
+    // Convert supported units
+    if (normalizedUnit === "ea") {
+      return convertEachUnit(value);
+    }
+    return convertMeasurableUnit(value, normalizedUnit as MeasurableUnit);
+  } catch {
+    // Handle any conversion errors
+    return { unitLabel: null, multiplier: null };
   }
 }
 
