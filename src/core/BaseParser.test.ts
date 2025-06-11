@@ -17,6 +17,7 @@ class MockStrategy implements IStrategy {
   parsePrice = vi.fn(() => 100);
   parseQuantity = vi.fn((): UnitLabel => ({ unitLabel: "1 кг", multiplier: 1 } as UnitLabel));
   renderUnitPrice = vi.fn();
+  renderNoneUnitPrice = vi.fn();
   shouldProcess = vi.fn(() => true);
   process = vi.fn();
   log = vi.fn();

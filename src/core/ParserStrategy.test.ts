@@ -43,6 +43,16 @@ class TestStrategy extends ParserStrategy {
     unitPriceEl.textContent = `${unitPrice.toFixed(2)} ₽ за ${unitLabel}`;
     priceEl.appendChild(unitPriceEl);
   }
+
+  renderNoneUnitPrice(cardEl: HTMLElement): void {
+    const priceEl = cardEl.querySelector(this.selectors.price!);
+    if (!priceEl) throw new Error("Price element not found");
+
+    const unitPriceEl = document.createElement("span");
+    unitPriceEl.className = "unit-price";
+    unitPriceEl.textContent = "Цена за единицу не указана";
+    priceEl.appendChild(unitPriceEl);
+  }
 }
 
 describe("ParserStrategy", () => {
