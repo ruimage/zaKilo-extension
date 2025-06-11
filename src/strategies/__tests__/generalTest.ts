@@ -50,10 +50,16 @@ export const generalCardTest = (strategy: IStrategy) => (testCard: any, index: n
 
         const styles = window.getComputedStyle(renderedUnitPrice as HTMLElement);
 
+<<<<<<< fix/#4-weghted-units-without-label
         // Check that all expected styles are applied
         Object.entries(expectedStyles).forEach(([property, value]) => {
           expect(styles[property as keyof CSSStyleDeclaration]).toBe(value);
         });
+=======
+      // Check that all expected styles are applied
+      Object.entries(expectedStyles).forEach(([property, value]) => {
+        expect(styles[property as unknown as keyof CSSStyleDeclaration]).toBe(value);
+>>>>>>> main
       });
     }
   });

@@ -48,7 +48,7 @@ export class SamokatStrategy extends ParserStrategy {
       unit = m[2];
     }
 
-    return getUnitParsedWeight(total, unit);
+    return getConvertedUnit(total, unit);
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {

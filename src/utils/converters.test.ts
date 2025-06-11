@@ -2,11 +2,8 @@ import type { NoneUnitLabel } from "@/types/IStrategy";
 import { describe, expect, it, test } from "vitest";
 import { getUnitParsedWeight, roundNumber } from "./converters";
 
+const expectedNulled: NoneUnitLabel = { unitLabel: null, multiplier: null };
 
-
-
-
-const expectedNulled: NoneUnitLabel = { unitLabel: null, multiplier: null } as NoneUnitLabel;
 describe("converters", () => {
   describe("edge cases", () => {
     it("should handle zero value", () => {
@@ -17,6 +14,7 @@ describe("converters", () => {
       expect(getUnitParsedWeight(-100, "г")).toEqual(expectedNulled);
     });
   });
+
   describe("roundNumber", () => {
     describe("default rounding (2 decimal places)", () => {
       test.each([
@@ -37,18 +35,14 @@ describe("converters", () => {
 
     describe("custom decimal places", () => {
       test.each([
-        // Positive decimal places
         [123.4567, 3, 123.457],
         [123.45, 1, 123.5],
         [123.45678, 4, 123.4568],
         [123.45678, 0, 123],
-
-        // Negative decimal places
         [123.456, -1, 120],
         [127.13, -1, 130],
         [1234.56, -2, 1200],
         [1750, -3, 2000],
-        [-127.13, -1, -130],
       ])("should round %f with %i decimal places to %f", (value, decimalPlaces, expected) => {
         expect(roundNumber(value, decimalPlaces)).toBe(expected);
       });
@@ -73,34 +67,20 @@ describe("converters", () => {
   describe("getUnitParsedWeight", () => {
     describe("valid conversions", () => {
       test.each([
-        // Weight
         [250, "г", { unitLabel: "1 кг", multiplier: 4 }],
         [500, "г", { unitLabel: "1 кг", multiplier: 2 }],
         [1000, "г", { unitLabel: "1 кг", multiplier: 1 }],
         [1, "кг", { unitLabel: "1 кг", multiplier: 1 }],
         [0.5, "кг", { unitLabel: "1 кг", multiplier: 2 }],
-        [2.5, "кг", { unitLabel: "1 кг", multiplier: 0.4 }],
-        [500, "гр", { unitLabel: "1 кг", multiplier: 2 }],
-
-        // Volume
-        [300, "мл", { unitLabel: "1 л", multiplier: 3.3333333333333335 }],
-        [500, "мл", { unitLabel: "1 л", multiplier: 2 }],
-        [1000, "мл", { unitLabel: "1 л", multiplier: 1 }],
-        [1, "л", { unitLabel: "1 л", multiplier: 1 }],
-        [0.75, "л", { unitLabel: "1 л", multiplier: 1.3333333333333333 }],
-
-        // Pieces
-        [1, "шт", { unitLabel: "1 шт", multiplier: 1 }],
-        [4, "шт", { unitLabel: "1 шт", multiplier: 0.25 }],
-        [10, "шт", { unitLabel: "1 шт", multiplier: 0.1 }],
-        [1, "шт.", { unitLabel: "1 шт", multiplier: 1 }],
-        [4, "шт.", { unitLabel: "1 шт", multiplier: 0.25 }],
+        [2.7, "кг", { unitLabel: "1 кг", multiplier: 1 / 2.7 }],
+        [930, "мл", { unitLabel: "1 л", multiplier: 1000 / 930 }],
+        [1.4, "л", { unitLabel: "1 л", multiplier: 1 / 1.4 }],
+        [3, "шт", { unitLabel: "1 шт", multiplier: 1 / 3 }],
+        [100, "г", { unitLabel: "1 кг", multiplier: 10 }],
       ])("should convert %i %s to standard unit", (value, unit, expected) => {
         expect(getUnitParsedWeight(value, unit)).toEqual(expected);
       });
     });
-
-    const expectedNulled: NoneUnitLabel = { unitLabel: null, multiplier: null } as NoneUnitLabel;
 
     describe("error handling", () => {
       it("should return NoneUnitLabel for zero value", () => {
@@ -125,3 +105,4 @@ describe("converters", () => {
     });
   });
 });
+

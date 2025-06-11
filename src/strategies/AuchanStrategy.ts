@@ -2,6 +2,7 @@ import { ParserStrategy } from "@/core/ParserStrategy";
 import type { NoneUnitLabel, UnitLabel } from "@/types/IStrategy";
 import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
 
+
 export class AuchanStrategy extends ParserStrategy {
   constructor() {
     super();

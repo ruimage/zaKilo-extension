@@ -32,7 +32,7 @@ export class DeliveryClubStrategy extends ParserStrategy {
     if (!m) throw new Error("Invalid quantity: " + nameText);
     const num = parseFloat(m[1]);
     const unit = m[2];
-    return getUnitParsedWeight(num, unit);
+    return getConvertedUnit(num, unit);
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {

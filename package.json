@@ -68,5 +68,8 @@
   },
   "resolutions": {
     "lodash-es": "^4.17.21"
+  },
+  "dependencies": {
+    "convert-units": "2.3.4"
   }
 }

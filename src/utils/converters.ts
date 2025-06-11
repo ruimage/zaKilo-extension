@@ -2,10 +2,6 @@ import type { NoneUnitLabel, UnitLabel } from "@/types/IStrategy";
 
 /**
  * Rounds a number to the specified number of decimal places
- * @param value - The number to round
- * @param decimalPlaces - The number of decimal places to round to (default: 2)
- *                      - If negative, rounds to tens, hundreds, etc.
- * @returns The rounded number
  */
 export function roundNumber(value: number, decimalPlaces: number = 2): number {
   const factor = Math.pow(10, decimalPlaces);
@@ -36,4 +32,52 @@ export function getUnitParsedWeight(value: number, unit: string): UnitLabel | No
     default:
       return { unitLabel: null, multiplier: null } as NoneUnitLabel;
   }
+  return normalizedUnit;
+}
+
+/**
+ * Gets target unit information for a given measure
+ * @throws {Error} If measure is unknown
+ */
+function getTargetUnitInfo(measure: ConverssionsMeasures): { target: TargetUnit; label: string } {
+  const target = measureToTargetUnit[measure];
+
+  if (!target) {
+    throw new Error(ERROR_MESSAGES.UNKNOWN_MEASURE(measure));
+  }
+  if (!(target in targetUnitLabels)) {
+    throw new Error(ERROR_MESSAGES.UNSUPPORTED_TARGET(target));
+  }
+
+  return {
+    target: target as TargetUnit,
+    label: targetUnitLabels[target as TargetUnit],
+  };
+}
+
+/**
+ * Converts each unit (штуки)
+ */
+function convertEachUnit(value: number): UnitLabel {
+  return {
+    unitLabel: targetUnitLabels.ea,
+    multiplier: 1 / value,
+  };
+}
+
+/**
+ * Converts measurable units (mass, volume)
+ */
+function convertMeasurableUnit(value: number, unit: MeasurableUnit): UnitLabel {
+  const desc = convert().describe(unit as Unit) as { measure: ConverssionsMeasures };
+  const { target, label } = getTargetUnitInfo(desc.measure);
+
+  const convertedValue = convert(value)
+    .from(unit as Unit)
+    .to(target as Unit);
+
+  return {
+    unitLabel: label,
+    multiplier: 1 / convertedValue,
+  };
 }

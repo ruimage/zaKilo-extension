@@ -16,12 +16,26 @@ export class LavkaStrategy extends ParserStrategy {
   }
 
   parsePrice(cardEl: HTMLElement): number {
-    const priceString = cardEl.querySelector(this.selectors.price)?.textContent;
-    this.log("parsed price text", priceString);
-    const cleaned = priceString?.replace(/\s|&thinsp;/g, "").replace("₽", "") ?? "";
-    const v = parseFloat(cleaned);
-    if (isNaN(v)) throw new Error("Invalid price: " + priceString);
-    return v;
+    const priceElement = cardEl.querySelector(this.selectors.price);
+    const priceString = priceElement?.textContent;
+
+    if (!priceString) {
+      throw new Error("Price string is empty or element not found");
+    }
+
+    const normalizedSpaceString = priceString.replace(/\s|&thinsp;/g, " ").trim();
+    const match = normalizedSpaceString.match(/^([\d.,]+)/);
+
+    if (match && match[1]) {
+      const potentialPrice = match[1].replace(",", ".");
+      this.log("parsed price text", potentialPrice);
+      const v = parseFloat(potentialPrice);
+      if (!isNaN(v)) {
+        return v;
+      }
+    }
+
+    throw new Error("Invalid price: " + priceString + " (normalized: " + normalizedSpaceString + ")");
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel {
@@ -31,7 +45,7 @@ export class LavkaStrategy extends ParserStrategy {
     if (!m) throw new Error("Invalid quantity: " + nameText);
     const num = parseFloat(m[1]);
     const unit = m[2];
-    return getUnitParsedWeight(num, unit);
+    return getConvertedUnit(num, unit);
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {
@@ -46,8 +60,18 @@ export class LavkaStrategy extends ParserStrategy {
 
     const formattedText = `${roundNumber(unitPrice, 0)}\u2009₽ за ${unitLabel}`;
 
+
+    const styles = {
+      color: "#000",
+      backgroundColor: "rgba(0, 198, 106, 0.1)",
+      padding: "2px 3px 2px 3px",
+      borderRadius: "0.25em",
+      fontWeight: "500",
+    };
+
     if (existingUnitPrice) {
       existingUnitPrice.textContent = formattedText;
+      Object.assign(existingUnitPrice.style, styles);
       return;
     }
 

@@ -43,5 +43,5 @@ export interface IStrategy {
   renderNoneUnitPrice(cardEl: HTMLElement): void;
   shouldProcess(cardEl: HTMLElement): boolean;
   process(cardEl: HTMLElement): void;
-  log(...args: any[]): void;
+  log(...args: unknown[]): void;
 }

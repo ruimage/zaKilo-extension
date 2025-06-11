@@ -43,7 +43,7 @@ export class KuperStrategy extends ParserStrategy {
       const unit = match[2];
 
       this.log("Name: totalText, total, unit", totalText, total, unit);
-      return getUnitParsedWeight(total, unit);
+      return getConvertedUnit(total, unit);
     } else {
       throw new Error("Обьем не распознан.");
     }
