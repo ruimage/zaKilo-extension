@@ -82,3 +82,25 @@ api.tabs.onUpdated.addListener((tabId: number, changeInfo, tab): void => {
     }
   }
 });
+
+api.runtime.onInstalled.addListener((details) => {
+  const currentVersion = api.runtime.getManifest().version;
+
+  if (details.reason === "install") {
+    // Первая установка
+    api.tabs.create({ url: "https://zakilo.syrnikovpavel.ru/" });
+  } else if (details.reason === "update") {
+    // Обновление: показываем changelog только для нужных версий
+    switch (currentVersion) {
+      case "1.0.2":
+        api.tabs.create({ url: "https://zakilo.syrnikovpavel.ru/1.0.2" });
+        break;
+      case "1.0.3":
+        api.tabs.create({ url: "https://zakilo.syrnikovpavel.ru/1.0.3" });
+        break;
+      default:
+        // Для остальных версий ничего не открываем
+        break;
+    }
+  }
+});
