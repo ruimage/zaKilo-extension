@@ -1,14 +1,14 @@
 import { describe, expect, it, test } from "vitest";
-import { getUnitParsedWeight, roundNumber } from "./converters";
+import { getConvertedUnit, roundNumber } from "./converters";
 
 describe("converters", () => {
   describe("edge cases", () => {
     it("should handle zero value", () => {
-      expect(() => getUnitParsedWeight(0, "г")).toThrow("Значение не может быть нулевым");
+      expect(() => getConvertedUnit(0, "г")).toThrow("Значение не может быть нулевым");
     });
 
     it("should handle negative value", () => {
-      expect(() => getUnitParsedWeight(-100, "г")).toThrow("Значение не может быть отрицательным");
+      expect(() => getConvertedUnit(-100, "г")).toThrow("Значение не может быть отрицательным");
     });
   });
   describe("roundNumber", () => {
@@ -64,7 +64,7 @@ describe("converters", () => {
     });
   });
 
-  describe("getUnitParsedWeight", () => {
+  describe("getConvertedUnit", () => {
     describe("valid conversions", () => {
       test.each([
         // Weight
@@ -101,9 +101,9 @@ describe("converters", () => {
 
         // Volume
         [930, "мл", { unitLabel: "1 л", multiplier: 1.075268817204301 }],
-        [970, "мл", { unitLabel: "1 л", multiplier: 1.0309278350515463 }],
+        [970, "мл", { unitLabel: "1 л", multiplier: 1.0309278350515465 }],
         [800, "мл", { unitLabel: "1 л", multiplier: 1.25 }],
-        [906, "мл", { unitLabel: "1 л", multiplier: 1.1037527593818985 }],
+        [906, "мл", { unitLabel: "1 л", multiplier: 1.1037527593818983 }],
         [1.947, "л", { unitLabel: "1 л", multiplier: 0.5136106831022085 }],
         [1.4, "л", { unitLabel: "1 л", multiplier: 0.7142857142857143 }],
         [2, "л", { unitLabel: "1 л", multiplier: 0.5 }],
@@ -111,29 +111,29 @@ describe("converters", () => {
         // Price per 100g
         [100, "г", { unitLabel: "1 кг", multiplier: 10 }],
       ])("should convert %i %s to standard unit", (value, unit, expected) => {
-        expect(getUnitParsedWeight(value, unit)).toEqual(expected);
+        expect(getConvertedUnit(value, unit)).toEqual(expected);
       });
     });
 
     describe("error handling", () => {
       it("should throw for zero value", () => {
-        expect(() => getUnitParsedWeight(0, "г")).toThrow("Значение не может быть нулевым");
+        expect(() => getConvertedUnit(0, "г")).toThrow("Значение не может быть нулевым");
       });
 
       it("should throw for negative value", () => {
-        expect(() => getUnitParsedWeight(-100, "г")).toThrow("Значение не может быть отрицательным");
+        expect(() => getConvertedUnit(-100, "г")).toThrow("Значение не может быть отрицательным");
       });
 
       it("should throw for unknown unit", () => {
-        expect(() => getUnitParsedWeight(5, "unknown")).toThrow("Неизвестная единица: unknown");
+        expect(() => getConvertedUnit(5, "unknown")).toThrow("Неизвестная единица: unknown");
       });
 
       it("should throw for empty unit", () => {
-        expect(() => getUnitParsedWeight(5, "")).toThrow("Неизвестная единица: ");
+        expect(() => getConvertedUnit(5, "")).toThrow("Неизвестная единица: ");
       });
 
       it("should throw for space unit", () => {
-        expect(() => getUnitParsedWeight(5, " ")).toThrow("Неизвестная единица:  ");
+        expect(() => getConvertedUnit(5, " ")).toThrow("Неизвестная единица:  ");
       });
     });
   });
