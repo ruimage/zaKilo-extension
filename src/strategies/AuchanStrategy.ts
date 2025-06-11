@@ -1,6 +1,6 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
 import type { NoneUnitLabel, UnitLabel } from "@/types/IStrategy";
-import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
+import { getConvertedUnit, roundNumber } from "@/utils/converters";
 
 
 export class AuchanStrategy extends ParserStrategy {
@@ -49,7 +49,7 @@ export class AuchanStrategy extends ParserStrategy {
     if (!match) return { unitLabel: null, multiplier: null } as NoneUnitLabel;
     const value = parseFloat(match[1].replace(",", "."));
     const unit = match[2].toLowerCase();
-    return getUnitParsedWeight(value, unit) as UnitLabel | NoneUnitLabel;
+    return getConvertedUnit(value, unit) as UnitLabel | NoneUnitLabel;
   }
 
   renderNoneUnitPrice(cardEl: HTMLElement): void {

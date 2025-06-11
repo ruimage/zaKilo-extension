@@ -1,6 +1,6 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
 import type { NoneUnitLabel, UnitLabel } from "@/types/IStrategy";
-import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
+import { getConvertedUnit, roundNumber } from "@/utils/converters";
 
 export class SamberiStrategy extends ParserStrategy {
   constructor() {
@@ -57,10 +57,10 @@ export class SamberiStrategy extends ParserStrategy {
 
     // Если это процент, конвертируем в граммы (предполагаем, что это процент от 100г)
     if (matches[0].includes("%")) {
-      return getUnitParsedWeight(num, "г");
+      return getConvertedUnit(num, "г");
     }
 
-    return getUnitParsedWeight(num, unit);
+    return getConvertedUnit(num, unit);
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {

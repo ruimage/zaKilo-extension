@@ -1,6 +1,6 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
 import type { NoneUnitLabel, UnitLabel } from "@/types/IStrategy";
-import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
+import { getConvertedUnit, roundNumber } from "@/utils/converters";
 
 export class PerekrestokStrategy extends ParserStrategy {
   constructor() {
@@ -61,7 +61,7 @@ export class PerekrestokStrategy extends ParserStrategy {
       total = parseFloat(m[1]);
       unit = m[2];
     }
-    return getUnitParsedWeight(total, unit);
+    return getConvertedUnit(total, unit);
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {

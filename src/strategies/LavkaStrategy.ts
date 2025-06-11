@@ -1,6 +1,6 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
 import type { NoneUnitLabel, UnitLabel } from "@/types/IStrategy";
-import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
+import { getConvertedUnit, roundNumber } from "@/utils/converters";
 
 export class LavkaStrategy extends ParserStrategy {
   constructor() {
@@ -45,7 +45,7 @@ export class LavkaStrategy extends ParserStrategy {
     if (!m) throw new Error("Invalid quantity: " + nameText);
     const num = parseFloat(m[1]);
     const unit = m[2];
-    return getUnitParsedWeight(num, unit);
+    return getConvertedUnit(num, unit);
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {
@@ -104,6 +104,14 @@ export class LavkaStrategy extends ParserStrategy {
     span.className = priceEl.className;
     span.setAttribute("data-testid", "unit-price");
     span.textContent = "Нет инф.";
+
+    const styles = {
+      color: "#000",
+      backgroundColor: "rgba(0, 198, 106, 0.1)",
+      padding: "2px 3px 2px 3px",
+      borderRadius: "0.25em",
+      fontWeight: "500",
+    };
 
     Object.assign(span.style, styles);
 

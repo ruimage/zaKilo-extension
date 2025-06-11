@@ -1,6 +1,6 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
 import type { NoneUnitLabel, UnitLabel } from "@/types/IStrategy";
-import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
+import { getConvertedUnit, roundNumber } from "@/utils/converters";
 
 export class OzonStrategy extends ParserStrategy {
   constructor() {
@@ -32,7 +32,7 @@ export class OzonStrategy extends ParserStrategy {
 
     const value = parseFloat(match[1].replace(",", "."));
     const unit = match[2].toLowerCase();
-    return getUnitParsedWeight(value, unit);
+    return getConvertedUnit(value, unit);
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {
