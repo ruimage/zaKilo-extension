@@ -113,8 +113,8 @@ jobs:
           ## 🚀 zaKilo Extension v${{ needs.build.outputs.version }}
 
           ### 📦 Установка:
-          - **Chrome**: Скачайте \`zaKilo-chrome-${{ needs.build.outputs.version }}.zip\`
-          - **Firefox**: Скачайте \`zaKilo-firefox-${{ needs.build.outputs.version }}.zip\`
+          - **Chrome**: Скачайте `zaKilo-chrome-${{ needs.build.outputs.version }}.zip`
+          - **Firefox**: Скачайте `zaKilo-firefox-${{ needs.build.outputs.version }}.zip`
 
           ### 🛠️ Сборка:
           - Node.js версия: 18.x
