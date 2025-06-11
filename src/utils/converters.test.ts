@@ -1,14 +1,23 @@
 import { describe, expect, it, test } from "vitest";
 import { getConvertedUnit, roundNumber } from "./converters";
+import type { UnitLabel, NoneUnitLabel } from "@/types/IStrategy";
 
 describe("converters", () => {
   describe("edge cases", () => {
     it("should return NoneUnitLabel for zero value", () => {
-      expect(getConvertedUnit(0, "г")).toEqual({ unitLabel: null, multiplier: null });
+      expect(getConvertedUnit(0, "г")).toEqual({
+        unitLabel: null,
+        multiplier: null,
+        [Symbol.for("tag")]: { NoneUnitLabel: true }
+      } as NoneUnitLabel);
     });
 
     it("should return NoneUnitLabel for negative value", () => {
-      expect(getConvertedUnit(-100, "г")).toEqual({ unitLabel: null, multiplier: null });
+      expect(getConvertedUnit(-100, "г")).toEqual({
+        unitLabel: null,
+        multiplier: null,
+        [Symbol.for("tag")]: { NoneUnitLabel: true }
+      } as NoneUnitLabel);
     });
 
     it("should throw for unknown unit", () => {
@@ -72,62 +81,54 @@ describe("converters", () => {
     describe("valid conversions", () => {
       test.each([
         // Weight
-        [250, "г", { unitLabel: "1 кг", multiplier: 4 }],
-        [500, "г", { unitLabel: "1 кг", multiplier: 2 }],
-        [1000, "г", { unitLabel: "1 кг", multiplier: 1 }],
-        [1, "кг", { unitLabel: "1 кг", multiplier: 1 }],
-        [0.5, "кг", { unitLabel: "1 кг", multiplier: 2 }],
-        [2.5, "кг", { unitLabel: "1 кг", multiplier: 0.4 }],
-        [500, "гр", { unitLabel: "1 кг", multiplier: 2 }],
+        [250, "г", { unitLabel: "1 кг", multiplier: 4, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [500, "г", { unitLabel: "1 кг", multiplier: 2, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [1000, "г", { unitLabel: "1 кг", multiplier: 1, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [1, "кг", { unitLabel: "1 кг", multiplier: 1, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [0.5, "кг", { unitLabel: "1 кг", multiplier: 2, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [2.5, "кг", { unitLabel: "1 кг", multiplier: 0.4, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [500, "гр", { unitLabel: "1 кг", multiplier: 2, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
 
         // Volume
-        [300, "мл", { unitLabel: "1 л", multiplier: 3.3333333333333335 }],
-        [500, "мл", { unitLabel: "1 л", multiplier: 2 }],
-        [1000, "мл", { unitLabel: "1 л", multiplier: 1 }],
-        [1, "л", { unitLabel: "1 л", multiplier: 1 }],
-        [0.75, "л", { unitLabel: "1 л", multiplier: 1.3333333333333333 }],
+        [300, "мл", { unitLabel: "1 л", multiplier: 3.3333333333333335, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [500, "мл", { unitLabel: "1 л", multiplier: 2, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [1000, "мл", { unitLabel: "1 л", multiplier: 1, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [1, "л", { unitLabel: "1 л", multiplier: 1, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [0.75, "л", { unitLabel: "1 л", multiplier: 1.3333333333333333, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
 
         // Pieces
-        [1, "шт", { unitLabel: "1 шт", multiplier: 1 }],
-        [2, "шт", { unitLabel: "1 шт", multiplier: 0.5 }],
-        [3, "шт", { unitLabel: "1 шт", multiplier: 0.3333333333333333 }],
-        [4, "шт", { unitLabel: "1 шт", multiplier: 0.25 }],
-        [10, "шт", { unitLabel: "1 шт", multiplier: 0.1 }],
-        [1, "шт.", { unitLabel: "1 шт", multiplier: 1 }],
-        [4, "шт.", { unitLabel: "1 шт", multiplier: 0.25 }],
+        [1, "шт", { unitLabel: "1 шт", multiplier: 1, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [2, "шт", { unitLabel: "1 шт", multiplier: 0.5, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [3, "шт", { unitLabel: "1 шт", multiplier: 0.3333333333333333, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [4, "шт", { unitLabel: "1 шт", multiplier: 0.25, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [10, "шт", { unitLabel: "1 шт", multiplier: 0.1, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [1, "шт.", { unitLabel: "1 шт", multiplier: 1, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [4, "шт.", { unitLabel: "1 шт", multiplier: 0.25, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
 
         // Weight
-        [950, "г", { unitLabel: "1 кг", multiplier: 1.0526315789473684 }],
-        [450, "г", { unitLabel: "1 кг", multiplier: 2.2222222222222223 }],
-        [75, "г", { unitLabel: "1 кг", multiplier: 13.333333333333334 }],
-        [3, "кг", { unitLabel: "1 кг", multiplier: 0.3333333333333333 }],
-        [2.7, "кг", { unitLabel: "1 кг", multiplier: 0.37037037037037035 }],
+        [950, "г", { unitLabel: "1 кг", multiplier: 1.0526315789473684, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [450, "г", { unitLabel: "1 кг", multiplier: 2.2222222222222223, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [75, "г", { unitLabel: "1 кг", multiplier: 13.333333333333334, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [3, "кг", { unitLabel: "1 кг", multiplier: 0.3333333333333333, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [2.7, "кг", { unitLabel: "1 кг", multiplier: 0.37037037037037035, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
 
         // Volume
-        [930, "мл", { unitLabel: "1 л", multiplier: 1.075268817204301 }],
-        [970, "мл", { unitLabel: "1 л", multiplier: 1.0309278350515465 }],
-        [800, "мл", { unitLabel: "1 л", multiplier: 1.25 }],
-        [906, "мл", { unitLabel: "1 л", multiplier: 1.1037527593818983 }],
-        [1.947, "л", { unitLabel: "1 л", multiplier: 0.5136106831022085 }],
-        [1.4, "л", { unitLabel: "1 л", multiplier: 0.7142857142857143 }],
-        [2, "л", { unitLabel: "1 л", multiplier: 0.5 }],
+        [930, "мл", { unitLabel: "1 л", multiplier: 1.075268817204301, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [970, "мл", { unitLabel: "1 л", multiplier: 1.0309278350515465, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [800, "мл", { unitLabel: "1 л", multiplier: 1.25, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [906, "мл", { unitLabel: "1 л", multiplier: 1.1037527593818983, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [1.947, "л", { unitLabel: "1 л", multiplier: 0.5136106831022085, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [1.4, "л", { unitLabel: "1 л", multiplier: 0.7142857142857143, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
+        [2, "л", { unitLabel: "1 л", multiplier: 0.5, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
 
         // Price per 100g
-        [100, "г", { unitLabel: "1 кг", multiplier: 10 }],
+        [100, "г", { unitLabel: "1 кг", multiplier: 10, [Symbol.for("tag")]: { UnitLabel: true } } as UnitLabel],
       ])("should convert %i %s to standard unit", (value, unit, expected) => {
         expect(getConvertedUnit(value, unit)).toEqual(expected);
       });
     });
 
     describe("error handling", () => {
-      it("should return NoneUnitLabel for zero value", () => {
-        expect(getConvertedUnit(0, "г")).toEqual({ unitLabel: null, multiplier: null });
-      });
-
-      it("should return NoneUnitLabel for negative value", () => {
-        expect(getConvertedUnit(-100, "г")).toEqual({ unitLabel: null, multiplier: null });
-      });
-
       it("should throw for unknown unit", () => {
         expect(() => getConvertedUnit(5, "unknown")).toThrow("Неизвестная единица: unknown");
       });

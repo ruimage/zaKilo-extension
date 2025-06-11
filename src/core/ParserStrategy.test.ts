@@ -1,4 +1,4 @@
-import type { UnitLabel } from "@/types/IStrategy";
+import type { UnitLabel, NoneUnitLabel } from "@/types/IStrategy";
 import { getConvertedUnit } from "@/utils/converters";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ParserStrategy } from "./ParserStrategy";
@@ -22,11 +22,15 @@ class TestStrategy extends ParserStrategy {
     return parseFloat(priceEl.textContent || "0");
   }
 
-  parseQuantity(cardEl: HTMLElement): UnitLabel {
+  parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel {
     const nameEl = cardEl.querySelector(this.selectors.name!);
     if (!nameEl) throw new Error("Name element not found");
     const match = (nameEl.textContent || "").match(/(\d+(?:\.\d+)?)\s*(г|кг|мл|л|шт)/);
-    if (!match) return { unitLabel: "1 шт", multiplier: 1 };
+    if (!match) return {
+      unitLabel: "1 шт",
+      multiplier: 1,
+      [Symbol.for("tag")]: { UnitLabel: true }
+    } as UnitLabel;
 
     const value = parseFloat(match[1]);
     const unit = match[2];
@@ -136,7 +140,8 @@ describe("ParserStrategy", () => {
     expect(strategy.parseQuantity(mockCard)).toEqual({
       unitLabel: "1 кг",
       multiplier: 2, // 1000 / 500
-    });
+      [Symbol.for("tag")]: { UnitLabel: true }
+    } as UnitLabel);
 
     // Test with different quantities and units
     const nameEl = mockCard.querySelector(".name")!;
@@ -145,32 +150,37 @@ describe("ParserStrategy", () => {
     expect(strategy.parseQuantity(mockCard)).toEqual({
       unitLabel: "1 кг",
       multiplier: 0.5, // 1 / 2
-    });
+      [Symbol.for("tag")]: { UnitLabel: true }
+    } as UnitLabel);
 
     nameEl.textContent = "Test Product 750мл";
     expect(strategy.parseQuantity(mockCard)).toEqual({
       unitLabel: "1 л",
       multiplier: 1.3333333333333333, // 1000 / 750, exact value
-    });
+      [Symbol.for("tag")]: { UnitLabel: true }
+    } as UnitLabel);
 
     nameEl.textContent = "Test Product 1.5л";
     expect(strategy.parseQuantity(mockCard)).toEqual({
       unitLabel: "1 л",
       multiplier: 0.6666666666666666, // 1 / 1.5, exact value
-    });
+      [Symbol.for("tag")]: { UnitLabel: true }
+    } as UnitLabel);
 
     nameEl.textContent = "Test Product 10шт";
     expect(strategy.parseQuantity(mockCard)).toEqual({
       unitLabel: "1 шт",
       multiplier: 0.1, // 1 / 10
-    });
+      [Symbol.for("tag")]: { UnitLabel: true }
+    } as UnitLabel);
 
     // Test with no quantity in name
     nameEl.textContent = "Test Product";
     expect(strategy.parseQuantity(mockCard)).toEqual({
       unitLabel: "1 шт",
       multiplier: 1,
-    });
+      [Symbol.for("tag")]: { UnitLabel: true }
+    } as UnitLabel);
   });
 
   it("should render unit price correctly", () => {

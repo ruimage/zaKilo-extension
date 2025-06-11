@@ -64,13 +64,21 @@ export function getConvertedUnit(
 ): UnitLabel | NoneUnitLabel {
   // Handle invalid values: zero or negative
   if (value <= 0) {
-    return { unitLabel: null, multiplier: null };
+    return {
+      unitLabel: null,
+      multiplier: null,
+      [Symbol.for("tag")]: { NoneUnitLabel: true }
+    } as NoneUnitLabel;
   }
 
   // Normalize and validate unit
   const normalizedUnit = normalizeUnit(unit);
   if (!normalizedUnit) {
-    return { unitLabel: null, multiplier: null };
+    return {
+      unitLabel: null,
+      multiplier: null,
+      [Symbol.for("tag")]: { NoneUnitLabel: true }
+    } as NoneUnitLabel;
   }
 
   try {
@@ -81,7 +89,11 @@ export function getConvertedUnit(
     return convertMeasurableUnit(value, normalizedUnit as MeasurableUnit);
   } catch {
     // Handle any conversion errors
-    return { unitLabel: null, multiplier: null };
+    return {
+      unitLabel: null,
+      multiplier: null,
+      [Symbol.for("tag")]: { NoneUnitLabel: true }
+    } as NoneUnitLabel;
   }
 }
 
@@ -127,7 +139,8 @@ function convertEachUnit(value: number): UnitLabel {
   return {
     unitLabel: targetUnitLabels.ea,
     multiplier: 1 / value,
-  };
+    [Symbol.for("tag")]: { UnitLabel: true }
+  } as UnitLabel;
 }
 
 /**
@@ -144,5 +157,6 @@ function convertMeasurableUnit(value: number, unit: MeasurableUnit): UnitLabel {
   return {
     unitLabel: label,
     multiplier: 1 / convertedValue,
-  };
+    [Symbol.for("tag")]: { UnitLabel: true }
+  } as UnitLabel;
 }
