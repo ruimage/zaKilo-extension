@@ -1,6 +1,6 @@
 import { ParserStrategy } from "@/core/ParserStrategy";
 import type { UnitLabel } from "@/types/IStrategy";
-import { getUnitParsedWeight, roundNumber } from "@/utils/converters";
+import { getConvertedUnit, roundNumber } from "@/utils/converters";
 
 export class MetroStrategy extends ParserStrategy {
   constructor() {
@@ -47,7 +47,11 @@ export class MetroStrategy extends ParserStrategy {
     if (!match) return { unitLabel: "1 шт", multiplier: 1 };
     const value = parseFloat(match[1].replace(",", "."));
     const unit = match[2];
-    return getUnitParsedWeight(value, unit);
+    const result = getConvertedUnit(value, unit);
+    if (result.unitLabel === null) {
+      return { unitLabel: "1 шт", multiplier: 1 };
+    }
+    return result;
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {
