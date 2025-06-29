@@ -31,45 +31,58 @@ export class LentaStrategy extends ParserStrategy {
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel {
-    const existing = cardEl.querySelector('[data-testid="unit-price"]');
-    if (existing) {
-      const txt = existing.textContent?.trim() || "";
-      const m = txt.match(/(\d+)\s*₽\/(г|гр|кг|мл|л|шт)/i);
-      if (m) {
-        return getConvertedUnit(parseInt(m[1], 10), m[2].toLowerCase());
+    const result = this.tryCustomSelectors<UnitLabel | NoneUnitLabel>(cardEl, [
+      // 1. Check existing unit-price badge
+      (cardEl) => {
+        const existing = cardEl.querySelector('[data-testid="unit-price"]');
+        if (existing) {
+          const txt = existing.textContent?.trim() || "";
+          const m = txt.match(/(\d+)\s*₽\/(г|гр|кг|мл|л|шт)/i);
+          if (m) {
+            return getConvertedUnit(parseInt(m[1], 10), m[2].toLowerCase());
+          }
+        }
+        return null;
+      },
+      // 2. Check package element
+      (cardEl) => {
+        const pkgEl = cardEl.querySelector(".card-name_package");
+        if (pkgEl) {
+          const pkgText = pkgEl.textContent?.trim() || "";
+          const mPkg = pkgText.match(/(\d+)(г|гр|кг|мл|л|шт)/i);
+          if (mPkg) {
+            return getConvertedUnit(parseInt(mPkg[1], 10), mPkg[2].toLowerCase());
+          }
+        }
+        return null;
+      },
+      // 3. Check name title attribute
+      (cardEl) => {
+        const nameEl = cardEl.querySelector("[automation-id='catProductName']") as HTMLElement;
+        if (nameEl) {
+          const title = nameEl.getAttribute("title") || "";
+          const mTitle = title.match(/(\d+)(г|гр|кг|мл|л|шт)/i);
+          if (mTitle) {
+            return getConvertedUnit(parseInt(mTitle[1], 10), mTitle[2].toLowerCase());
+          }
+        }
+        return null;
+      },
+      // 4. Check price label
+      (cardEl) => {
+        const labelEl = cardEl.querySelector(".product-position-price .price");
+        if (labelEl) {
+          const labelTxt = labelEl.textContent?.trim() || "";
+          const mLabel = labelTxt.match(/Цена за\s*(\d+)\s*(г|гр|кг|мл|л|шт)/i);
+          if (mLabel) {
+            return getConvertedUnit(parseInt(mLabel[1], 10), mLabel[2].toLowerCase());
+          }
+        }
+        return null;
       }
-    }
+    ]);
 
-    const pkgEl = cardEl.querySelector(".card-name_package");
-    if (pkgEl) {
-      const pkgText = pkgEl.textContent?.trim() || "";
-      const mPkg = pkgText.match(/(\d+)(г|гр|кг|мл|л|шт)/i);
-      if (mPkg) {
-        return getConvertedUnit(parseInt(mPkg[1], 10), mPkg[2].toLowerCase());
-      }
-    }
-
-    const nameEl = cardEl.querySelector("[automation-id='catProductName']") as HTMLElement;
-    if (nameEl) {
-      const title = nameEl.getAttribute("title") || "";
-      const mTitle = title.match(/(\d+)(г|гр|кг|мл|л|шт)/i);
-      if (mTitle) {
-        return getConvertedUnit(parseInt(mTitle[1], 10), mTitle[2].toLowerCase());
-      }
-    }
-
-    const labelEl = cardEl.querySelector(".product-position-price .price");
-    if (labelEl) {
-      const labelTxt = labelEl.textContent?.trim() || "";
-      const mLabel = labelTxt.match(/Цена за\s*(\d+)\s*(г|гр|кг|мл|л|шт)/i);
-      if (mLabel) {
-        return getConvertedUnit(parseInt(mLabel[1], 10), mLabel[2].toLowerCase());
-      }
-    }
-    return {
-      unitLabel: null,
-      multiplier: null,
-    } as NoneUnitLabel;
+    return result || { unitLabel: null, multiplier: null } as NoneUnitLabel;
   }
 
   renderUnitPrice(cardEl: Element, unitPrice: number, unitLabel: string): void {

@@ -24,43 +24,51 @@ export class SamberiStrategy extends ParserStrategy {
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel {
-    const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
+    const nameText = this.trySelector(cardEl, this.selectors.name);
     this.log("parsed name text", nameText);
 
-    // Ищем все возможные форматы единиц измерения
-    const patterns = [
-      // Формат "число + единица без пробела" (например, "100г", "1л")
-      /(\d+(?:[.,]\d+)?)([а-яёa-z]+)(?:\s|$)/i,
-      // Формат "число + пробел + единица" (например, "200 мл")
-      /(\d+(?:[.,]\d+)?)\s+([а-яёa-z]+)(?:\s|$)/i,
-    ];
+    // Use tryCustomSelectors for complex multi-pattern matching
+    const result = this.tryCustomSelectors<UnitLabel | NoneUnitLabel>(cardEl, [
+      (cardEl) => {
+        // Multi-pattern regex matching with last match selection
+        const patterns = [
+          // Формат "число + единица без пробела" (например, "100г", "1л")
+          /(\d+(?:[.,]\d+)?)([а-яёa-z]+)(?:\s|$)/i,
+          // Формат "число + пробел + единица" (например, "200 мл")
+          /(\d+(?:[.,]\d+)?)\s+([а-яёa-z]+)(?:\s|$)/i,
+        ];
 
-    // Ищем все совпадения во всех форматах
-    let matches: RegExpMatchArray | null = null;
-    let lastIndex = -1;
+        // Ищем все совпадения во всех форматах
+        let matches: RegExpMatchArray | null = null;
+        let lastIndex = -1;
 
-    for (const pattern of patterns) {
-      const allMatches = nameText.matchAll(new RegExp(pattern, "gi"));
-      for (const match of allMatches) {
-        if (match.index! > lastIndex) {
-          matches = match;
-          lastIndex = match.index!;
+        for (const pattern of patterns) {
+          const allMatches = nameText.matchAll(new RegExp(pattern, "gi"));
+          for (const match of allMatches) {
+            if (match.index! > lastIndex) {
+              matches = match;
+              lastIndex = match.index!;
+            }
+          }
         }
+
+        if (!matches) return null;
+
+        const num = parseFloat(matches[1].replace(",", "."));
+        // Для процентов используем "г" как единицу измерения
+        const unit = matches[2]?.toLowerCase() || "г";
+
+        // Если это процент, конвертируем в граммы (предполагаем, что это процент от 100г)
+        if (matches[0].includes("%")) {
+          return getConvertedUnit(num, "г");
+        }
+
+        return getConvertedUnit(num, unit);
       }
-    }
+    ]);
 
-    if (!matches) throw new Error("Invalid quantity: " + nameText);
-
-    const num = parseFloat(matches[1].replace(",", "."));
-    // Для процентов используем "г" как единицу измерения
-    const unit = matches[2]?.toLowerCase() || "г";
-
-    // Если это процент, конвертируем в граммы (предполагаем, что это процент от 100г)
-    if (matches[0].includes("%")) {
-      return getConvertedUnit(num, "г");
-    }
-
-    return getConvertedUnit(num, unit);
+    if (!result) throw new Error("Invalid quantity: " + nameText);
+    return result;
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {

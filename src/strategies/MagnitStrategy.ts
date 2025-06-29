@@ -35,7 +35,7 @@ export class MagnitStrategy extends ParserStrategy {
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel {
-    const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
+    const nameText = this.trySelector(cardEl, this.selectors.name);
     const s = nameText.trim().toLowerCase().replace(",", ".");
     const match = s.match(/([\d]+(?:\.\d+)?)\s*(г|гр|кг|мл|л|шт)\.?/i);
     if (!match) {

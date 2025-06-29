@@ -45,7 +45,7 @@ export class PyaterochkaStrategy extends ParserStrategy {
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel {
-    const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
+    const nameText = this.trySelector(cardEl, this.selectors.name);
 
     const s = nameText.trim().toLowerCase().replace(/,/g, ".");
     const mulMatch = s.match(/^(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*([^\s\d]+)/i);

@@ -25,12 +25,10 @@ export class SamokatStrategy extends ParserStrategy {
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel {
-    let nameText: string;
-    if (this.selectors?.volume) {
-      nameText = cardEl.querySelector(this.selectors.volume)?.textContent?.trim() ?? "";
-    } else {
-      nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
-    }
+    const nameText = this.trySelectors(cardEl, [
+      { selector: this.selectors.volume || '' },
+      { selector: this.selectors.name || '' }
+    ]);
 
     const s = nameText.toLowerCase().replace(/,/g, ".").trim();
     const mulMatch = s.match(/^(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*([^\s\d]+)$/i);

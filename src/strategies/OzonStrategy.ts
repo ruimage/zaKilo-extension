@@ -24,7 +24,7 @@ export class OzonStrategy extends ParserStrategy {
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel {
-    const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
+    const nameText = this.trySelector(cardEl, this.selectors.name);
     const regex = /([\d.,]+)\s*(г|гр|кг|мл|л|шт)/i;
     const match = nameText.match(regex);
 

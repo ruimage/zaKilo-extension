@@ -39,12 +39,10 @@ export class PerekrestokStrategy extends ParserStrategy {
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel {
-    let quantityText: string;
-    if (this.selectors?.volume) {
-      quantityText = cardEl.querySelector(this.selectors.volume)?.textContent?.trim() ?? "";
-    } else {
-      quantityText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
-    }
+    const quantityText = this.trySelectors(cardEl, [
+      { selector: this.selectors.volume || '' },
+      { selector: this.selectors.name || '' }
+    ]);
 
     const s = quantityText.trim().toLowerCase().replace(/,/g, ".");
     const mulMatch = s.match(/^(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*([^\s\d]+)/i);

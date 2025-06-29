@@ -26,12 +26,12 @@ export class KuperStrategy extends ParserStrategy {
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel {
-    const volumeText = this.selectors?.volume ? cardEl.querySelector(this.selectors.volume)?.textContent || "" : "";
-    const nameText = cardEl.querySelector(this.selectors.name)?.getAttribute("title") || "";
-    const volumeString = nameText || volumeText;
+    const volumeString = this.trySelectors(cardEl, [
+      { selector: this.selectors.name || '', method: 'getAttribute', attribute: 'title' },
+      { selector: this.selectors.volume || '' }
+    ]);
 
-    this.log("volumeString", volumeText);
-    this.log("nameText", nameText);
+    this.log("volumeString", volumeString);
 
     const s = volumeString.trim().toLowerCase().replace(",", ".");
     const match = s.match(/([\d]+(?:\.\d+)?)\s*(г|гр|кг|мл|л|шт)\.?/i);

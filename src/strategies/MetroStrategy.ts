@@ -33,25 +33,32 @@ export class MetroStrategy extends ParserStrategy {
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel {
-    const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() || "";
+    const result = this.tryCustomSelectors<UnitLabel>(cardEl, [
+      // 1. Check price unit for кг/л indicators
+      (cardEl) => {
+        const priceUnitText = this.trySelector(cardEl, this.selectors.priceUnit!).toLowerCase();
+        if (/(\/|)\s*кг/.test(priceUnitText)) return { unitLabel: "1 кг", multiplier: 1 } as UnitLabel;
+        if (/(\/|)\s*л/.test(priceUnitText)) return { unitLabel: "1 л", multiplier: 1 } as UnitLabel;
+        return null;
+      },
+      // 2. Try regex on name text
+      (cardEl) => {
+        const nameText = this.trySelector(cardEl, this.selectors.name);
+        const regex = /([\d.,]+)\s*(г(?!од)|гр|кг|мл|л|шт)/i;
+        const match = nameText.match(regex);
+        if (match) {
+          const value = parseFloat(match[1].replace(",", "."));
+          const unit = match[2];
+          const converted = getConvertedUnit(value, unit);
+          if (converted.unitLabel !== null) {
+            return converted;
+          }
+        }
+        return null;
+      }
+    ]);
 
-    const priceUnitEl = cardEl.querySelector(this.selectors.priceUnit!);
-    const priceUnitText = priceUnitEl?.textContent?.toLowerCase() || "";
-
-    if (/(\/|)\s*кг/.test(priceUnitText)) return { unitLabel: "1 кг", multiplier: 1 } as UnitLabel;
-    if (/(\/|)\s*л/.test(priceUnitText)) return { unitLabel: "1 л", multiplier: 1 } as UnitLabel;
-
-    const regex = /([\d.,]+)\s*(г(?!од)|гр|кг|мл|л|шт)/i;
-    const match = nameText.match(regex);
-
-    if (!match) return { unitLabel: "1 шт", multiplier: 1 } as UnitLabel;
-    const value = parseFloat(match[1].replace(",", "."));
-    const unit = match[2];
-    const result = getConvertedUnit(value, unit);
-    if (result.unitLabel === null) {
-      return { unitLabel: "1 шт", multiplier: 1 } as UnitLabel;
-    }
-    return result;
+    return result || { unitLabel: "1 шт", multiplier: 1 } as UnitLabel;
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {

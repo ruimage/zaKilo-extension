@@ -39,7 +39,7 @@ export class LavkaStrategy extends ParserStrategy {
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel {
-    const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
+    const nameText = this.trySelector(cardEl, this.selectors.name);
     const s = nameText.toLowerCase().replace(",", ".").trim();
     const m = s.match(/([\d.]+)\s*([^\s\d]+)/);
     if (!m) throw new Error("Invalid quantity: " + nameText);

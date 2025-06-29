@@ -28,7 +28,7 @@ export class DeliveryClubStrategy extends ParserStrategy {
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel {
-    const qtyText = cardEl.querySelector(this.selectors.volume as string)?.textContent?.trim() ?? "";
+    const qtyText = this.trySelector(cardEl, this.selectors.volume as string);
     const s = qtyText.toLowerCase().replace(",", ".").trim();
     const m = s.match(/([\d.]+)\s*([^\s\d]+)/);
     if (!m) throw new Error("Invalid quantity: " + qtyText);

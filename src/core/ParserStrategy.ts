@@ -63,6 +63,55 @@ export abstract class ParserStrategy implements IStrategy {
     }
   }
 
+  protected trySelector(
+    cardEl: HTMLElement,
+    selector: string,
+    method: 'textContent' | 'getAttribute' = 'textContent',
+    attribute?: string
+  ): string {
+    if (!selector) return '';
+    
+    const element = cardEl.querySelector(selector);
+    if (!element) return '';
+    
+    if (method === 'getAttribute') {
+      return element.getAttribute(attribute || 'title')?.trim() || '';
+    }
+    
+    return element.textContent?.trim() || '';
+  }
+
+  protected trySelectors(
+    cardEl: HTMLElement,
+    configs: Array<{
+      selector: string;
+      method?: 'textContent' | 'getAttribute';
+      attribute?: string;
+    }>
+  ): string {
+    for (const config of configs) {
+      const text = this.trySelector(
+        cardEl,
+        config.selector,
+        config.method || 'textContent',
+        config.attribute
+      );
+      if (text) return text;
+    }
+    return '';
+  }
+
+  protected tryCustomSelectors<T>(
+    cardEl: HTMLElement,
+    extractors: Array<(cardEl: HTMLElement) => T | null>
+  ): T | null {
+    for (const extractor of extractors) {
+      const result = extractor(cardEl);
+      if (result !== null) return result;
+    }
+    return null;
+  }
+
   abstract parsePrice(cardEl: HTMLElement): number;
   abstract parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel;
   abstract renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void;

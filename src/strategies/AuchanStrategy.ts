@@ -26,16 +26,10 @@ export class AuchanStrategy extends ParserStrategy {
   }
 
   parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel {
-    let nameText: string;
-
-    nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
-
-    if (this.selectors?.volume) {
-      const volumeText = cardEl.querySelector(this.selectors.volume)?.textContent?.trim() ?? "";
-      if (volumeText) {
-        nameText = volumeText;
-      }
-    }
+    const nameText = this.trySelectors(cardEl, [
+      { selector: this.selectors.volume || '' },
+      { selector: this.selectors.name || '' }
+    ]);
 
     const regex = /([\d.,]+)\s*(г(?!од)|гр|кг|мл|л|шт)/i;
     const match = nameText.match(regex);
