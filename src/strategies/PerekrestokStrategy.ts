@@ -71,8 +71,10 @@ export class PerekrestokStrategy extends ParserStrategy {
     const fz = "calc(0.95vw)";
 
     wrapper.style.fontSize = fz;
-    // @ts-expect-error
-    wrapper.parentElement.style.fontSize = fz;
+    // Set parent element font size if it exists
+    if (wrapper.parentElement) {
+      wrapper.parentElement.style.fontSize = fz;
+    }
 
     wrapper.querySelectorAll(this.selectors.unitPrice).forEach((el) => el.remove());
 
@@ -99,8 +101,10 @@ export class PerekrestokStrategy extends ParserStrategy {
     const fz = "calc(0.95vw)";
 
     wrapper.style.fontSize = fz;
-    // @ts-expect-error
-    wrapper.parentElement.style.fontSize = fz;
+    // Set parent element font size if it exists
+    if (wrapper.parentElement) {
+      wrapper.parentElement.style.fontSize = fz;
+    }
 
     wrapper.querySelectorAll(this.selectors.unitPrice).forEach((el) => el.remove());
 

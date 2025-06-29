@@ -45,7 +45,7 @@ export class KuperStrategy extends ParserStrategy {
       this.log("Name: totalText, total, unit", totalText, total, unit);
       return getConvertedUnit(total, unit);
     } else {
-      throw new Error("Обьем не распознан.");
+      return { unitLabel: null, multiplier: null } as NoneUnitLabel;
     }
   }
 
@@ -56,8 +56,10 @@ export class KuperStrategy extends ParserStrategy {
     const fz = "calc(0.95vw)";
 
     wrapper.style.fontSize = fz;
-    // @ts-expect-error
-    wrapper.parentElement.style.fontSize = fz;
+    // Set parent element font size if it exists
+    if (wrapper.parentElement) {
+      wrapper.parentElement.style.fontSize = fz;
+    }
 
     wrapper.querySelectorAll(this.selectors.unitPrice).forEach((el: Element) => el.remove());
 
@@ -84,8 +86,10 @@ export class KuperStrategy extends ParserStrategy {
     const fz = "calc(0.95vw)";
 
     wrapper.style.fontSize = fz;
-    // @ts-expect-error
-    wrapper.parentElement.style.fontSize = fz;
+    // Set parent element font size if it exists
+    if (wrapper.parentElement) {
+      wrapper.parentElement.style.fontSize = fz;
+    }
 
     wrapper.querySelectorAll(this.selectors.unitPrice).forEach((el: Element) => el.remove());
 

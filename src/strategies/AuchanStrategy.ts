@@ -37,13 +37,6 @@ export class AuchanStrategy extends ParserStrategy {
       }
     }
 
-    if (this.selectors?.volume) {
-      const volumeText = cardEl.querySelector(this.selectors.volume)?.textContent?.trim() ?? "";
-      if (volumeText) {
-        nameText = volumeText;
-      }
-    }
-
     const regex = /([\d.,]+)\s*(г(?!од)|гр|кг|мл|л|шт)/i;
     const match = nameText.match(regex);
     if (!match) return { unitLabel: null, multiplier: null } as NoneUnitLabel;
@@ -59,8 +52,10 @@ export class AuchanStrategy extends ParserStrategy {
     const fz = "calc(0.95vw)";
 
     wrapper.style.fontSize = fz;
-    // @ts-expect-error
-    wrapper.parentElement.style.fontSize = fz;
+    // Set parent element font size if it exists
+    if (wrapper.parentElement) {
+      wrapper.parentElement.style.fontSize = fz;
+    }
 
     wrapper.querySelectorAll(this.selectors.unitPrice).forEach((el) => el.remove());
 
@@ -87,8 +82,10 @@ export class AuchanStrategy extends ParserStrategy {
     const fz = "calc(0.95vw)";
 
     wrapper.style.fontSize = fz;
-    // @ts-expect-error
-    wrapper.parentElement.style.fontSize = fz;
+    // Set parent element font size if it exists
+    if (wrapper.parentElement) {
+      wrapper.parentElement.style.fontSize = fz;
+    }
 
     wrapper.querySelectorAll(this.selectors.unitPrice).forEach((el) => el.remove());
 
