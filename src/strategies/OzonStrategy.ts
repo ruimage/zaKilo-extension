@@ -25,14 +25,32 @@ export class OzonStrategy extends ParserStrategy {
 
   parseQuantity(cardEl: HTMLElement): UnitLabel | NoneUnitLabel {
     const nameText = cardEl.querySelector(this.selectors.name)?.textContent?.trim() ?? "";
-    const regex = /([\d.,]+)\s*(г|гр|кг|мл|л|шт)/i;
+    // Единицы трёх типов, чтобы не путать с «соседними» обозначениями в названии:
+    //  • объём данных (накопители): тб/гб/мб + латиница; (?!ит) отсекает скорость
+    //    интерфейса «6 Гбит/с», иначе ёмкость спуталась бы с гигабитами;
+    //  • метраж (трубы, кабель): длина в метрах, диаметр и стенка — в мм, поэтому
+    //    м(?![мб]) отсекает «мм» и «Мбит»;
+    //  • вес/объём: граммы г(?!б), чтобы одиночное «г» не цеплялось за «Гбит/ГБ».
+    // Цифровые единицы стоят раньше г/м: при разборе важен порядок альтернатив.
+    const regex =
+      /([\d.,]+)\s*(тб|tb|гб(?!ит)|gb|мб(?!ит)|mb|кг|гр|г(?!б)|мл|л|шт|метров|метра|метр|м(?![мб]))/i;
     const match = nameText.match(regex);
 
     if (!match) return { unitLabel: null, multiplier: null } as NoneUnitLabel;
 
     const value = parseFloat(match[1].replace(",", "."));
     const unit = match[2].toLowerCase();
-    return getConvertedUnit(value, unit);
+
+    // Название — свободный текст продавца, формат непредсказуем. Поэтому учитываем
+    // мультипак только по однозначному сигналу: множитель ("х"/"x"/"×"/"*") + число + "шт",
+    // напр. "800 гр. х 6 шт." → вес одной упаковки умножаем на количество.
+    // Глиф обязателен: он отделяет настоящий мультипак ("800 г х 6 шт") от случая, когда
+    // итог уже указан, а разбивка в скобках ("4,8 кг (6 шт. по 800 г)") — там умножать нельзя.
+    // Штучные товары (unit === "шт") не трогаем: там количество и так в цене за штуку.
+    const packMatch = unit !== "шт" ? nameText.match(/[xXхХ×*]\s*(\d+)\s*шт/) : null;
+    const count = packMatch ? parseInt(packMatch[1], 10) : 1;
+
+    return getConvertedUnit(value * count, unit);
   }
 
   renderUnitPrice(cardEl: HTMLElement, unitPrice: number, unitLabel: string): void {
